@@ -82,15 +82,7 @@
 
     window.addEventListener("load", async () => {
 
-        loadSettings();
-
-        const settings =
-            await window.loadSettingsFromFirestore();
-
-        console.log(
-            "Firestore Settings:",
-            settings
-        );
+        await loadSettings();
 
     });
 

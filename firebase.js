@@ -212,30 +212,3 @@ function watchSettings(callback) {
 
 window.watchSettings =
     watchSettings;
-
-async function saveSettingsToFirebase(settings) {
-
-    try {
-
-        const docRef =
-            window.firebaseServices.doc(
-                window.firebaseServices.db,
-                "settings",
-                "config"
-            );
-
-        await window.firebaseServices.updateDoc(
-            docRef,
-            settings
-        );
-
-        console.log(
-            "Settings saved to Firestore"
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-}

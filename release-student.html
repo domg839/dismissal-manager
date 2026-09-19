@@ -41,26 +41,29 @@
 
     <script src="app.js"></script>
 
-    <script>
+<script>
 
-        window.addEventListener("load", () => {
+    window.addEventListener("load", async () => {
 
-            window.watchDismissalQueue(
+        await loadSettingsFromFirebase();
 
-                (records) => {
+        window.watchDismissalQueue(
 
-                    dismissalQueue =
-                        records;
+            (records) => {
 
-                    renderReleaseBoard();
+                dismissalQueue =
+                    records;
 
-                }
+                renderReleaseBoard();
 
-            );
+            }
 
-        });
+        );
 
-    </script>
+    });
+
+</script>
+
 
 </body>
 

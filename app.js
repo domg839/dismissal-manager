@@ -1,36 +1,52 @@
-let dismissalQueue =
-    JSON.parse(
-        localStorage.getItem("dismissalQueue")
-    ) || [];
+let dismissalQueue = [];
 
-let START_SPOT =
-    parseInt(
-        localStorage.getItem("startSpot")
-    ) || 3;
+let START_SPOT = 3;
 
-let END_SPOT =
-    parseInt(
-        localStorage.getItem("endSpot")
-    ) || 10;
+let END_SPOT = 10;
 
-let CARS_DISPLAYED =
-    parseInt(
-        localStorage.getItem("carsDisplayed")
-    ) || 24;
+let CARS_DISPLAYED = 25;
 
-let dismissalStartTime =
-    localStorage.getItem(
-        "dismissalStartTime"
-    );    
+let dismissalStartTime = null;
+
+let SCHOOL_NAME = "School";
+
+async function loadSettingsFromFirebase() {
+
+    const settings =
+        await window.loadSettingsFromFirestore();
+
+    if (!settings) {
+        return;
+    }
+
+    SCHOOL_NAME =
+        settings.schoolName || "School";
+
+    START_SPOT =
+        settings.startSpot || 3;
+
+    END_SPOT =
+        settings.endSpot || 10;
+
+    CARS_DISPLAYED =
+        settings.carsDisplayed || 25;
+
+    dismissalStartTime =
+        settings.dismissalStartTime || null;
+
+    console.log(
+        "Settings Loaded:",
+        settings
+    );
+
+    return settings;
+}
 
 renderQueue();
 
 function saveQueue() {
 
-    localStorage.setItem(
-        "dismissalQueue",
-        JSON.stringify(dismissalQueue)
-    );
+    // Queue now stored in Firestore
 
 }
 
@@ -140,13 +156,11 @@ function addVehicle() {
         studentRecord
     );
 
-    addVehicleToFirebase(
-        studentRecord
-    );
+addVehicleToFirebase(
+    studentRecord
+);
 
-    saveQueue();
-
-    renderQueue();
+renderQueue();
 
     tagInput.value = "";
 
@@ -165,11 +179,9 @@ function deleteVehicle(index) {
         return;
     }
 
-    dismissalQueue.splice(index, 1);
+dismissalQueue.splice(index, 1);
 
-    saveQueue();
-
-    renderQueue();
+renderQueue();
 }
 
 function editVehicle(index) {
@@ -192,12 +204,10 @@ function editVehicle(index) {
     dismissalQueue[index].tag =
         newTag.trim();
 
-    dismissalQueue[index].editedFrom =
-        oldTag;
+dismissalQueue[index].editedFrom =
+    oldTag;
 
-    saveQueue();
-
-    renderQueue();
+renderQueue();
 }
 
 function toggleRelease(tag) {
@@ -207,6 +217,11 @@ function toggleRelease(tag) {
 }
 
 function renderDismissalBoard() {
+
+    console.log(
+    "CARS_DISPLAYED:",
+    CARS_DISPLAYED
+);
 
     let board =
         document.getElementById("dismissalBoard");
@@ -428,17 +443,16 @@ function releaseStudent(tagNumber) {
         return;
     }
 
-    if (!dismissalStartTime) {
+if (!dismissalStartTime) {
 
-        dismissalStartTime =
-            new Date().toISOString();
+    dismissalStartTime =
+        new Date().toISOString();
 
-        localStorage.setItem(
-            "dismissalStartTime",
-            dismissalStartTime
-        );
+    updateDismissalStartTime(
+        dismissalStartTime
+    );
 
-    }
+}
 
     releaseStudentFirebase(
         student
@@ -446,7 +460,7 @@ function releaseStudent(tagNumber) {
 
 }
 
-function loadSettings() {
+async function loadSettings() {
 
     let schoolBox =
         document.getElementById("schoolName");
@@ -469,17 +483,24 @@ function loadSettings() {
         return;
     }
 
+    const settings =
+        await window.loadSettingsFromFirestore();
+
+    if (!settings) {
+        return;
+    }
+
     schoolBox.value =
-        localStorage.getItem("schoolName")
-        || "School";
+        settings.schoolName || "";
 
-    startBox.value = START_SPOT;
+    startBox.value =
+        settings.startSpot || 3;
 
-    endBox.value = END_SPOT;
+    endBox.value =
+        settings.endSpot || 10;
 
     carsBox.value =
-        localStorage.getItem("carsDisplayed")
-        || 24;
+        settings.carsDisplayed || 25;
 }
 
 async function saveSettings() {
@@ -772,11 +793,11 @@ async function endDismissal() {
 
     dismissalQueue = [];
 
-    localStorage.removeItem(
-        "dismissalStartTime"
-    );
+await updateDismissalStartTime(
+    null
+);
 
-    dismissalStartTime = null;
+dismissalStartTime = null;
 
     alert(
         "Dismissal ended and saved to history."
@@ -797,11 +818,7 @@ function renderLastDismissal() {
     }
 
     let history =
-        JSON.parse(
-            localStorage.getItem(
-                "dismissalHistory"
-            )
-        ) || [];
+        window.dismissalHistory || [];
 
     if (history.length === 0) {
 
@@ -817,27 +834,29 @@ function renderLastDismissal() {
     stats.innerHTML = `
 
         <p>
-            🚗 Cars Released:
+            Cars Released:
             ${last.carsReleased}
         </p>
 
         <p>
-            🕒 Start:
+            Start:
             ${last.startTime || "N/A"}
         </p>
 
         <p>
-            🕒 End:
+            End:
             ${last.endTime || "N/A"}
         </p>
 
         <p>
-            ⏱ Duration:
-            ${formatDuration(last.duration)}
+            Duration:
+            ${formatDuration(
+                last.duration
+            )}
         </p>
 
         <p>
-            📈 Cars/Minute:
+            Cars Per Minute:
             ${last.carsPerMinute}
         </p>
 
@@ -955,7 +974,7 @@ function renderHistory() {
     }
 }
 
-function deleteHistory(index) {
+async function deleteHistory(documentId) {
 
     let confirmDelete = confirm(
         "Delete this dismissal record?"
@@ -965,21 +984,28 @@ function deleteHistory(index) {
         return;
     }
 
-    let history =
-        JSON.parse(
-            localStorage.getItem(
-                "dismissalHistory"
-            )
-        ) || [];
+    try {
 
-    history.splice(index, 1);
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalHistory",
+                documentId
+            );
 
-    localStorage.setItem(
-        "dismissalHistory",
-        JSON.stringify(history)
-    );
+        await window.firebaseServices.deleteDoc(
+            docRef
+        );
 
-    renderHistory();
+        console.log(
+            "History record deleted"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
 }
 
 function renderSchoolName() {
@@ -993,13 +1019,8 @@ function renderSchoolName() {
         return;
     }
 
-    let schoolName =
-        localStorage.getItem(
-            "schoolName"
-        ) || "School";
-
     title.innerText =
-        schoolName;
+        SCHOOL_NAME;
 }
 
 function renderCurrentDismissal() {
@@ -1268,6 +1289,31 @@ async function saveSettingsToFirebase(settings) {
 
         console.log(
             "Settings saved to Firestore"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function updateDismissalStartTime(startTime) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "settings",
+                "config"
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                dismissalStartTime: startTime
+            }
         );
 
     } catch (error) {

@@ -39,7 +39,9 @@
 
 <script>
 
-    window.addEventListener("load", () => {
+    window.addEventListener("load", async () => {
+
+        await loadSettingsFromFirebase();
 
         window.watchDismissalQueue(
 
