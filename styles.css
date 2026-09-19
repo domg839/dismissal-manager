@@ -549,16 +549,15 @@ input {
 
 h3 {
 
-    margin-top: -3px;
+    margin-top: -2px;
 
     margin-bottom: 15px;
 
-    color: rgba(255,255,255,.9);
+    color: rgba(255,255,255,.85);
 
     font-weight: normal;
 
-    text-shadow:
-        1px 1px 3px rgba(0,0,0,.25);
+    min-height: 28px;
 }
 
 .helper-text {
