@@ -9,7 +9,8 @@ import {
     query,
     orderBy,
     doc,
-    updateDoc
+    updateDoc,
+    deleteDoc
 }
 from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
@@ -33,28 +34,29 @@ window.firebaseServices = {
     query,
     orderBy,
     doc,
-    updateDoc
+    updateDoc,
+    deleteDoc
 };
 
 console.log("Firebase Services Ready");
 
 async function loadQueueFromFirestore() {
 
-const queueQuery =
-    query(
-        collection(
-            db,
-            "dismissalQueue"
-        ),
-        orderBy(
-            "queuePosition"
-        )
-    );
+    const queueQuery =
+        query(
+            collection(
+                db,
+                "dismissalQueue"
+            ),
+            orderBy(
+                "queuePosition"
+            )
+        );
 
-const querySnapshot =
-    await getDocs(
-        queueQuery
-    );
+    const querySnapshot =
+        await getDocs(
+            queueQuery
+        );
 
     let records = [];
 
@@ -86,14 +88,14 @@ function watchDismissalQueue(callback) {
     return onSnapshot(
 
         query(
-    collection(
-        db,
-        "dismissalQueue"
-    ),
-    orderBy(
-        "queuePosition"
-    )
-),
+            collection(
+                db,
+                "dismissalQueue"
+            ),
+            orderBy(
+                "queuePosition"
+            )
+        ),
 
         (snapshot) => {
 
@@ -109,11 +111,11 @@ function watchDismissalQueue(callback) {
             });
 
             console.log(
-    "Realtime Queue:",
-    records
-);
+                "Realtime Queue:",
+                records
+            );
 
-callback(records);
+            callback(records);
 
         }
 
@@ -122,3 +124,118 @@ callback(records);
 
 window.watchDismissalQueue =
     watchDismissalQueue;
+
+function watchDismissalHistory(callback) {
+
+    return onSnapshot(
+
+        collection(
+            db,
+            "dismissalHistory"
+        ),
+
+        (snapshot) => {
+
+            let records = [];
+
+            snapshot.forEach((doc) => {
+
+                records.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
+
+            });
+
+            callback(records);
+
+        }
+
+    );
+}
+
+window.watchDismissalHistory =
+    watchDismissalHistory;
+
+async function loadSettingsFromFirestore() {
+
+    const settingsQuery =
+        await getDocs(
+            collection(
+                db,
+                "settings"
+            )
+        );
+
+    let settings = {};
+
+    settingsQuery.forEach((doc) => {
+
+        settings = {
+            id: doc.id,
+            ...doc.data()
+        };
+
+    });
+
+    return settings;
+}
+
+window.loadSettingsFromFirestore =
+    loadSettingsFromFirestore;
+
+function watchSettings(callback) {
+
+    return onSnapshot(
+
+        doc(
+            db,
+            "settings",
+            "config"
+        ),
+
+        (snapshot) => {
+
+            if (snapshot.exists()) {
+
+                callback({
+                    id: snapshot.id,
+                    ...snapshot.data()
+                });
+
+            }
+
+        }
+
+    );
+}
+
+window.watchSettings =
+    watchSettings;
+
+async function saveSettingsToFirebase(settings) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "settings",
+                "config"
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            settings
+        );
+
+        console.log(
+            "Settings saved to Firestore"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}

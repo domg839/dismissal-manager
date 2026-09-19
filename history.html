@@ -25,13 +25,30 @@
 
     </div>
 
-    <script src="app.js"></script>
+<script type="module" src="firebase.js"></script>
 
-    <script>
+<script src="app.js"></script>
 
-        renderHistory();
+<script>
 
-    </script>
+    window.addEventListener("load", () => {
+
+        window.watchDismissalHistory(
+
+            (records) => {
+
+                window.dismissalHistory =
+                    records;
+
+                renderHistory();
+
+            }
+
+        );
+
+    });
+
+</script>
 
 </body>
 

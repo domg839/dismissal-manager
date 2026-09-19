@@ -38,16 +38,28 @@
     <script type="module" src="firebase.js"></script>
     <script src="app.js"></script>
 
-    <script>
-        renderSchoolName();
-        renderCurrentDismissal();
+<script>
 
-        setInterval(function () {
-            dismissalQueue = JSON.parse(localStorage.getItem("dismissalQueue")) || [];
-            dismissalStartTime = localStorage.getItem("dismissalStartTime");
-            renderCurrentDismissal();
-        }, 1000);
-    </script>
+    renderSchoolName();
+
+    window.addEventListener("load", () => {
+
+        window.watchDismissalQueue(
+
+            (records) => {
+
+                dismissalQueue =
+                    records;
+
+                renderCurrentDismissal();
+
+            }
+
+        );
+
+    });
+
+</script>
 
 </body>
 </html>

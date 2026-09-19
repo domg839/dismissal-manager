@@ -74,14 +74,27 @@
         </div>
 
     </div>
+    <script type="module" src="firebase.js"></script>
 
     <script src="app.js"></script>
 
-    <script>
+<script>
+
+    window.addEventListener("load", async () => {
 
         loadSettings();
 
-    </script>
+        const settings =
+            await window.loadSettingsFromFirestore();
+
+        console.log(
+            "Firestore Settings:",
+            settings
+        );
+
+    });
+
+</script>
 
 </body>
 

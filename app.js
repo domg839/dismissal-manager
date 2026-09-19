@@ -482,7 +482,7 @@ function loadSettings() {
         || 24;
 }
 
-function saveSettings() {
+async function saveSettings() {
 
     let schoolBox =
         document.getElementById("schoolName");
@@ -518,25 +518,21 @@ function saveSettings() {
         return;
     }
 
-    localStorage.setItem(
-        "schoolName",
-        schoolBox.value
-    );
+    await saveSettingsToFirebase({
 
-    localStorage.setItem(
-        "startSpot",
-        startValue
-    );
+        schoolName:
+            schoolBox.value,
 
-    localStorage.setItem(
-        "endSpot",
-        endValue
-    );
+        startSpot:
+            startValue,
 
-    localStorage.setItem(
-        "carsDisplayed",
-        carsValue
-    );
+        endSpot:
+            endValue,
+
+        carsDisplayed:
+            carsValue
+
+    });
 
     alert(
         "Settings saved."
@@ -701,7 +697,7 @@ async function requestStudent(tagNumber) {
     }
 }
 
-function endDismissal() {
+async function endDismissal() {
 
     if (!dismissalStartTime) {
 
@@ -720,8 +716,11 @@ function endDismissal() {
         return;
     }
 
+    const currentQueue =
+        await getCurrentQueueFromFirestore();
+
     let releasedCount =
-        dismissalQueue.filter(
+        currentQueue.filter(
             student => student.released
         ).length;
 
@@ -738,48 +737,40 @@ function endDismissal() {
             endTime - startTime
         ) / 60000;
 
-    let history =
-        JSON.parse(
-            localStorage.getItem(
-                "dismissalHistory"
-            )
-        ) || [];
+    const historyRecord = {
 
-    history.unshift({
+        date:
+            endTime.toLocaleDateString(),
 
-    date:
-        endTime.toLocaleDateString(),
+        startTime:
+            startTime.toLocaleTimeString(),
 
-    startTime:
-        startTime.toLocaleTimeString(),
+        endTime:
+            endTime.toLocaleTimeString(),
 
-    endTime:
-        endTime.toLocaleTimeString(),
+        carsReleased:
+            releasedCount,
 
-    carsReleased:
-        releasedCount,
+        duration:
+            durationMinutes,
 
-    duration:
-        durationMinutes,
+        carsPerMinute:
+            (
+                releasedCount /
+                Math.max(
+                    durationMinutes,
+                    1
+                )
+            ).toFixed(1)
+    };
 
-    carsPerMinute:
-        (
-            releasedCount /
-            Math.max(
-                durationMinutes,
-                1
-            )
-        ).toFixed(1)
-});
-
-    localStorage.setItem(
-        "dismissalHistory",
-        JSON.stringify(history)
+    await saveHistoryToFirebase(
+        historyRecord
     );
 
-    dismissalQueue = [];
+    await clearFirebaseQueue();
 
-    saveQueue();
+    dismissalQueue = [];
 
     localStorage.removeItem(
         "dismissalStartTime"
@@ -890,11 +881,7 @@ function renderHistory() {
     }
 
     let history =
-        JSON.parse(
-            localStorage.getItem(
-                "dismissalHistory"
-            )
-        ) || [];
+        window.dismissalHistory || [];
 
     historyList.innerHTML = "";
 
@@ -927,7 +914,7 @@ function renderHistory() {
 
                     <button
                         class="delete-history"
-                        onclick="deleteHistory(${i})">
+                        onclick="deleteHistory('${history[i].id}')">
 
                         <i class="fa-solid fa-trash"></i>
 
@@ -1200,6 +1187,87 @@ async function requestStudentFirebase(student) {
 
         console.log(
             "Student alert saved"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function clearFirebaseQueue() {
+
+    const queueRecords =
+        await window.loadQueueFromFirestore();
+
+    for (const student of queueRecords) {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalQueue",
+                student.id
+            );
+
+        await window.firebaseServices.deleteDoc(
+            docRef
+        );
+    }
+}
+
+async function saveHistoryToFirebase(historyRecord) {
+
+    try {
+
+        await window.firebaseServices.addDoc(
+
+            window.firebaseServices.collection(
+                window.firebaseServices.db,
+                "dismissalHistory"
+            ),
+
+            historyRecord
+
+        );
+
+        console.log(
+            "History saved to Firestore"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function getCurrentQueueFromFirestore() {
+
+    const records =
+        await window.loadQueueFromFirestore();
+
+    return records || [];
+}
+
+async function saveSettingsToFirebase(settings) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "settings",
+                "config"
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            settings
+        );
+
+        console.log(
+            "Settings saved to Firestore"
         );
 
     } catch (error) {
