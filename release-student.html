@@ -2,13 +2,19 @@
 <html>
 
 <head>
+
     <title>Release Student</title>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <link rel="stylesheet" href="styles.css">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
 
 <body class="page-release">
@@ -21,38 +27,40 @@
 
         <div class="release-board-wrapper">
 
-<div class="release-board-wrapper">
+            <div id="releaseBoard"></div>
 
-    <div id="releaseBoard"></div>
+        </div>
 
-</div>
-
-</div>
-
-<a href="index.html" class="home-icon">
-    <i class="fa-solid fa-house"></i>
-</a>
+        <a href="index.html" class="home-icon">
+            <i class="fa-solid fa-house"></i>
+        </a>
 
     </div>
+
+    <script type="module" src="firebase.js"></script>
 
     <script src="app.js"></script>
 
     <script>
 
-    renderReleaseBoard();
+        window.addEventListener("load", () => {
 
-    setInterval(function () {
+            window.watchDismissalQueue(
 
-        dismissalQueue =
-            JSON.parse(
-                localStorage.getItem("dismissalQueue")
-            ) || [];
+                (records) => {
 
-        renderReleaseBoard();
+                    dismissalQueue =
+                        records;
 
-    }, 1000);
+                    renderReleaseBoard();
 
-</script>
+                }
+
+            );
+
+        });
+
+    </script>
 
 </body>
 

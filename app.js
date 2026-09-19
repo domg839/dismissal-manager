@@ -108,24 +108,41 @@ function addVehicle() {
         );
 
         if (!proceed) {
+
             tagInput.focus();
+
             return;
         }
     }
 
     const spotCount =
-       END_SPOT - START_SPOT + 1;
+        END_SPOT - START_SPOT + 1;
 
     const assignedSpot =
-       START_SPOT +
-       (dismissalQueue.length % spotCount);
+        START_SPOT +
+        (dismissalQueue.length % spotCount);
 
-    dismissalQueue.push({
+    const studentRecord = {
+
         tag: tagNumber,
+
+        queuePosition:
+            dismissalQueue.length + 1,
+
         spot: assignedSpot,
+
         released: false,
+
         needsStudent: false
-    });
+    };
+
+    dismissalQueue.push(
+        studentRecord
+    );
+
+    addVehicleToFirebase(
+        studentRecord
+    );
 
     saveQueue();
 
@@ -411,28 +428,22 @@ function releaseStudent(tagNumber) {
         return;
     }
 
-if (!dismissalStartTime) {
+    if (!dismissalStartTime) {
 
-    dismissalStartTime =
-        new Date().toISOString();
+        dismissalStartTime =
+            new Date().toISOString();
 
-    localStorage.setItem(
-        "dismissalStartTime",
-        dismissalStartTime
+        localStorage.setItem(
+            "dismissalStartTime",
+            dismissalStartTime
+        );
+
+    }
+
+    releaseStudentFirebase(
+        student
     );
-}
 
-student.released = true;
-
-student.needsStudent = false;
-
-    saveQueue();
-
-    renderReleaseBoard();
-
-    renderSpotManager();
-
-    renderDismissalBoard();
 }
 
 function loadSettings() {
@@ -633,7 +644,7 @@ board.style.gridTemplateColumns =
     }
 }
 
-function requestStudent(tagNumber) {
+async function requestStudent(tagNumber) {
 
     let student =
         dismissalQueue.find(
@@ -663,11 +674,31 @@ function requestStudent(tagNumber) {
         return;
     }
 
-    student.needsStudent = true;
+    try {
 
-    saveQueue();
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalQueue",
+                student.id
+            );
 
-    renderSpotManager();
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                needsStudent: true
+            }
+        );
+
+        console.log(
+            "Student alert saved"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
 }
 
 function endDismissal() {
@@ -1091,4 +1122,89 @@ function getElapsedTime() {
     }
 
     return `${minutes}m ${remainingSeconds}s`;
+}
+
+async function addVehicleToFirebase(student) {
+
+    try {
+
+        await window.firebaseServices.addDoc(
+
+            window.firebaseServices.collection(
+                window.firebaseServices.db,
+                "dismissalQueue"
+            ),
+
+            student
+
+        );
+
+        console.log(
+            "Student saved to Firestore"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function releaseStudentFirebase(student) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalQueue",
+                student.id
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                released: true,
+                needsStudent: false
+            }
+        );
+
+        console.log(
+            "Student released"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function requestStudentFirebase(student) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalQueue",
+                student.id
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                needsStudent: true
+            }
+        );
+
+        console.log(
+            "Student alert saved"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
 }

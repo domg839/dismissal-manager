@@ -33,24 +33,30 @@
 
     </div>
 
-    <script src="app.js"></script>
+<script type="module" src="firebase.js"></script>
 
-    <script>
+<script src="app.js"></script>
 
-        renderSpotManager();
+<script>
 
-        setInterval(function () {
+    window.addEventListener("load", () => {
 
-            dismissalQueue =
-                JSON.parse(
-                    localStorage.getItem("dismissalQueue")
-                ) || [];
+        window.watchDismissalQueue(
 
-            renderSpotManager();
+            (records) => {
 
-        }, 1000);
+                dismissalQueue =
+                    records;
 
-    </script>
+                renderSpotManager();
+
+            }
+
+        );
+
+    });
+
+</script>
 
 </body>
 

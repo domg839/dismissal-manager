@@ -2,20 +2,26 @@
 <html>
 
 <head>
+
     <title>Car Entry</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <link rel="stylesheet" href="styles.css">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 </head>
 
 <body class="page-car">
 
-<a href="index.html" class="home-icon">
-    <i class="fa-solid fa-house"></i>
-</a>
+    <a href="index.html" class="home-icon">
+        <i class="fa-solid fa-house"></i>
+    </a>
 
     <div class="container">
 
@@ -40,18 +46,28 @@
 
             <h2>Recent Entries</h2>
 
-            <div id="recentEntries">
-            </div>
+            <div id="recentEntries"></div>
 
         </div>
 
     </div>
 
+    <script type="module" src="firebase.js"></script>
+
     <script src="app.js"></script>
 
     <script>
 
-        renderQueue();
+window.addEventListener("load", async () => {
+
+    await window.loadQueueFromFirestore();
+
+    dismissalQueue =
+        window.dismissalQueue || [];
+
+    renderQueue();
+
+});
 
         document
             .getElementById("tagInput")

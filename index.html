@@ -1,114 +1,53 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>School Dismissal Manager</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    
+
     <link rel="stylesheet" href="styles.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 </head>
-
 <body class="page-home">
 
     <div class="container">
 
-        <h1>
-            Dismissal Manager
-        </h1>
+        <h1>Dismissal Manager</h1>
 
-        <h3 id="schoolTitle">
-            School Name
-        </h3>
+        <h3 id="schoolTitle">School Name</h3>
 
-        <a href="car-entry.html">
-            <button class="btn-car">
-                Car Entry
-            </button>
-        </a>
+        <a href="car-entry.html"><button class="btn-car">Car Entry</button></a>
+        <a href="release-student.html"><button class="btn-release">Release Student</button></a>
+        <a href="dismissal-board.html"><button class="btn-board">Dismissal Board</button></a>
+        <a href="spot-manager.html"><button class="btn-spot">Spot Manager</button></a>
+        <a href="history.html"><button class="btn-history">History</button></a>
+        <a href="settings.html"><button class="btn-settings">Settings</button></a>
 
-        <a href="release-student.html">
-            <button class="btn-release">
-                Release Student
-            </button>
-        </a>
-
-        <a href="dismissal-board.html">
-            <button class="btn-board">
-                Dismissal Board
-            </button>
-        </a>
-
-        <a href="spot-manager.html">
-            <button class="btn-spot">
-                Spot Manager
-            </button>
-        </a>
-
-        <a href="history.html">
-            <button class="btn-history">
-                History
-            </button>
-        </a>
-
-        <a href="settings.html">
-            <button class="btn-settings">
-                Settings
-            </button>
-        </a>
-
-        <button
-            class="btn-end"
-            onclick="endDismissal()">
-
-            End Dismissal
-
-        </button>
+        <button class="btn-end" onclick="endDismissal()">End Dismissal</button>
 
         <div class="stats">
-
             <h2>Current Dismissal</h2>
-
             <div id="currentDismissalStats">
-
                 <p>No active dismissal.</p>
-
             </div>
-
         </div>
 
     </div>
 
+    <script type="module" src="firebase.js"></script>
     <script src="app.js"></script>
 
     <script>
-
         renderSchoolName();
-
         renderCurrentDismissal();
 
         setInterval(function () {
-
-            dismissalQueue =
-                JSON.parse(
-                    localStorage.getItem(
-                        "dismissalQueue"
-                    )
-                ) || [];
-
-            dismissalStartTime =
-                localStorage.getItem(
-                    "dismissalStartTime"
-                );
-
+            dismissalQueue = JSON.parse(localStorage.getItem("dismissalQueue")) || [];
+            dismissalStartTime = localStorage.getItem("dismissalStartTime");
             renderCurrentDismissal();
-
         }, 1000);
-
     </script>
 
 </body>
-
 </html>
