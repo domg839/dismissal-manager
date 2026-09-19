@@ -331,8 +331,13 @@ function renderReleaseBoard() {
         }
     }
 
+    let spotWidth =
+        window.innerWidth <= 600
+            ? 50
+            : 70;
+
     board.style.gridTemplateColumns =
-        `140px repeat(${maxColumns}, 140px)`;
+        `${spotWidth}px repeat(${maxColumns}, 140px)`;
 
     for (
         let spot = START_SPOT;
@@ -342,7 +347,7 @@ function renderReleaseBoard() {
 
         board.innerHTML += `
             <div class="spot-cell">
-                Spot ${spot}
+                ${spot}
             </div>
         `;
 
@@ -359,30 +364,31 @@ function renderReleaseBoard() {
 
             if (spotStudents[col]) {
 
-let statusClass = "";
+                let statusClass = "";
 
-if (spotStudents[col].released) {
+                if (spotStudents[col].released) {
 
-    statusClass = "released";
+                    statusClass = "released";
 
-}
-else if (
-    spotStudents[col].needsStudent
-) {
+                }
+                else if (
+                    spotStudents[col].needsStudent
+                ) {
 
-    statusClass = "needs-student";
-}
+                    statusClass =
+                        "needs-student";
+                }
 
-board.innerHTML += `
-    <div
-        class="release-cell ${statusClass}"
-        onclick="releaseStudent('${spotStudents[col].tag}')">
+                board.innerHTML += `
+                    <div
+                        class="release-cell ${statusClass}"
+                        onclick="releaseStudent('${spotStudents[col].tag}')">
 
-        ${spotStudents[col].needsStudent ? "⚠ " : ""}
-        ${spotStudents[col].tag}
+                        ${spotStudents[col].needsStudent ? "⚠ " : ""}
+                        ${spotStudents[col].tag}
 
-    </div>
-`;
+                    </div>
+                `;
 
             } else {
 
@@ -559,8 +565,13 @@ function renderSpotManager() {
         }
     }
 
-    board.style.gridTemplateColumns =
-        `140px repeat(${maxColumns}, 140px)`;
+    let spotWidth =
+    window.innerWidth <= 600
+        ? 50
+        : 70;
+
+board.style.gridTemplateColumns =
+    `${spotWidth}px repeat(${maxColumns}, 140px)`;
 
     for (
         let spot = START_SPOT;
@@ -570,7 +581,7 @@ function renderSpotManager() {
 
         board.innerHTML += `
             <div class="spot-cell">
-                Spot ${spot}
+                ${spot}
             </div>
         `;
 
