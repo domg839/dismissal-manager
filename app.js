@@ -711,11 +711,17 @@ async function requestStudent(tagNumber) {
         return;
     }
 
-    let confirmed = confirm(
-        "Send student needed alert for tag " +
-        tagNumber +
-        "?"
-    );
+    let message =
+        student.needsStudent
+            ? "Remove student needed alert for tag " +
+              tagNumber +
+              "?"
+            : "Send student needed alert for tag " +
+              tagNumber +
+              "?";
+
+    let confirmed =
+        confirm(message);
 
     if (!confirmed) {
         return;
@@ -733,12 +739,13 @@ async function requestStudent(tagNumber) {
         await window.firebaseServices.updateDoc(
             docRef,
             {
-                needsStudent: true
+                needsStudent:
+                    !student.needsStudent
             }
         );
 
         console.log(
-            "Student alert saved"
+            "Student alert updated"
         );
 
     } catch (error) {
@@ -1159,8 +1166,7 @@ async function releaseStudentFirebase(student) {
         await window.firebaseServices.updateDoc(
             docRef,
             {
-                released: true,
-                needsStudent: false
+                released: !student.released
             }
         );
 
