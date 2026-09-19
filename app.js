@@ -875,6 +875,20 @@ function renderHistory() {
     let history =
         window.dismissalHistory || [];
 
+    history.sort((a, b) => {
+
+        let dateA = new Date(
+            `${a.date} ${a.endTime}`
+        );
+
+        let dateB = new Date(
+            `${b.date} ${b.endTime}`
+        );
+
+        return dateB - dateA;
+
+    });
+
     historyList.innerHTML = "";
 
     if (history.length === 0) {

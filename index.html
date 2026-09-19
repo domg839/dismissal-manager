@@ -77,26 +77,32 @@
 
     <script>
 
-        window.addEventListener("load", async () => {
+window.addEventListener("load", async () => {
 
-            await loadSettingsFromFirebase();
+    await loadSettingsFromFirebase();
 
-            renderSchoolName();
+    renderSchoolName();
 
-            window.watchDismissalQueue(
+    window.watchDismissalQueue(
 
-                (records) => {
+        (records) => {
 
-                    dismissalQueue =
-                        records;
+            dismissalQueue =
+                records;
 
-                    renderCurrentDismissal();
+            renderCurrentDismissal();
 
-                }
+        }
 
-            );
+    );
 
-        });
+    setInterval(() => {
+
+        renderCurrentDismissal();
+
+    }, 1000);
+
+});
 
     </script>
 
