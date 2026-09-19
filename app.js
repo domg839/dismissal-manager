@@ -167,11 +167,40 @@ renderQueue();
     tagInput.focus();
 }
 
-function deleteVehicle(index) {
+async function deleteVehicleFirebase(student) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalQueue",
+                student.id
+            );
+
+        await window.firebaseServices.deleteDoc(
+            docRef
+        );
+
+        console.log(
+            "Student deleted"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function deleteVehicle(index) {
+
+    let student =
+        dismissalQueue[index];
 
     let proceed = confirm(
         "Remove tag " +
-        dismissalQueue[index].tag +
+        student.tag +
         "?"
     );
 
@@ -179,15 +208,18 @@ function deleteVehicle(index) {
         return;
     }
 
-dismissalQueue.splice(index, 1);
-
-renderQueue();
+    await deleteVehicleFirebase(
+        student
+    );
 }
 
-function editVehicle(index) {
+async function editVehicle(index) {
+
+    let student =
+        dismissalQueue[index];
 
     let oldTag =
-        dismissalQueue[index].tag;
+        student.tag;
 
     let newTag = prompt(
         "Edit Tag Number",
@@ -201,13 +233,11 @@ function editVehicle(index) {
         return;
     }
 
-    dismissalQueue[index].tag =
-        newTag.trim();
-
-dismissalQueue[index].editedFrom =
-    oldTag;
-
-renderQueue();
+    await editVehicleFirebase(
+        student,
+        newTag.trim(),
+        oldTag
+    );
 }
 
 function toggleRelease(tag) {
@@ -806,63 +836,6 @@ dismissalStartTime = null;
     location.reload();
 }
 
-function renderLastDismissal() {
-
-    let stats =
-        document.getElementById(
-            "lastDismissalStats"
-        );
-
-    if (!stats) {
-        return;
-    }
-
-    let history =
-        window.dismissalHistory || [];
-
-    if (history.length === 0) {
-
-        stats.innerHTML =
-            "<p>No dismissal history yet.</p>";
-
-        return;
-    }
-
-    let last =
-        history[0];
-
-    stats.innerHTML = `
-
-        <p>
-            Cars Released:
-            ${last.carsReleased}
-        </p>
-
-        <p>
-            Start:
-            ${last.startTime || "N/A"}
-        </p>
-
-        <p>
-            End:
-            ${last.endTime || "N/A"}
-        </p>
-
-        <p>
-            Duration:
-            ${formatDuration(
-                last.duration
-            )}
-        </p>
-
-        <p>
-            Cars Per Minute:
-            ${last.carsPerMinute}
-        </p>
-
-    `;
-}
-
 function formatDuration(minutes) {
 
     let totalSeconds =
@@ -1314,6 +1287,40 @@ async function updateDismissalStartTime(startTime) {
             {
                 dismissalStartTime: startTime
             }
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+async function editVehicleFirebase(
+    student,
+    newTag,
+    oldTag
+) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalQueue",
+                student.id
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                tag: newTag,
+                editedFrom: oldTag
+            }
+        );
+
+        console.log(
+            "Student edited"
         );
 
     } catch (error) {
