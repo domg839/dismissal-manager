@@ -7,11 +7,16 @@ body {
     font-family: Arial, sans-serif;
 
     margin: 0;
+
+    animation:
+        fadeIn .15s ease-in;
 }
 
 h1 {
 
-    color: #F2C94C;
+    font-family: 'Poppins', sans-serif;
+
+    color: #FFD700;
 
     text-shadow:
         2px 2px 4px rgba(0,0,0,.35);
@@ -46,7 +51,8 @@ button {
 
     transition:
         transform .15s ease,
-        box-shadow .15s ease;
+        box-shadow .15s ease,
+        background-color .15s ease;
 
     border: 1px solid
         rgba(255,255,255,.25);
@@ -86,6 +92,11 @@ button:hover {
 
     box-shadow:
         0 10px 20px rgba(0,0,0,.35);
+}
+
+button:active {
+
+    transform: scale(0.97);
 }
 
 .board-card {
@@ -283,11 +294,13 @@ input {
 
     color: black;
 
+    font-size: 22px;
+
+    font-weight: bold;
+
     padding: 10px;
 
     border-radius: 5px;
-
-    font-weight: bold;
 
     cursor: pointer;
 
@@ -304,6 +317,15 @@ input {
     justify-content: center;
 
     align-items: center;
+}
+
+@media (max-width: 600px) {
+
+    .release-cell {
+
+        font-size: 16px;
+    }
+
 }
 
 .release-cell.released {
@@ -340,9 +362,9 @@ input {
 
     display: grid;
 
-    gap: 22px;
+    gap: 6px;
 
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 
     width: max-content;
 }
@@ -806,7 +828,11 @@ h3 {
 
     .settings-row input {
 
-        width: 100%;
+        width: 250px;
+
+        max-width: 100%;
+
+        margin: 0 auto;
     }
 }
 
@@ -841,4 +867,18 @@ h3 {
 
         font-size: 20px;
     }
+}
+
+@keyframes fadeIn {
+
+    from {
+
+        opacity: 0;
+    }
+
+    to {
+
+        opacity: 1;
+    }
+
 }

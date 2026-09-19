@@ -395,8 +395,8 @@ function renderReleaseBoard() {
 
     let spotWidth =
         window.innerWidth <= 600
-            ? 50
-            : 70;
+            ? 70
+            : 90;
 
     board.style.gridTemplateColumns =
         `${spotWidth}px repeat(${maxColumns}, 140px)`;
@@ -625,8 +625,8 @@ function renderSpotManager() {
 
     let spotWidth =
     window.innerWidth <= 600
-        ? 50
-        : 70;
+        ? 70
+        : 90;
 
 board.style.gridTemplateColumns =
     `${spotWidth}px repeat(${maxColumns}, 140px)`;
