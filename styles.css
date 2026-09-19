@@ -1,0 +1,783 @@
+body {
+
+    color: white;
+
+    text-align: center;
+
+    font-family: Arial, sans-serif;
+
+    margin: 0;
+}
+
+h1 {
+
+    color: #F2C94C;
+
+    text-shadow:
+        2px 2px 4px rgba(0,0,0,.35);
+
+    font-size: 36px;
+
+    margin-bottom: 15px;
+}
+
+button {
+
+    display: block;
+
+    font-weight: 900;
+
+    width: 190px;
+
+    margin: 8px auto;
+
+    padding: 12px;
+
+    font-size: 18px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 6px 14px rgba(0,0,0,.30);
+
+    color: white;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+
+    border: 1px solid
+        rgba(255,255,255,.25);
+}
+
+.container {
+    width: 95%;
+    margin: auto;
+    padding-top: 20px;
+}
+
+.stats {
+
+    width: 350px;
+
+    margin: 15px auto;
+
+    background-color: rgba(255,255,255,.15);
+
+    padding: 10px 15px;
+
+    border-radius: 14px;
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.25);
+}
+
+a {
+    text-decoration: none;
+}
+
+button:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 20px rgba(0,0,0,.35);
+}
+
+.board-card {
+    background-color: white;
+    color: black;
+    width: 250px;
+    margin: 10px auto;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.spot-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.spot-label {
+    width: 100px;
+    background-color: gold;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.tag {
+    width: 50px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.alert {
+    background-color: #FFD700;
+}
+
+.entry-card {
+    background-color: rgba(255,255,255,.15);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.recent-card {
+
+    background-color: rgba(255,255,255,.15);
+
+    padding: 20px;
+
+    border-radius: 10px;
+
+    margin-bottom: 20px;
+
+    max-height: 300px;
+
+    overflow-y: auto;
+}
+
+input {
+    width: 250px;
+    padding: 12px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border: none;
+    font-size: 18px;
+    text-align: center;
+}
+
+.release-card {
+    background-color: rgba(255,255,255,.15);
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.release-card h2 {
+    color: #FFD700;
+    margin-bottom: 15px;
+}
+
+.release-card p {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.queue-item {
+    background-color: rgba(255,255,255,.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    min-height: 40px;
+}
+
+.queue-item span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.queue-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.queue-actions button {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    margin: 0;
+}
+
+.release-tag {
+    width: 70px;
+    background-color: white;
+    color: black;
+    padding: 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+}
+
+.release-tag:hover {
+    background-color: #FFD700;
+}
+
+.released {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#dismissalBoard {
+
+    display: grid;
+
+    gap: 15px;
+
+    width: 95vw;
+
+    margin: 10px auto;
+}
+
+.board-tile {
+
+    background-color: white;
+
+    color: black;
+
+    border-radius: 12px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    font-weight: bold;
+
+    aspect-ratio: 2 / 1;
+
+    font-size: clamp(
+        2rem,
+        4vw,
+        4.5rem
+    );
+}
+
+.spot-header {
+
+    background-color: gold;
+
+    color: black;
+
+    font-weight: bold;
+
+    padding: 10px;
+
+    border-radius: 5px;
+}
+
+.release-cell {
+
+    background-color: white;
+
+    color: black;
+
+    padding: 10px;
+
+    border-radius: 5px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    text-align: center;
+
+    white-space: nowrap;
+
+    min-width: 120px;
+
+    min-height: 42px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.release-cell.released {
+
+    background-color: #32CD32;
+
+    color: white;
+}
+
+.empty-cell {
+
+    background-color: rgba(255,255,255,.15);
+
+    border: 1px solid rgba(255,255,255,.25);
+
+    cursor: default;
+}
+
+.release-board-wrapper {
+
+    overflow-x: auto;
+
+    overflow-y: visible;
+
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding-bottom: 10px;
+}
+
+#releaseBoard,
+#spotManagerBoard {
+
+    display: grid;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+    width: max-content;
+}
+
+.spot-cell {
+
+    position: sticky;
+
+    left: 0;
+
+    z-index: 10;
+
+    background-color: #21478F;
+
+    color: white;
+
+    font-weight: 700;
+
+    font-size: 24px;
+
+    border-radius: 5px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 42px;
+
+    padding: 10px;
+
+    white-space: nowrap;
+}
+
+.home-icon {
+
+    position: fixed;
+
+    top: 15px;
+
+    left: 15px;
+
+    width: 50px;
+
+    height: 50px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    border-radius: 50%;
+
+    background-color: #4A7DFF;
+
+    color: white;
+
+    text-decoration: none;
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.25);
+
+    z-index: 999;
+
+    font-size: 22px;
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.home-icon:hover {
+
+    background-color: #2554C7;
+
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 14px rgba(0,0,0,.35);
+}
+
+.needs-student {
+
+    background-color: #FFD700;
+
+    color: black;
+}
+
+.board-alert {
+
+    background-color: #FFD700;
+
+    color: black;
+}
+
+.history-card {
+
+    background-color: white;
+
+    color: black;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    margin-bottom: 15px;
+
+    text-align: left;
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.2);
+}
+
+.history-card p {
+
+    margin: 6px 0;
+}
+
+.history-card h2 {
+
+    margin: 0;
+}
+
+.history-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin-bottom: 15px;
+}
+
+.delete-history {
+
+    width: 40px;
+
+    height: 40px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 0;
+
+    margin: 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background-color: #DC3545;
+
+    color: white;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 8px rgba(0,0,0,.25);
+}
+
+.delete-history:hover {
+
+    background-color: #C82333;
+
+    transform: translateY(-1px);
+}
+
+.delete-history i {
+
+    pointer-events: none;
+}
+
+h3 {
+
+    margin-top: -3px;
+
+    margin-bottom: 15px;
+
+    color: rgba(255,255,255,.9);
+
+    font-weight: normal;
+
+    text-shadow:
+        1px 1px 3px rgba(0,0,0,.25);
+}
+
+.helper-text {
+
+    font-size: 14px;
+
+    opacity: 0.8;
+
+    margin-top: 10px;
+}
+
+.current-stats {
+
+    text-align: left;
+
+    width: fit-content;
+
+    margin: 0 auto;
+}
+
+.current-stats p {
+
+    margin: 3px 0;
+
+    font-size: 18px;
+}
+
+.btn-car {
+
+    background-color: #6CA6FF;
+}
+
+.btn-release {
+
+    background-color: #66D8C6;
+}
+
+.btn-board {
+
+    background-color: #4A7DFF;
+}
+
+.btn-spot {
+
+    background-color: #B084FF;
+}
+
+.btn-history {
+
+    background-color: #FFD166;
+}
+
+.btn-settings {
+
+    background-color: #BFC7D5;
+}
+
+.btn-end {
+
+    background-color: #FF7B72;
+}
+
+.page-home {
+
+    background:
+        linear-gradient(
+            180deg,
+            #7B00FF,
+            #5B00D1
+        );
+
+    min-height: 100vh;
+}
+
+.page-car {
+
+    background:
+        linear-gradient(
+            180deg,
+            #5B9CFF,
+            #326BFF
+        );
+
+    min-height: 100vh;
+}
+
+.page-release {
+
+    background:
+        linear-gradient(
+            180deg,
+            #45C7B2,
+            #1E7F70
+        );
+
+    min-height: 100vh;
+}
+
+.page-board {
+
+    background:
+        linear-gradient(
+            180deg,
+            #21478F,
+            #142D60
+        );
+
+    min-height: 100vh;
+}
+
+.page-spot {
+
+    background:
+        linear-gradient(
+            180deg,
+            #9A50FF,
+            #6A00F4
+        );
+
+    min-height: 100vh;
+}
+
+.page-history {
+
+    background:
+        linear-gradient(
+            180deg,
+            #C08300,
+            #8B5E00
+        );
+
+    min-height: 100vh;
+}
+
+.page-settings {
+
+    background:
+        linear-gradient(
+            180deg,
+            #8F99A8,
+            #667085
+        );
+
+    min-height: 100vh;
+}
+
+.settings-card {
+
+    width: 600px;
+
+    max-width: 95%;
+
+    margin: 20px auto;
+
+    padding: 25px;
+
+    background-color: rgba(255,255,255,.15);
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 8px 20px rgba(0,0,0,.25);
+}
+
+.settings-row {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 18px;
+
+    gap: 40px;
+}
+
+.settings-row label {
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    text-align: left;
+
+    flex: 1;
+}
+
+.settings-row input {
+
+    width: 220px;
+
+    margin: 0;
+}
+
+.btn-save-settings {
+
+    margin-top: 20px;
+
+    background-color: #4A7DFF;
+
+    color: white;
+
+    width: 220px;
+}
+
+.edited-new {
+
+    color: #FFD700;
+
+    font-weight: bold;
+}
+
+.stats h2 {
+
+    margin: 0 0 10px 0;
+
+    color: #FFD700;
+}
+
+.board-empty {
+
+    background-color:
+        rgba(255,255,255,.05);
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    box-shadow: none;
+
+    aspect-ratio: 2 / 1;
+}
+
+.queue-actions button:first-child {
+
+    background-color: #4A7DFF;
+
+    color: white;
+}
+
+.queue-actions button:last-child {
+
+    background-color: #DC3545;
+
+    color: white;
+}

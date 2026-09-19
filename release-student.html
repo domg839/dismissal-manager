@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Release Student</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body class="page-release">
+
+    <div class="container">
+
+        <h1>Release Student</h1>
+
+        <p>Tap a tag to release a student.</p>
+
+        <div class="release-board-wrapper">
+
+<div class="release-board-wrapper">
+
+    <div id="releaseBoard"></div>
+
+</div>
+
+</div>
+
+<a href="index.html" class="home-icon">
+    <i class="fa-solid fa-house"></i>
+</a>
+
+    </div>
+
+    <script src="app.js"></script>
+
+    <script>
+
+    renderReleaseBoard();
+
+    setInterval(function () {
+
+        dismissalQueue =
+            JSON.parse(
+                localStorage.getItem("dismissalQueue")
+            ) || [];
+
+        renderReleaseBoard();
+
+    }, 1000);
+
+</script>
+
+</body>
+
+</html>

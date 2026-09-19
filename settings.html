@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+
+<body class="page-settings">
+
+<a href="index.html" class="home-icon">
+    <i class="fa-solid fa-house"></i>
+</a>
+
+    <div class="container">
+
+        <h1>Settings</h1>
+
+        <div class="settings-card">
+
+            <div class="settings-row">
+
+                <label>School Name</label>
+
+                <input
+                    type="text"
+                    id="schoolName">
+
+            </div>
+
+            <div class="settings-row">
+
+                <label>Starting Spot</label>
+
+                <input
+                    type="number"
+                    id="startSpot">
+
+            </div>
+
+            <div class="settings-row">
+
+                <label>Ending Spot</label>
+
+                <input
+                    type="number"
+                    id="endSpot">
+
+            </div>
+
+            <div class="settings-row">
+
+                <label>Cars Displayed</label>
+
+                <input
+                    type="number"
+                    id="carsDisplayed">
+
+            </div>
+
+            <button
+                class="btn-save-settings"
+                onclick="saveSettings()">
+
+                Save Settings
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+
+    <script>
+
+        loadSettings();
+
+    </script>
+
+</body>
+
+</html>

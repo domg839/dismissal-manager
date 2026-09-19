@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Car Entry</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body class="page-car">
+
+<a href="index.html" class="home-icon">
+    <i class="fa-solid fa-house"></i>
+</a>
+
+    <div class="container">
+
+        <h1>Car Entry</h1>
+
+        <div class="entry-card">
+
+            <h2>Enter Tag Number</h2>
+
+            <input
+                type="text"
+                id="tagInput"
+                placeholder="Enter Tag">
+
+            <p class="helper-text">
+                Press Enter to add vehicle
+            </p>
+
+        </div>
+
+        <div class="recent-card">
+
+            <h2>Recent Entries</h2>
+
+            <div id="recentEntries">
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="app.js"></script>
+
+    <script>
+
+        renderQueue();
+
+        document
+            .getElementById("tagInput")
+            .addEventListener(
+                "keypress",
+                function (event) {
+
+                    if (event.key === "Enter") {
+
+                        addVehicle();
+
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>
