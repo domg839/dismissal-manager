@@ -55,37 +55,56 @@ function renderQueue() {
 
     recentEntries.innerHTML = "";
 
-    for (let i = dismissalQueue.length - 1; i >= 0; i--) {
+    if (dismissalQueue.length === 0) {
+
+    recentEntries.innerHTML = `
+        <div class="empty-queue">
+            No recent entries yet.
+        </div>
+    `;
+
+    return;
+}
+
+    let tagCounts = {};
+
+    dismissalQueue.forEach(student => {
+
+        let tags =
+            student.tag.split(" ");
+
+        tags.forEach(tag => {
+
+            tagCounts[tag] =
+                (tagCounts[tag] || 0) + 1;
+
+        });
+
+    });
+
+    for (
+        let i = dismissalQueue.length - 1;
+        i >= 0;
+        i--
+    ) {
 
         let tagDisplay = "";
 
-        let duplicateCount =
-            dismissalQueue.filter(
-                item =>
-                    item.tag === dismissalQueue[i].tag
-            ).length;
-
-        if (duplicateCount > 1) {
-
-            tagDisplay =
-                `<span class="duplicate-tag">
-                    DUP ${dismissalQueue[i].tag}
-                </span>`;
-
-        } else if (
+        if (
             dismissalQueue[i].editedFrom
         ) {
 
-            tagDisplay =
-                `<span class="queue-tag">
+            tagDisplay = `
+                <span class="queue-tag">
                     ${dismissalQueue[i].editedFrom}
-                 </span>
+                </span>
 
-                 →
+                →
 
-                 <span class="queue-tag edited-new">
+                <span class="queue-tag edited-new">
                     ${dismissalQueue[i].tag}
-                 </span>`;
+                </span>
+            `;
 
         } else {
 
@@ -94,12 +113,20 @@ function renderQueue() {
                     .split(" ");
 
             tagDisplay =
-                tags.map(
-                    tag =>
-                        `<span class="queue-tag">
+                tags.map(tag => {
+
+                    let cssClass =
+                        tagCounts[tag] > 1
+                            ? "duplicate-tag"
+                            : "queue-tag";
+
+                    return `
+                        <span class="${cssClass}">
                             ${tag}
-                         </span>`
-                ).join("");
+                        </span>
+                    `;
+
+                }).join("");
 
         }
 

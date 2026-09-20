@@ -151,6 +151,8 @@ button:active {
 
     margin-bottom: 20px;
 
+    min-height: 350px;
+
     max-height: 60vh;
 
     overflow-y: auto;
@@ -337,6 +339,10 @@ input {
     .release-cell {
 
         font-size: 16px;
+
+        min-height: 280px;
+
+        max-height: 55vh;
     }
 
 }
@@ -831,13 +837,6 @@ h3 {
     width: 220px;
 }
 
-.edited-new {
-
-    color: #FFD700;
-
-    font-weight: bold;
-}
-
 .stats h2 {
 
     margin: 0 0 10px 0;
@@ -1022,9 +1021,9 @@ h3 {
 
     display: inline-block;
 
-    background-color: #F57C00;
+    background-color: white;
 
-    color: white;
+    color: black;
 
     padding: 3px 10px;
 
@@ -1033,6 +1032,10 @@ h3 {
     font-weight: bold;
 
     margin-right: 4px;
+
+    border: 2px solid #f5b400;
+
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
 }
 
 .queue-tag {
@@ -1051,6 +1054,27 @@ h3 {
 
     margin-right: 4px;
 
-    box-shadow:
-        0 2px 4px rgba(0,0,0,.15);
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+}
+
+.edited-new {
+
+    border: 2px solid #1254fc;
+
+    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+}
+
+.empty-queue {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    height: 250px;
+
+    opacity: .6;
+
+    font-style: italic;
 }
