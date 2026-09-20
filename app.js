@@ -95,8 +95,19 @@ function renderQueue() {
             student.editedFrom
         ) {
 
-            let editedClass =
-                "queue-tag edited-new";
+            let isDuplicate =
+    dismissalQueue.some(
+        item =>
+            item.id !== student.id &&
+            item.tag
+                .split(" ")
+                .includes(student.tag)
+    );
+
+let editedClass =
+    isDuplicate
+        ? "duplicate-tag edited-new"
+        : "queue-tag edited-new";
 
             if (
                 student.released
@@ -406,11 +417,35 @@ async function editVehicle(index) {
         return;
     }
 
+    newTag =
+        newTag.trim();
+
+    if (
+        dismissalQueue.some(
+            item =>
+                item.tag === newTag &&
+                item.id !== student.id
+        )
+    ) {
+
+        let proceed = confirm(
+            newTag +
+            " is already in the queue.\n\n" +
+            "Do you want to use it anyway?"
+        );
+
+        if (!proceed) {
+            return;
+        }
+
+    }
+
     await editVehicleFirebase(
         student,
-        newTag.trim(),
+        newTag,
         oldTag
     );
+
 }
 
 function toggleRelease(tag) {
