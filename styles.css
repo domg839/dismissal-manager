@@ -21,7 +21,7 @@ h1 {
     text-shadow:
         2px 2px 4px rgba(0,0,0,.35);
 
-    font-size: 36px;
+    font-size: 30px;
 
     margin-bottom: 15px;
 }
@@ -141,16 +141,17 @@ button:active {
 
 .entry-card {
     background-color: rgba(255,255,255,.15);
-    padding: 20px;
+    padding: 5px;
     border-radius: 10px;
     margin-bottom: 20px;
+    min-height: auto;
 }
 
 .recent-card {
 
     background-color: rgba(255,255,255,.15);
 
-    padding: 20px;
+    padding: 5px;
 
     border-radius: 10px;
 
@@ -163,11 +164,12 @@ button:active {
 
 input {
     width: 250px;
-    padding: 12px;
+    padding: 18px;
     margin: 15px 0;
-    border-radius: 8px;
+    border-radius: 12px;
     border: none;
-    font-size: 18px;
+    font-size: 28px;
+    font-weight: bold;
     text-align: center;
 }
 
@@ -566,7 +568,9 @@ h3 {
 
     opacity: 0.8;
 
-    margin-top: 10px;
+    margin-top: -7px;
+
+    margin-bottom: 0;
 }
 
 .current-stats {
@@ -880,4 +884,37 @@ h3 {
         opacity: 1;
     }
 
+}
+
+@media (max-width: 600px) {
+
+    input {
+
+        width: 280px;
+
+        font-size: 28px;
+
+        font-weight: bold;
+
+        padding: 14px;
+    }
+
+}
+
+.entry-card h2,
+.recent-card h2 {
+
+    margin-top: 0;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.helper-text {
+
+    margin-bottom: 0;
+}
+
+.entry-card h2 {
+
+    margin-bottom: -10px;
 }
