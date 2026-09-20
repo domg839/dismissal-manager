@@ -96,7 +96,9 @@ button:hover {
 
 button:active {
 
-    transform: scale(0.97);
+    transform:
+        translateY(2px)
+        scale(0.97);
 }
 
 .board-card {
@@ -145,17 +147,15 @@ button:active {
 
     padding: 0 20px 20px 20px;
 
-    overflow-y: auto;
-
-    position: relative;
-
     border-radius: 10px;
 
     margin-bottom: 20px;
 
-    max-height: 300px;
+    max-height: 60vh;
 
     overflow-y: auto;
+
+    position: relative;
 }
 
 input {
@@ -211,6 +211,9 @@ input {
 }
 
 .queue-actions button {
+    transition: 
+      transform .1s ease, 
+      box-shadow .1s ease;
     width: 32px;
     height: 32px;
     padding: 0;
@@ -288,6 +291,11 @@ input {
 
 .release-cell {
 
+    transition:
+        transform .1s ease,
+        box-shadow .1s ease,
+        background-color .15s ease;
+
     background-color: white;
 
     color: black;
@@ -317,6 +325,13 @@ input {
     align-items: center;
 }
 
+.release-cell:active {
+
+    transform:
+        translateY(2px)
+        scale(0.97);
+}
+
 @media (max-width: 600px) {
 
     .release-cell {
@@ -328,16 +343,18 @@ input {
 
 .release-cell.released {
 
-    background-color: #32CD32;
+    background-color: #4CAF50;
 
     color: white;
 }
 
 .empty-cell {
 
-    background-color: rgba(255,255,255,.15);
+    background-color:
+        rgba(255,255,255,.03);
 
-    border: 1px solid rgba(255,255,255,.25);
+    border:
+        1px solid rgba(255,255,255,.05);
 
     cursor: default;
 }
@@ -432,8 +449,15 @@ input {
     font-size: 22px;
 
     transition:
-        transform .15s ease,
-        box-shadow .15s ease;
+        transform .1s ease,
+        box-shadow .15s ease,
+        background-color .15s ease;
+}
+
+.home-icon:active {
+    transform:
+        translateY(3px)
+        scale(0.90);
 }
 
 .home-icon:hover {
@@ -505,6 +529,11 @@ input {
 
 .delete-history {
 
+    transition:
+        transform .1s ease,
+        box-shadow .1s ease,
+        background-color .15s ease;
+
     width: 40px;
 
     height: 40px;
@@ -531,6 +560,13 @@ input {
 
     box-shadow:
         0 3px 8px rgba(0,0,0,.25);
+}
+
+.delete-history:active {
+
+    transform:
+        translateY(2px)
+        scale(0.95);
 }
 
 .delete-history:hover {
@@ -566,7 +602,7 @@ h3 {
 
     margin-top: -7px;
 
-    margin-bottom: 0;
+    margin-bottom: 15;
 }
 
 .current-stats {
@@ -581,6 +617,8 @@ h3 {
 .current-stats p {
 
     margin: 3px 0;
+
+    font-weight: 400;
 
     font-size: 18px;
 }
@@ -649,8 +687,8 @@ h3 {
     background:
         linear-gradient(
             180deg,
-            #45C7B2,
-            #1E7F70
+            #244B74,
+            #102A43
         );
 
     min-height: 100vh;
@@ -807,6 +845,13 @@ h3 {
     color: white;
 }
 
+.queue-actions button:active {
+
+    transform:
+        translateY(2px)
+        scale(0.95);
+}
+
 @media (max-width: 600px) {
 
     .settings-row {
@@ -886,7 +931,9 @@ h3 {
 
     input {
 
-        width: 280px;
+        width: 100%;
+
+        max-width: 280px;
 
         font-size: 28px;
 
@@ -903,16 +950,6 @@ h3 {
     margin-top: 0;
     font-size: 18px;
     margin-bottom: 10px;
-}
-
-.helper-text {
-
-    margin-bottom: 0;
-}
-
-.entry-card h2 {
-
-    margin-bottom: -10px;
 }
 
 .recent-card h2 {
@@ -932,16 +969,6 @@ h3 {
     border-top-left-radius: 10px;
 
     border-top-right-radius: 10px;
-}
-
-
-
-.entry-card {
-    background-color: rgba(255,255,255,.15);
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    min-height: auto;
 }
 
 .queue-position {

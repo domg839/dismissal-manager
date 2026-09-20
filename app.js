@@ -160,11 +160,22 @@ function addVehicle() {
         studentRecord
     );
 
-addVehicleToFirebase(
-    studentRecord
-);
+    addVehicleToFirebase(
+        studentRecord
+    );
 
-renderQueue();
+    renderQueue();
+
+    let recentCard =
+        document.querySelector(
+            ".recent-card"
+        );
+
+    if (recentCard) {
+
+        recentCard.scrollTop = 0;
+
+    }
 
     tagInput.value = "";
 
@@ -251,11 +262,6 @@ function toggleRelease(tag) {
 }
 
 function renderDismissalBoard() {
-
-    console.log(
-    "CARS_DISPLAYED:",
-    CARS_DISPLAYED
-);
 
     let board =
         document.getElementById("dismissalBoard");
