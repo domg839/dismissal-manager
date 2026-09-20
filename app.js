@@ -8,6 +8,8 @@ let CARS_DISPLAYED = 25;
 
 let dismissalStartTime = null;
 
+let endingDismissal = false;
+
 let SCHOOL_NAME = "School";
 
 async function loadSettingsFromFirebase() {
@@ -841,6 +843,8 @@ async function endDismissal() {
         return;
     }
 
+    endingDismissal = true;
+
     const currentQueue =
         await getCurrentQueueFromFirestore();
 
@@ -903,9 +907,15 @@ await updateDismissalStartTime(
 
 dismissalStartTime = null;
 
-    alert(
-        "Dismissal ended and saved to history."
-    );
+dismissalQueue = [];
+
+renderCurrentDismissal();
+
+alert(
+    "Dismissal ended and saved to history."
+);
+    
+endingDismissal = false;
 
     location.reload();
 }
@@ -1101,6 +1111,10 @@ function renderSchoolName() {
 }
 
 function renderCurrentDismissal() {
+
+    if (endingDismissal) {
+    return;
+}
 
     let stats =
         document.getElementById(

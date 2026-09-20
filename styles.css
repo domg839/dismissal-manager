@@ -145,7 +145,7 @@ button:active {
 
     background-color: rgba(255,255,255,.15);
 
-    padding: 0 20px 20px 20px;
+    padding: 0px 20px 20px 20px;
 
     border-radius: 10px;
 
@@ -340,9 +340,9 @@ input {
 
         font-size: 16px;
 
-        min-height: 280px;
+        min-height: 28px;
 
-        max-height: 55vh;
+        padding: 4px;
     }
 
 }
@@ -776,7 +776,9 @@ h3 {
 
     width: 100%;
 
-    max-width: 700px;
+    height: auto;
+
+    max-width: 650px;
 
     margin: 20px auto;
 
@@ -807,11 +809,11 @@ h3 {
 
 .settings-row label {
 
-    width: 220px;
+    width: 260px;
 
     text-align: left;
 
-    font-size: 18px;
+    font-size: 24px;
 
     font-weight: bold;
 
@@ -821,7 +823,11 @@ h3 {
 
 .settings-row input {
 
-    width: 220px;
+    width: 290px;
+
+    font-size: 18px;
+
+    padding: 10px;
 
     margin: 0;
 }
@@ -986,11 +992,13 @@ h3 {
 
     position: sticky;
 
-    top: 0px;
+    top: 0;
 
     z-index: 20;
 
     margin: 0 -20px;
+
+    margin-bottom: 5px;
 
     padding: 12px 0;
 
@@ -1010,11 +1018,6 @@ h3 {
     font-weight: bold;
 
     opacity: .6;
-}
-
-#schoolName {
-
-    width: 320px;
 }
 
 .duplicate-tag {
