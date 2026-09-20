@@ -178,25 +178,43 @@ for (
         i--
     ) {
 
-        let tagDisplay = "";
+if (
+    dismissalQueue[i].editedFrom
+) {
 
-        if (
-            dismissalQueue[i].editedFrom
-        ) {
+    let editedClass =
+        "queue-tag edited-new";
 
-            tagDisplay = `
-                <span class="queue-tag">
-                    ${dismissalQueue[i].editedFrom}
-                </span>
+    if (
+        dismissalQueue[i].released
+    ) {
 
-                →
+        editedClass +=
+            " released-tag";
 
-                <span class="queue-tag edited-new">
-                    ${dismissalQueue[i].tag}
-                </span>
-            `;
+    }
+    else if (
+        dismissalQueue[i].needsStudent
+    ) {
 
-        } else {
+        editedClass +=
+            " alert-tag";
+
+    }
+
+    tagDisplay = `
+        <span class="queue-tag">
+            ${dismissalQueue[i].editedFrom}
+        </span>
+
+        →
+
+        <span class="${editedClass}">
+            ${dismissalQueue[i].tag}
+        </span>
+    `;
+
+} else {
 
             let tags =
                 dismissalQueue[i].tag
@@ -205,10 +223,23 @@ for (
             tagDisplay =
                 tags.map(tag => {
 
-                    let cssClass =
-                        tagCounts[tag] > 1
-                            ? "duplicate-tag"
-                            : "queue-tag";
+                    let cssClass = "queue-tag";
+
+if (dismissalQueue[i].released) {
+
+    cssClass = "queue-tag released-tag";
+
+}
+else if (dismissalQueue[i].needsStudent) {
+
+    cssClass = "queue-tag alert-tag";
+
+}
+else if (tagCounts[tag] > 1) {
+
+    cssClass = "duplicate-tag";
+
+}
 
                     return `
                         <span class="${cssClass}">
@@ -368,11 +399,27 @@ async function deleteVehicle(index) {
     let student =
         dismissalQueue[index];
 
-    let proceed = confirm(
-        "Remove tag " +
-        student.tag +
-        "?"
-    );
+    let proceed;
+
+    if (student.released) {
+
+        proceed = confirm(
+            "Tag " +
+            student.tag +
+            " has already been released.\n\n" +
+            "Released tags should normally remain in the queue.\n\n" +
+            "Delete anyway?"
+        );
+
+    } else {
+
+        proceed = confirm(
+            "Remove tag " +
+            student.tag +
+            "?"
+        );
+
+    }
 
     if (!proceed) {
         return;
@@ -381,6 +428,7 @@ async function deleteVehicle(index) {
     await deleteVehicleFirebase(
         student
     );
+
 }
 
 async function editVehicle(index) {
@@ -623,7 +671,7 @@ let spotStudents =
                 board.innerHTML += `
                     <div
                         class="release-cell ${statusClass}"
-                        onclick="releaseStudent('${spotStudents[col].tag}')">
+                        onclick="releaseStudent('${spotStudents[col].id}')">
 
                         ${spotStudents[col].needsStudent ? "⚠ " : ""}
                         ${spotStudents[col].tag}
@@ -641,12 +689,12 @@ let spotStudents =
     }
 }
 
-function releaseStudent(tagNumber) {
+function releaseStudent(studentId) {
 
-    let student =
-        dismissalQueue.find(
-            item => item.tag === tagNumber
-        );
+let student =
+    dismissalQueue.find(
+        item => item.id === studentId
+    );
 
     if (!student) {
         return;
@@ -865,7 +913,7 @@ let spotStudents =
                 board.innerHTML += `
                     <div
                         class="release-cell ${statusClass}"
-                        onclick="requestStudent('${spotStudents[col].tag}')">
+                        onclick="requestStudent('${spotStudents[col].id}')">
 
                         ${spotStudents[col].needsStudent ? "⚠ " : ""}
 
@@ -884,12 +932,12 @@ let spotStudents =
     }
 }
 
-async function requestStudent(tagNumber) {
+async function requestStudent(studentId) {
 
-    let student =
-        dismissalQueue.find(
-            item => item.tag === tagNumber
-        );
+let student =
+    dismissalQueue.find(
+        item => item.id === studentId
+    );
 
     if (!student) {
         return;
@@ -904,14 +952,14 @@ async function requestStudent(tagNumber) {
         return;
     }
 
-    let message =
-        student.needsStudent
-            ? "Remove student needed alert for tag " +
-              tagNumber +
-              "?"
-            : "Send student needed alert for tag " +
-              tagNumber +
-              "?";
+let message =
+    student.needsStudent
+        ? "Remove student needed alert for tag " +
+          student.tag +
+          "?"
+        : "Send student needed alert for tag " +
+          student.tag +
+          "?";
 
     let confirmed =
         confirm(message);

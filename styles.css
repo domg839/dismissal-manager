@@ -1069,11 +1069,14 @@ h3 {
     box-shadow: 0 2px 4px rgba(0,0,0,.15);
 }
 
-.edited-new {
+.released-tag {
+    background-color: #4CAF50;
+    color: white;
+}
 
-    border: 2px solid #1254fc;
-
-    box-shadow: 0 2px 4px rgba(0,0,0,.15);
+.alert-tag {
+    background-color: #FFD700;
+    color: black;
 }
 
 .empty-queue {
