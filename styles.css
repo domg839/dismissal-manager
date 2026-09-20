@@ -145,6 +145,10 @@ button:active {
 
     padding: 0 20px 20px 20px;
 
+    overflow-y: auto;
+
+    position: relative;
+
     border-radius: 10px;
 
     margin-bottom: 20px;
@@ -915,15 +919,15 @@ h3 {
 
     position: sticky;
 
-    top: -5px;
-
-    background-color: rgb(120,165,245);
+    top: 0px;
 
     z-index: 20;
 
     margin: 0 -20px;
 
-    padding: 10px 0;
+    padding: 12px 0;
+
+    background-color: rgb(120,165,245);
 
     border-top-left-radius: 10px;
 
