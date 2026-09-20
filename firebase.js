@@ -85,19 +85,23 @@ window.loadQueueFromFirestore =
 
 function watchDismissalQueue(callback) {
 
-    return onSnapshot(
+return onSnapshot(
 
-        query(
-            collection(
-                db,
-                "dismissalQueue"
-            ),
-            orderBy(
-                "queuePosition"
-            )
+    query(
+        collection(
+            db,
+            "dismissalQueue"
         ),
+        orderBy(
+            "queuePosition"
+        )
+    ),
 
-        (snapshot) => {
+    {
+        includeMetadataChanges: true
+    },
+
+    (snapshot) => {
 
             let records = [];
 
@@ -105,6 +109,7 @@ function watchDismissalQueue(callback) {
 
                 records.push({
                     id: doc.id,
+                    pending: doc.metadata.hasPendingWrites,
                     ...doc.data()
                 });
 
@@ -115,11 +120,19 @@ function watchDismissalQueue(callback) {
                 records
             );
 
+            console.log(
+                records.map(record => ({
+                    tag: record.tag,
+                    pending: record.pending
+                }))
+            );
+
             callback(records);
 
         }
 
     );
+
 }
 
 window.watchDismissalQueue =

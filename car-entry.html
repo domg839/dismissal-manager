@@ -58,54 +58,18 @@
 
         await loadSettingsFromFirebase();
 
-window.watchDismissalQueue(
+        window.watchDismissalQueue(
 
-    (records) => {
+            (records) => {
 
-        console.log(
-            "ONLINE:",
-            navigator.onLine
-        );
-
-        console.log(
-            "PENDING:",
-            pendingEntries
-        );
-
-        console.log(
-            "RECORDS:",
-            records
-        );
-
-        dismissalQueue =
-            records;
-
-        if (navigator.onLine) {
-
-            setTimeout(() => {
-
-                pendingEntries =
-                    pendingEntries.filter(
-                        pending =>
-                            !records.some(
-                                record =>
-                                    record.tag === pending.tag
-                            )
-                    );
+                dismissalQueue =
+                    records;
 
                 renderQueue();
 
-            }, 500);
+            }
 
-        } else {
-
-            renderQueue();
-
-        }
-
-    }
-
-);
+        );
 
     });
 
@@ -123,17 +87,18 @@ window.watchDismissalQueue(
 
             }
         );
-window.addEventListener(
-    "online",
-    updateConnectionStatus
-);
 
-window.addEventListener(
-    "offline",
-    updateConnectionStatus
-);
+    window.addEventListener(
+        "online",
+        updateConnectionStatus
+    );
 
-updateConnectionStatus();
+    window.addEventListener(
+        "offline",
+        updateConnectionStatus
+    );
+
+    updateConnectionStatus();
 
 </script>
 

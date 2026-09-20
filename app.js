@@ -1,17 +1,9 @@
 let dismissalQueue = [];
 
-let pendingEntries = [];
-
-let failedEntries = [];
-
 let START_SPOT = 3;
-
 let END_SPOT = 10;
-
 let CARS_DISPLAYED = 25;
-
 let dismissalStartTime = null;
-
 let SCHOOL_NAME = "School";
 
 async function loadSettingsFromFirebase() {
@@ -59,102 +51,18 @@ function renderQueue() {
 
     recentEntries.innerHTML = "";
 
-    for (
-    let i = pendingEntries.length - 1;
-    i >= 0;
-    i--
-) {
-
-    recentEntries.innerHTML += `
-        <div class="queue-item">
-
-            <span>
-
-                <span class="queue-position">
-                    ${pendingEntries[i].queuePosition}
-                </span>
-
-                <span class="queue-status status-saving">
-                    <i class="fa-solid fa-arrows-rotate"></i>
-                </span>
-
-                <span class="queue-tag pending-tag">
-    ${pendingEntries[i].tag}
-</span>
-
-            </span>
-
-            <div class="queue-actions">
-
-    <button disabled>
-        <i class="fa-solid fa-pen"></i>
-    </button>
-
-    <button disabled>
-        <i class="fa-solid fa-trash"></i>
-    </button>
-
-</div>
-
-        </div>
-    `;
-}
-
-for (
-    let i = failedEntries.length - 1;
-    i >= 0;
-    i--
-) {
-
-    recentEntries.innerHTML += `
-        <div class="queue-item">
-
-            <span>
-
-                <span class="queue-position">
-                    ${failedEntries[i].queuePosition}
-                </span>
-
-                <span class="queue-status status-failed">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </span>
-
-                <span class="queue-tag pending-tag">
-                    ${failedEntries[i].tag}
-                </span>
-
-            </span>
-
-            <div class="queue-actions">
-
-                <button disabled>
-                    <i class="fa-solid fa-pen"></i>
-                </button>
-
-                <button disabled>
-                    <i class="fa-solid fa-trash"></i>
-                </button>
-
-            </div>
-
-        </div>
-    `;
-}
-
     if (
-    dismissalQueue.length === 0 &&
-    pendingEntries.length === 0 &&
-    failedEntries.length === 0
-) {
+        dismissalQueue.length === 0
+    ) {
 
-    recentEntries.innerHTML = `
-        <div class="empty-queue">
-            No recent entries yet.
-        </div>
-    `;
+        recentEntries.innerHTML = `
+            <div class="empty-queue">
+                No recent entries yet.
+            </div>
+        `;
 
-    return;
-}
+        return;
+    }
 
     let tagCounts = {};
 
@@ -178,68 +86,100 @@ for (
         i--
     ) {
 
-if (
-    dismissalQueue[i].editedFrom
-) {
+        let student =
+            dismissalQueue[i];
 
-    let editedClass =
-        "queue-tag edited-new";
+        let tagDisplay = "";
 
-    if (
-        dismissalQueue[i].released
-    ) {
+        if (
+            student.editedFrom
+        ) {
 
-        editedClass +=
-            " released-tag";
+            let editedClass =
+                "queue-tag edited-new";
 
-    }
-    else if (
-        dismissalQueue[i].needsStudent
-    ) {
+            if (
+                student.released
+            ) {
 
-        editedClass +=
-            " alert-tag";
+                editedClass +=
+                    " released-tag";
 
-    }
+            }
+            else if (
+                student.needsStudent
+            ) {
 
-    tagDisplay = `
-        <span class="queue-tag">
-            ${dismissalQueue[i].editedFrom}
-        </span>
+                editedClass +=
+                    " alert-tag";
 
-        →
+            }
 
-        <span class="${editedClass}">
-            ${dismissalQueue[i].tag}
-        </span>
-    `;
+            if (
+                student.pending
+            ) {
 
-} else {
+                editedClass +=
+                    " pending-tag";
+
+            }
+
+            tagDisplay = `
+                <span class="queue-tag">
+                    ${student.editedFrom}
+                </span>
+
+                →
+
+                <span class="${editedClass}">
+                    ${student.tag}
+                </span>
+            `;
+
+        }
+        else {
 
             let tags =
-                dismissalQueue[i].tag
-                    .split(" ");
+                student.tag.split(" ");
 
             tagDisplay =
                 tags.map(tag => {
 
-                    let cssClass = "queue-tag";
+                    let cssClass =
+                        student.pending
+                            ? "queue-tag pending-tag"
+                            : "queue-tag";
 
-if (dismissalQueue[i].released) {
+                    if (
+                        student.released
+                    ) {
 
-    cssClass = "queue-tag released-tag";
+                        cssClass =
+                            student.pending
+                                ? "queue-tag released-tag pending-tag"
+                                : "queue-tag released-tag";
 
-}
-else if (dismissalQueue[i].needsStudent) {
+                    }
+                    else if (
+                        student.needsStudent
+                    ) {
 
-    cssClass = "queue-tag alert-tag";
+                        cssClass =
+                            student.pending
+                                ? "queue-tag alert-tag pending-tag"
+                                : "queue-tag alert-tag";
 
-}
-else if (tagCounts[tag] > 1) {
+                    }
+                    else if (
+                        tagCounts[tag] > 1
+                    ) {
 
-    cssClass = "duplicate-tag";
+                        cssClass =
+                            student.pending
+                                ? "duplicate-tag pending-tag"
+                                : "duplicate-tag";
 
-}
+                    }
 
                     return `
                         <span class="${cssClass}">
@@ -256,33 +196,53 @@ else if (tagCounts[tag] > 1) {
 
                 <span>
 
-<span class="queue-position">
-    ${i + 1}
-</span>
+                    <span class="queue-position">
+                        ${student.queuePosition}
+                    </span>
 
-<span class="queue-status status-saved">
-    <i class="fa-solid fa-check"></i>
-</span>
+                    <span class="queue-status ${
+                        student.pending
+                            ? "status-saving"
+                            : "status-saved"
+                    }">
 
-${tagDisplay}
+                        <i class="fa-solid ${
+                            student.pending
+                                ? "fa-arrows-rotate"
+                                : "fa-check"
+                        }"></i>
+
+                    </span>
+
+                    ${tagDisplay}
 
                 </span>
 
                 <div class="queue-actions">
 
-                    <button onclick="editVehicle(${i})">
+                    <button
+                        ${student.pending ? "disabled" : ""}
+                        onclick="editVehicle(${i})">
+
                         <i class="fa-solid fa-pen"></i>
+
                     </button>
 
-                    <button onclick="deleteVehicle(${i})">
+                    <button
+                        ${student.pending ? "disabled" : ""}
+                        onclick="deleteVehicle(${i})">
+
                         <i class="fa-solid fa-trash"></i>
+
                     </button>
 
                 </div>
 
             </div>
         `;
+
     }
+
 }
 
 function addVehicle() {
@@ -340,12 +300,6 @@ function addVehicle() {
         needsStudent: false,
         syncStatus: "saving"
     };
-
-    pendingEntries.push({
-    id: crypto.randomUUID(),
-    tag: tagNumber,
-    queuePosition: studentRecord.queuePosition
-});
 
     addVehicleToFirebase(
         studentRecord
@@ -1405,22 +1359,9 @@ async function addVehicleToFirebase(student) {
 
     } catch (error) {
 
-    console.error(error);
+        console.error(error);
 
-    failedEntries.push({
-        tag: student.tag,
-        queuePosition: student.queuePosition
-    });
-
-    pendingEntries =
-        pendingEntries.filter(
-            item =>
-                item.tag !== student.tag
-        );
-
-    renderQueue();
-
-}
+    }
 
 }
 
