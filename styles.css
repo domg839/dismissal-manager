@@ -884,6 +884,15 @@ h3 {
         scale(0.95);
 }
 
+.queue-actions button:disabled {
+    opacity: .4;
+    cursor: default;
+}
+
+.pending-tag {
+    opacity: .4;
+}
+
 @media (max-width: 600px) {
 
     .settings-row {
@@ -1080,4 +1089,60 @@ h3 {
     opacity: .6;
 
     font-style: italic;
+}
+
+.queue-status {
+    display: inline-flex;
+    width: 24px;
+    justify-content: center;
+    align-items: center;
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.status-saving {
+    color: #FFD700;
+}
+
+.status-saving i {
+    animation: spin .8s linear infinite;
+    display: inline-block;
+}
+
+.status-saved {
+    color: #4CAF50;
+}
+
+.status-failed {
+    color: #FF4D4D;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.connection-status {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    opacity: .65;
+
+    z-index: 900;
+}
+
+.connection-online {
+    color: #7dff7d;
+}
+
+.connection-offline {
+    color: #ff7b7b;
 }

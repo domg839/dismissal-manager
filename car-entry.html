@@ -36,6 +36,8 @@
     Press Enter to add vehicle
 </p>
 
+<div id="connectionStatus" class="connection-status"></div>
+
         <div class="recent-card">
 
             <h2>Recent Entries</h2>
@@ -56,18 +58,31 @@
 
         await loadSettingsFromFirebase();
 
-        window.watchDismissalQueue(
+window.watchDismissalQueue(
 
-            (records) => {
+    (records) => {
 
-                dismissalQueue =
-                    records;
+        dismissalQueue =
+            records;
 
-                renderQueue();
+setTimeout(() => {
 
-            }
-
+    pendingEntries =
+        pendingEntries.filter(
+            pending =>
+                !records.some(
+                    record =>
+                        record.tag === pending.tag
+                )
         );
+
+    renderQueue();
+
+}, 500);
+
+    }
+
+);
 
     });
 
@@ -85,6 +100,17 @@
 
             }
         );
+window.addEventListener(
+    "online",
+    updateConnectionStatus
+);
+
+window.addEventListener(
+    "offline",
+    updateConnectionStatus
+);
+
+updateConnectionStatus();
 
 </script>
 

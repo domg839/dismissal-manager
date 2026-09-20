@@ -1,5 +1,9 @@
 let dismissalQueue = [];
 
+let pendingEntries = [];
+
+let failedEntries = [];
+
 let START_SPOT = 3;
 
 let END_SPOT = 10;
@@ -7,8 +11,6 @@ let END_SPOT = 10;
 let CARS_DISPLAYED = 25;
 
 let dismissalStartTime = null;
-
-let endingDismissal = false;
 
 let SCHOOL_NAME = "School";
 
@@ -57,7 +59,93 @@ function renderQueue() {
 
     recentEntries.innerHTML = "";
 
-    if (dismissalQueue.length === 0) {
+    for (
+    let i = pendingEntries.length - 1;
+    i >= 0;
+    i--
+) {
+
+    recentEntries.innerHTML += `
+        <div class="queue-item">
+
+            <span>
+
+                <span class="queue-position">
+                    ${pendingEntries[i].queuePosition}
+                </span>
+
+                <span class="queue-status status-saving">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                </span>
+
+                <span class="queue-tag pending-tag">
+    ${pendingEntries[i].tag}
+</span>
+
+            </span>
+
+            <div class="queue-actions">
+
+    <button disabled>
+        <i class="fa-solid fa-pen"></i>
+    </button>
+
+    <button disabled>
+        <i class="fa-solid fa-trash"></i>
+    </button>
+
+</div>
+
+        </div>
+    `;
+}
+
+for (
+    let i = failedEntries.length - 1;
+    i >= 0;
+    i--
+) {
+
+    recentEntries.innerHTML += `
+        <div class="queue-item">
+
+            <span>
+
+                <span class="queue-position">
+                    ${failedEntries[i].queuePosition}
+                </span>
+
+                <span class="queue-status status-failed">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </span>
+
+                <span class="queue-tag pending-tag">
+                    ${failedEntries[i].tag}
+                </span>
+
+            </span>
+
+            <div class="queue-actions">
+
+                <button disabled>
+                    <i class="fa-solid fa-pen"></i>
+                </button>
+
+                <button disabled>
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+
+            </div>
+
+        </div>
+    `;
+}
+
+    if (
+    dismissalQueue.length === 0 &&
+    pendingEntries.length === 0 &&
+    failedEntries.length === 0
+) {
 
     recentEntries.innerHTML = `
         <div class="empty-queue">
@@ -137,11 +225,15 @@ function renderQueue() {
 
                 <span>
 
-                    <span class="queue-position">
-                        ${i + 1}
-                    </span>
+<span class="queue-position">
+    ${i + 1}
+</span>
 
-                    ${tagDisplay}
+<span class="queue-status status-saved">
+    <i class="fa-solid fa-check"></i>
+</span>
+
+${tagDisplay}
 
                 </span>
 
@@ -201,29 +293,28 @@ function addVehicle() {
         START_SPOT +
         (dismissalQueue.length % spotCount);
 
-    const studentRecord = {
+const studentRecord = {
+    tag: tagNumber,
+    queuePosition:
+    dismissalQueue.length +
+    pendingEntries.length +
+    1,
+    spot: assignedSpot,
+    released: false,
+    needsStudent: false,
+    syncStatus: "saving"
+};
 
-        tag: tagNumber,
+pendingEntries.push({
+    tag: tagNumber,
+    queuePosition: studentRecord.queuePosition
+});
 
-        queuePosition:
-            dismissalQueue.length + 1,
+addVehicleToFirebase(
+    studentRecord
+);
 
-        spot: assignedSpot,
-
-        released: false,
-
-        needsStudent: false
-    };
-
-    dismissalQueue.push(
-        studentRecord
-    );
-
-    addVehicleToFirebase(
-        studentRecord
-    );
-
-    renderQueue();
+renderQueue();
 
     let recentCard =
         document.querySelector(
@@ -843,8 +934,6 @@ async function endDismissal() {
         return;
     }
 
-    endingDismissal = true;
-
     const currentQueue =
         await getCurrentQueueFromFirestore();
 
@@ -907,15 +996,9 @@ await updateDismissalStartTime(
 
 dismissalStartTime = null;
 
-dismissalQueue = [];
-
-renderCurrentDismissal();
-
-alert(
-    "Dismissal ended and saved to history."
-);
-    
-endingDismissal = false;
+    alert(
+        "Dismissal ended and saved to history."
+    );
 
     location.reload();
 }
@@ -1112,10 +1195,6 @@ function renderSchoolName() {
 
 function renderCurrentDismissal() {
 
-    if (endingDismissal) {
-    return;
-}
-
     let stats =
         document.getElementById(
             "currentDismissalStats"
@@ -1244,9 +1323,23 @@ async function addVehicleToFirebase(student) {
 
     } catch (error) {
 
-        console.error(error);
+    console.error(error);
 
-    }
+    failedEntries.push({
+        tag: student.tag,
+        queuePosition: student.queuePosition
+    });
+
+    pendingEntries =
+        pendingEntries.filter(
+            item =>
+                item.tag !== student.tag
+        );
+
+    renderQueue();
+
+}
+
 }
 
 async function releaseStudentFirebase(student) {
@@ -1444,5 +1537,40 @@ async function editVehicleFirebase(
 
         console.error(error);
 
+    }
+}
+
+function updateConnectionStatus() {
+    let status =
+        document.getElementById(
+            "connectionStatus"
+        );
+
+    if (!status) {
+        return;
+    }
+
+    if (navigator.onLine) {
+        status.innerHTML =
+            "● Connected";
+
+        status.classList.remove(
+            "connection-offline"
+        );
+
+        status.classList.add(
+            "connection-online"
+        );
+    } else {
+        status.innerHTML =
+            "● Offline";
+
+        status.classList.remove(
+            "connection-online"
+        );
+
+        status.classList.add(
+            "connection-offline"
+        );
     }
 }
