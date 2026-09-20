@@ -342,9 +342,10 @@ function addVehicle() {
     };
 
     pendingEntries.push({
-        tag: tagNumber,
-        queuePosition: studentRecord.queuePosition
-    });
+    id: crypto.randomUUID(),
+    tag: tagNumber,
+    queuePosition: studentRecord.queuePosition
+});
 
     addVehicleToFirebase(
         studentRecord
