@@ -139,19 +139,11 @@ button:active {
     background-color: #FFD700;
 }
 
-.entry-card {
-    background-color: rgba(255,255,255,.15);
-    padding: 5px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    min-height: auto;
-}
-
 .recent-card {
 
     background-color: rgba(255,255,255,.15);
 
-    padding: 5px;
+    padding: 0 20px 20px 20px;
 
     border-radius: 10px;
 
@@ -905,7 +897,7 @@ h3 {
 .recent-card h2 {
 
     margin-top: 0;
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 10px;
 }
 
@@ -917,4 +909,44 @@ h3 {
 .entry-card h2 {
 
     margin-bottom: -10px;
+}
+
+.recent-card h2 {
+
+    position: sticky;
+
+    top: -5px;
+
+    background-color: rgb(120,165,245);
+
+    z-index: 20;
+
+    margin: 0 -20px;
+
+    padding: 10px 0;
+
+    border-top-left-radius: 10px;
+
+    border-top-right-radius: 10px;
+}
+
+
+
+.entry-card {
+    background-color: rgba(255,255,255,.15);
+    padding: 5px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    min-height: auto;
+}
+
+.queue-position {
+
+    display: inline-block;
+
+    width: 35px;
+
+    font-weight: bold;
+
+    opacity: .6;
 }

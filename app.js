@@ -68,29 +68,33 @@ function renderQueue() {
 
                 <span>
 
+                    <span class="queue-position">
+                        ${i + 1}
+                    </span>
+
                     ${
-    dismissalQueue[i].editedFrom
+                        dismissalQueue[i].editedFrom
 
-    ? `${dismissalQueue[i].editedFrom}
-       →
-       <span class="edited-new">
-            ${dismissalQueue[i].tag}
-       </span>`
+                        ? `${dismissalQueue[i].editedFrom}
+                           →
+                           <span class="edited-new">
+                                ${dismissalQueue[i].tag}
+                           </span>`
 
-    : dismissalQueue[i].tag
-}
+                        : dismissalQueue[i].tag
+                    }
 
                 </span>
 
                 <div class="queue-actions">
 
-<button onclick="editVehicle(${i})">
-    <i class="fa-solid fa-pen"></i>
-</button>
+                    <button onclick="editVehicle(${i})">
+                        <i class="fa-solid fa-pen"></i>
+                    </button>
 
-<button onclick="deleteVehicle(${i})">
-    <i class="fa-solid fa-trash"></i>
-</button>
+                    <button onclick="deleteVehicle(${i})">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
 
                 </div>
 
