@@ -293,28 +293,33 @@ function addVehicle() {
         START_SPOT +
         (dismissalQueue.length % spotCount);
 
-const studentRecord = {
-    tag: tagNumber,
-    queuePosition:
-    dismissalQueue.length +
-    pendingEntries.length +
-    1,
-    spot: assignedSpot,
-    released: false,
-    needsStudent: false,
-    syncStatus: "saving"
-};
+    const nextQueuePosition =
+        Math.max(
+            ...dismissalQueue.map(
+                item => item.queuePosition || 0
+            ),
+            0
+        ) + 1;
 
-pendingEntries.push({
-    tag: tagNumber,
-    queuePosition: studentRecord.queuePosition
-});
+    const studentRecord = {
+        tag: tagNumber,
+        queuePosition: nextQueuePosition,
+        spot: assignedSpot,
+        released: false,
+        needsStudent: false,
+        syncStatus: "saving"
+    };
 
-addVehicleToFirebase(
-    studentRecord
-);
+    pendingEntries.push({
+        tag: tagNumber,
+        queuePosition: studentRecord.queuePosition
+    });
 
-renderQueue();
+    addVehicleToFirebase(
+        studentRecord
+    );
+
+    renderQueue();
 
     let recentCard =
         document.querySelector(
@@ -573,10 +578,24 @@ function renderReleaseBoard() {
             </div>
         `;
 
-        let spotStudents =
-            dismissalQueue.filter(
-                student => student.spot === spot
-            );
+let activeStudents =
+    [...dismissalQueue]
+        .sort(
+            (a, b) =>
+                a.queuePosition -
+                b.queuePosition
+        );
+
+let spotStudents =
+    activeStudents.filter(
+        (student, index) =>
+            START_SPOT +
+            (index % (
+                END_SPOT -
+                START_SPOT +
+                1
+            )) === spot
+    );
 
         for (
             let col = 0;
@@ -803,10 +822,24 @@ board.style.gridTemplateColumns =
             </div>
         `;
 
-        let spotStudents =
-            dismissalQueue.filter(
-                student => student.spot === spot
-            );
+let activeStudents =
+    [...dismissalQueue]
+        .sort(
+            (a, b) =>
+                a.queuePosition -
+                b.queuePosition
+        );
+
+let spotStudents =
+    activeStudents.filter(
+        (student, index) =>
+            START_SPOT +
+            (index % (
+                END_SPOT -
+                START_SPOT +
+                1
+            )) === spot
+    );
 
         for (
             let col = 0;
