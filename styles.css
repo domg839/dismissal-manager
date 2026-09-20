@@ -1017,3 +1017,40 @@ h3 {
 
     width: 320px;
 }
+
+.duplicate-tag {
+
+    display: inline-block;
+
+    background-color: #F57C00;
+
+    color: white;
+
+    padding: 3px 10px;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+
+    margin-right: 4px;
+}
+
+.queue-tag {
+
+    display: inline-block;
+
+    background-color: white;
+
+    color: black;
+
+    padding: 3px 10px;
+
+    border-radius: 8px;
+
+    font-weight: bold;
+
+    margin-right: 4px;
+
+    box-shadow:
+        0 2px 4px rgba(0,0,0,.15);
+}

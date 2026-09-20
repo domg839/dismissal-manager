@@ -44,12 +44,6 @@ async function loadSettingsFromFirebase() {
 
 renderQueue();
 
-function saveQueue() {
-
-    // Queue now stored in Firestore
-
-}
-
 function renderQueue() {
 
     let recentEntries =
@@ -63,6 +57,52 @@ function renderQueue() {
 
     for (let i = dismissalQueue.length - 1; i >= 0; i--) {
 
+        let tagDisplay = "";
+
+        let duplicateCount =
+            dismissalQueue.filter(
+                item =>
+                    item.tag === dismissalQueue[i].tag
+            ).length;
+
+        if (duplicateCount > 1) {
+
+            tagDisplay =
+                `<span class="duplicate-tag">
+                    DUP ${dismissalQueue[i].tag}
+                </span>`;
+
+        } else if (
+            dismissalQueue[i].editedFrom
+        ) {
+
+            tagDisplay =
+                `<span class="queue-tag">
+                    ${dismissalQueue[i].editedFrom}
+                 </span>
+
+                 →
+
+                 <span class="queue-tag edited-new">
+                    ${dismissalQueue[i].tag}
+                 </span>`;
+
+        } else {
+
+            let tags =
+                dismissalQueue[i].tag
+                    .split(" ");
+
+            tagDisplay =
+                tags.map(
+                    tag =>
+                        `<span class="queue-tag">
+                            ${tag}
+                         </span>`
+                ).join("");
+
+        }
+
         recentEntries.innerHTML += `
             <div class="queue-item">
 
@@ -72,17 +112,7 @@ function renderQueue() {
                         ${i + 1}
                     </span>
 
-                    ${
-                        dismissalQueue[i].editedFrom
-
-                        ? `${dismissalQueue[i].editedFrom}
-                           →
-                           <span class="edited-new">
-                                ${dismissalQueue[i].tag}
-                           </span>`
-
-                        : dismissalQueue[i].tag
-                    }
+                    ${tagDisplay}
 
                 </span>
 
@@ -991,6 +1021,8 @@ function renderHistory() {
         `;
     }
 }
+
+
 
 async function deleteHistory(documentId) {
 
