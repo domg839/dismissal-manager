@@ -65,20 +65,28 @@ window.watchDismissalQueue(
         dismissalQueue =
             records;
 
-setTimeout(() => {
+        if (navigator.onLine) {
 
-    pendingEntries =
-        pendingEntries.filter(
-            pending =>
-                !records.some(
-                    record =>
-                        record.tag === pending.tag
-                )
-        );
+            setTimeout(() => {
 
-    renderQueue();
+                pendingEntries =
+                    pendingEntries.filter(
+                        pending =>
+                            !records.some(
+                                record =>
+                                    record.tag === pending.tag
+                            )
+                    );
 
-}, 500);
+                renderQueue();
+
+            }, 500);
+
+        } else {
+
+            renderQueue();
+
+        }
 
     }
 
