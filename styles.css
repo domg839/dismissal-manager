@@ -506,10 +506,29 @@ input {
 
 .history-card p {
 
-    margin: 6px 0;
+    color: #666;
+
+    margin: 3px 0;
+}
+
+.history-card strong {
+
+    color: black;
 }
 
 .history-card h2 {
+
+    display: inline-block;
+
+    background-color: #F4F4F4;
+
+    padding: 4px 12px;
+
+    border-radius: 8px;
+
+    font-family: 'Poppins', sans-serif;
+
+    font-size: 32px;
 
     margin: 0;
 }
@@ -524,7 +543,12 @@ input {
 
     width: 100%;
 
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+
+    padding-bottom: 10px;
+
+    border-bottom:
+        1px solid rgba(0,0,0,.15);
 }
 
 .delete-history {

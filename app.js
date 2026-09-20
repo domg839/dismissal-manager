@@ -927,7 +927,11 @@ function renderHistory() {
 
         historyList.innerHTML += `
 
-            <div class="history-card">
+            <div class="history-card ${
+                i === 0
+                    ? "latest-history"
+                    : ""
+            }">
 
                 <div class="history-header">
 
@@ -947,29 +951,39 @@ function renderHistory() {
 
                 <p>
                     Cars Released:
-                    ${history[i].carsReleased}
+                    <strong>
+                        ${history[i].carsReleased}
+                    </strong>
                 </p>
 
                 <p>
                     Start Time:
-                    ${history[i].startTime}
+                    <strong>
+                        ${history[i].startTime}
+                    </strong>
                 </p>
 
                 <p>
                     End Time:
-                    ${history[i].endTime}
+                    <strong>
+                        ${history[i].endTime}
+                    </strong>
                 </p>
 
                 <p>
                     Duration:
-                    ${formatDuration(
-                        history[i].duration
-                    )}
+                    <strong>
+                        ${formatDuration(
+                            history[i].duration
+                        )}
+                    </strong>
                 </p>
 
                 <p>
                     Cars Per Minute:
-                    ${history[i].carsPerMinute}
+                    <strong>
+                        ${history[i].carsPerMinute}
+                    </strong>
                 </p>
 
             </div>
