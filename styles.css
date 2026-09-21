@@ -631,11 +631,8 @@ h3 {
 }
 
 .current-stats {
-
-    text-align: left;
-
+    text-align: center;
     width: fit-content;
-
     margin: 0 auto;
 }
 
@@ -643,7 +640,7 @@ h3 {
 
     margin: 3px 0;
 
-    font-weight: 400;
+    font-weight: 700;
 
     font-size: 18px;
 }

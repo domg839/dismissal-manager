@@ -83,6 +83,25 @@ window.addEventListener("load", async () => {
 
     renderSchoolName();
 
+    window.watchSettings(
+    (settings) => {
+
+        console.log(
+            "Dismissal Start Time:",
+            settings.dismissalStartTime
+        );
+
+        dismissalStartTime =
+            settings.dismissalStartTime;
+
+        renderCurrentDismissal();
+console.log(
+    "Dismissal Start Time:",
+    settings.dismissalStartTime
+);
+    }
+);
+
     window.watchDismissalQueue(
 
         (records) => {

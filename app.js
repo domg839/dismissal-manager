@@ -1,5 +1,7 @@
 let dismissalQueue = [];
 
+let endingDismissal = false;
+
 let START_SPOT = 3;
 let END_SPOT = 10;
 let CARS_DISPLAYED = 25;
@@ -1005,6 +1007,10 @@ async function endDismissal() {
         return;
     }
 
+    endingDismissal = true;
+
+    renderCurrentDismissal();
+
     const currentQueue =
         await getCurrentQueueFromFirestore();
 
@@ -1051,6 +1057,7 @@ async function endDismissal() {
                     1
                 )
             ).toFixed(1)
+
     };
 
     await saveHistoryToFirebase(
@@ -1061,17 +1068,18 @@ async function endDismissal() {
 
     dismissalQueue = [];
 
-await updateDismissalStartTime(
-    null
-);
+    await updateDismissalStartTime(
+        null
+    );
 
-dismissalStartTime = null;
+    dismissalStartTime = null;
 
     alert(
         "Dismissal ended and saved to history."
     );
 
     location.reload();
+
 }
 
 function formatDuration(minutes) {
@@ -1275,55 +1283,53 @@ function renderCurrentDismissal() {
         return;
     }
 
-    let waitingCount =
-        dismissalQueue.filter(
-            student =>
-                !student.released
-        ).length;
+    if (endingDismissal) {
 
-    let releasedCount =
-        dismissalQueue.filter(
-            student =>
-                student.released
-        ).length;
-
-    let alertCount =
-        dismissalQueue.filter(
-            student =>
-                student.needsStudent
-        ).length;
-
-    if (
-        waitingCount === 0 &&
-        releasedCount === 0
-    ) {
-
-        stats.innerHTML =
-            "<p>No active dismissal.</p>";
+        stats.innerHTML = `
+            <p>
+                <i class="fa-solid fa-arrows-rotate"></i>
+                Ending dismissal...
+            </p>
+        `;
 
         return;
+
     }
 
-     let elapsedText =
+    if (!dismissalStartTime) {
+
+        stats.innerHTML = `
+    <p>No active dismissal.</p>
+    <p class="helper-text">
+        Release a student to begin.
+    </p>
+`;
+
+        return;
+
+    }
+
+    let startTime =
+        new Date(
+            dismissalStartTime
+        );
+
+    let elapsedText =
         getElapsedTime();
 
-         stats.innerHTML = `
+    stats.innerHTML = `
 
         <div class="current-stats">
 
             <p>
-                Waiting:
-                ${waitingCount}
+                <strong>
+                    Dismissal In Progress
+                </strong>
             </p>
 
             <p>
-                Released:
-                ${releasedCount}
-            </p>
-
-            <p>
-                Alerts:
-                ${alertCount}
+                Started:
+                ${startTime.toLocaleTimeString()}
             </p>
 
             <p>
@@ -1334,6 +1340,7 @@ function renderCurrentDismissal() {
         </div>
 
     `;
+
 }
 
 function getElapsedTime() {
