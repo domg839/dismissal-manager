@@ -45,35 +45,43 @@
             <button class="btn-history">History</button>
         </a>
 
-        <a href="settings.html">
-            <button class="btn-settings">Settings</button>
-        </a>
+<a href="settings.html">
+    <button class="btn-settings">Settings</button>
+</a>
 
-        <button
-            class="btn-end"
-            onclick="endDismissal()">
+<button
+    class="btn-end"
+    onclick="endDismissal()">
 
-            End Dismissal
+    End Dismissal
 
-        </button>
+</button>
 
-        <div class="stats">
+<div class="stats">
 
-            <h2>Current Dismissal</h2>
+<button
+    id="weatherToggle"
+    class="weather-toggle sun"
+    onclick="toggleRainDay()">
 
-            <div id="currentDismissalStats">
+    <i class="fa-solid fa-sun"></i>
 
-                <p>No active dismissal.</p>
+</button>
 
-            </div>
+    <h2>Current Dismissal</h2>
 
-        </div>
+    <div id="currentDismissalStats">
+
+        <p>No active dismissal.</p>
 
     </div>
 
-    <script type="module" src="firebase.js"></script>
+</div>
 
-    <script src="app.js"></script>
+</div>
+
+<script type="module" src="firebase.js"></script>
+<script src="app.js"></script>
 
     <script>
 
@@ -86,19 +94,10 @@ window.addEventListener("load", async () => {
     window.watchSettings(
     (settings) => {
 
-        console.log(
-            "Dismissal Start Time:",
-            settings.dismissalStartTime
-        );
-
         dismissalStartTime =
             settings.dismissalStartTime;
 
         renderCurrentDismissal();
-console.log(
-    "Dismissal Start Time:",
-    settings.dismissalStartTime
-);
     }
 );
 

@@ -41,6 +41,7 @@ button {
     background-color: rgba(255,255,255,.15);
     padding: 12px;
     border-radius: 14px;
+    position: relative;
     box-shadow: 0 6px 14px rgba(0,0,0,.25);}
 
 a {
@@ -805,5 +806,102 @@ h3 {
         right: 10px;}
 
     h1 {
-        font-size: 30px;}}     
-            
+        font-size: 30px;}} 
+
+.latest-history {
+    border: 2px solid #FFD700;}   
+    
+.latest-badge {
+    background-color: #FFD700;
+    color: black;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;}
+
+.history-edited {
+    text-align: right;
+    font-size: 12px;
+    opacity: .55;
+    margin-top: 12px;
+    font-style: italic;}   
+
+.history-date-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;}    
+
+.fastest-badge {
+    background-color: #28A745;
+    color: white;
+
+    padding: 4px 8px;
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: 700;}
+
+.busiest-badge {
+    background-color: #4A7DFF;
+    color: white;
+
+    padding: 4px 8px;
+    border-radius: 6px;
+
+    font-size: 12px;
+    font-weight: 700;} 
+    
+.btn-rain {
+    background-color: #5DADE2;
+    color: white;}
+    
+.dismissal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;}
+
+.weather-toggle {
+    position: absolute;
+    top: 0px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    transition:
+        transform .1s ease,
+        background-color .15s ease;
+    box-shadow: 0 3px 8px rgba(0,0,0,.25);}
+
+.weather-toggle:hover {
+    background-color: rgba(255,255,255,.25);}
+
+.weather-toggle:active {
+    transform:
+        translateY(2px)
+        scale(.95);}   
+
+.weather-toggle i {
+    pointer-events: none;}
+
+.weather-toggle.rain {
+    background-color: #5DADE2;
+    color: white;}
+
+.weather-toggle.sun {
+    background-color: #795106;
+    color: rgb(255, 218, 95);}   
+    
+.rain-badge {
+    background-color: #5DADE2;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;}    
+    

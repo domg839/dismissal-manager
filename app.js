@@ -7,6 +7,7 @@ let END_SPOT = 10;
 let CARS_DISPLAYED = 25;
 let dismissalStartTime = null;
 let SCHOOL_NAME = "School";
+let rainyDay = false;
 
 async function loadSettingsFromFirebase() {
 
@@ -1036,33 +1037,35 @@ async function endDismissal() {
             endTime - startTime
         ) / 60000;
 
-    const historyRecord = {
+const historyRecord = {
 
-        date:
-            endTime.toLocaleDateString(),
+    date:
+        endTime.toLocaleDateString(),
 
-        startTime:
-            startTime.toLocaleTimeString(),
+    startTime:
+        startTime.toLocaleTimeString(),
 
-        endTime:
-            endTime.toLocaleTimeString(),
+    endTime:
+        endTime.toLocaleTimeString(),
 
-        carsReleased:
-            releasedCount,
+    carsReleased:
+        releasedCount,
 
-        duration:
-            durationMinutes,
+    duration:
+        durationMinutes,
 
-        carsPerMinute:
-            (
-                releasedCount /
-                Math.max(
-                    durationMinutes,
-                    1
-                )
-            ).toFixed(1)
+    carsPerMinute:
+        (
+            releasedCount /
+            Math.max(
+                durationMinutes,
+                1
+            )
+        ).toFixed(1),
 
-    };
+    rainyDay: rainyDay
+
+};
 
     await saveHistoryToFirebase(
         historyRecord
@@ -1078,6 +1081,27 @@ async function endDismissal() {
 
     dismissalStartTime = null;
 
+rainyDay = false;
+
+let weatherButton =
+    document.getElementById(
+        "weatherToggle"
+    );
+
+if (weatherButton) {
+
+    weatherButton.innerHTML =
+        '<i class="fa-solid fa-sun"></i>';
+
+weatherButton.classList.remove(
+    "rain"
+);
+
+weatherButton.classList.add(
+    "sun"
+);
+
+}
     location.reload();
 
 }
@@ -1135,6 +1159,25 @@ function renderHistory() {
 
     });
 
+    const fastestCPM =
+    Math.max(
+        ...history.map(
+            item =>
+                parseFloat(
+                    item.carsPerMinute
+                ) || 0
+        )
+    );
+
+const busiestCars =
+    Math.max(
+        ...history.map(
+            item =>
+                item.carsReleased || 0
+        )
+    );
+
+
     historyList.innerHTML = "";
 
     if (history.length === 0) {
@@ -1164,9 +1207,37 @@ function renderHistory() {
 
 <div class="history-header">
 
+<div class="history-date-group">
+
     <h2>
         ${history[i].date}
     </h2>
+
+    ${i === 0 ? `
+        <span class="latest-badge">
+            Latest
+        </span>
+    ` : ""}
+
+    ${parseFloat(history[i].carsPerMinute) === fastestCPM ? `
+        <span class="fastest-badge">
+            Fastest
+        </span>
+    ` : ""}
+
+    ${history[i].carsReleased === busiestCars ? `
+        <span class="busiest-badge">
+            Busiest
+        </span>
+    ` : ""}
+
+${history[i].rainyDay ? `
+    <span class="rain-badge">
+        Rain
+    </span>
+` : ""}    
+
+</div>
 
     <div class="history-actions">
 
@@ -1227,7 +1298,14 @@ function renderHistory() {
                         ${history[i].carsPerMinute}
                     </strong>
                 </p>
-
+${history[i].lastEdited ? `
+    <p class="history-edited">
+        Last Edited:
+        <strong>
+            ${history[i].lastEdited}
+        </strong>
+    </p>
+` : ""}
             </div>
 
         `;
@@ -1771,6 +1849,12 @@ async function editHistory(documentId) {
             record.carsReleased
         );
 
+let rainyDay = confirm(
+    "Weather Condition\n\n" +
+    "OK = 🌧 Rainy Day\n" +
+    "Cancel = ☀ Normal Day"
+);   
+
     if (carsReleased === null) {
         return;
     }
@@ -1808,20 +1892,68 @@ async function editHistory(documentId) {
                 documentId
             );
 
-        await window.firebaseServices.updateDoc(
-            docRef,
-            {
-                startTime,
-                endTime,
-                carsReleased,
-                duration,
-                carsPerMinute
-            }
-        );
+await window.firebaseServices.updateDoc(
+    docRef,
+    {
+        startTime,
+        endTime,
+        carsReleased,
+        duration,
+        carsPerMinute,
+        rainyDay,
+
+        lastEdited:
+            new Date()
+                .toLocaleString()
+    }
+);
 
     } catch (error) {
 
         console.error(error);
+
+    }
+
+}
+
+function toggleRainDay() {
+
+    rainyDay = !rainyDay;
+
+    let button =
+        document.getElementById(
+            "weatherToggle"
+        );
+
+    if (!button) {
+        return;
+    }
+
+    if (rainyDay) {
+
+        button.innerHTML =
+            '<i class="fa-solid fa-cloud-rain"></i>';
+
+        button.classList.remove(
+            "sun"
+        );
+
+        button.classList.add(
+            "rain"
+        );
+
+    } else {
+
+        button.innerHTML =
+            '<i class="fa-solid fa-sun"></i>';
+
+        button.classList.remove(
+            "rain"
+        );
+
+        button.classList.add(
+            "sun"
+        );
 
     }
 
