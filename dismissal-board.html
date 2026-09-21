@@ -47,24 +47,24 @@
 
 <script>
 
-    window.addEventListener("load", async () => {
+window.addEventListener("load", async () => {
 
-        await loadSettingsFromFirebase();
+    await loadSettingsFromFirebase();
 
-        window.watchDismissalQueue(
+    window.watchDismissalQueue(
 
-            (records) => {
+        (records) => {
 
-                dismissalQueue =
-                    records;
+            dismissalQueue =
+                records;
 
-                renderDismissalBoard();
+            renderDismissalBoard();
 
-            }
+        }
 
-        );
+    );
 
-    });
+});
 
 </script>
 

@@ -8,6 +8,7 @@ let CARS_DISPLAYED = 25;
 let dismissalStartTime = null;
 let SCHOOL_NAME = "School";
 let rainyDay = false;
+let soundEnabled = true;
 
 async function loadSettingsFromFirebase() {
 
@@ -318,6 +319,8 @@ function addVehicle() {
     addVehicleToFirebase(
         studentRecord
     );
+
+    playEntrySound();
 
     renderQueue();
 
@@ -907,17 +910,26 @@ let spotStudents =
                     statusClass = "needs-student";
                 }
 
-                board.innerHTML += `
-                    <div
-                        class="release-cell ${statusClass}"
-                        onclick="requestStudent('${spotStudents[col].id}')">
+board.innerHTML += `
+    <div
+        class="release-cell ${statusClass}"
+        onclick="requestStudent('${spotStudents[col].id}')">
 
-                        ${spotStudents[col].needsStudent ? "⚠ " : ""}
+        ${spotStudents[col].needsStudent ? "⚠ " : ""}
+        ${spotStudents[col].tag}
 
-                        ${spotStudents[col].tag}
+        ${spotStudents[col].needsStudent &&
+          spotStudents[col].requestedAt
+            ? `<div class="spot-alert-age">
+                ${getAlertAge(
+                    spotStudents[col].requestedAt
+                )}
+               </div>`
+            : ""}
 
-                    </div>
-                `;
+    </div>
+`;
+
 
             } else {
 
@@ -974,13 +986,18 @@ let message =
                 student.id
             );
 
-        await window.firebaseServices.updateDoc(
-            docRef,
-            {
-                needsStudent:
-                    !student.needsStudent
-            }
-        );
+await window.firebaseServices.updateDoc(
+    docRef,
+    {
+        needsStudent:
+            !student.needsStudent,
+
+        requestedAt:
+            !student.needsStudent
+                ? Date.now()
+                : null
+    }
+);
 
         console.log(
             "Student alert updated"
@@ -1956,5 +1973,90 @@ function toggleRainDay() {
         );
 
     }
+
+}
+
+function toggleSound() {
+
+    soundEnabled = !soundEnabled;
+
+    let button =
+        document.getElementById(
+            "soundToggle"
+        );
+
+    if (!button) {
+        return;
+    }
+
+    button.innerHTML =
+        soundEnabled
+            ? "🔊"
+            : "🔇";
+
+}
+
+function playEntrySound() {
+
+    if (!soundEnabled) {
+        return;
+    }
+
+    const audioContext =
+        new (
+            window.AudioContext ||
+            window.webkitAudioContext
+        )();
+
+    const oscillator =
+        audioContext.createOscillator();
+
+    const gainNode =
+        audioContext.createGain();
+
+    oscillator.connect(gainNode);
+
+    gainNode.connect(
+        audioContext.destination
+    );
+
+    oscillator.type = "sine";
+
+    oscillator.frequency.value = 800;
+
+    gainNode.gain.value = 0.03;
+
+    oscillator.start();
+
+    setTimeout(() => {
+
+        oscillator.stop();
+
+    }, 75);
+
+}
+
+function getAlertAge(requestedAt) {
+
+    if (!requestedAt) {
+        return "";
+    }
+
+    const elapsedSeconds =
+        Math.floor(
+            (Date.now() - requestedAt) / 1000
+        );
+
+    const minutes =
+        Math.floor(
+            elapsedSeconds / 60
+        );
+
+    const seconds =
+        elapsedSeconds % 60;
+
+    return `${minutes}:${seconds
+        .toString()
+        .padStart(2, "0")}`;
 
 }
