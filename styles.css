@@ -939,13 +939,11 @@ h3 {
 }
 
 @media (max-width: 600px) {
-
     .spot-cell {
-
-        width: 50px;
-
-        min-width: 50px;
-
+        width: 42px;
+        min-width: 42px;
+        min-height: 42px;
+        padding: 12px;
         font-size: 20px;
     }
 }
