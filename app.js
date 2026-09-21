@@ -499,31 +499,24 @@ function renderDismissalBoard() {
             CARS_DISPLAYED
         );
 
-let columns;
-
-if (CARS_DISPLAYED <= 12) {
-
-    columns = 4;
-
-} else if (CARS_DISPLAYED <= 24) {
-
-    columns = 5;
-
-} else if (CARS_DISPLAYED <= 32) {
-
-    columns = 6;
-
-} else {
-
-    columns = Math.ceil(
+let columns =
+    Math.ceil(
         Math.sqrt(
             CARS_DISPLAYED
         )
     );
-}
+
+let rows =
+    Math.ceil(
+        CARS_DISPLAYED /
+        columns
+    );
 
     board.style.gridTemplateColumns =
         `repeat(${columns}, 1fr)`;
+
+    board.style.gridTemplateRows =
+        `repeat(${rows}, 1fr)`;    
 
     for (
         let i = 0;
@@ -533,24 +526,36 @@ if (CARS_DISPLAYED <= 12) {
 
         if (activeStudents[i]) {
 
-            let tagDisplay =
-                activeStudents[i].needsStudent
-                    ? `⚠ ${activeStudents[i].tag}`
-                    : activeStudents[i].tag;
+let tagDisplay =
+    activeStudents[i].needsStudent
+        ? `⚠ ${activeStudents[i].tag}`
+        : activeStudents[i].tag;
 
-            let alertClass =
-                activeStudents[i].needsStudent
-                    ? "board-alert"
-                    : "";
+let alertClass =
+    activeStudents[i].needsStudent
+        ? "board-alert"
+        : "";
 
-            board.innerHTML += `
-                <div class="
-                    board-tile
-                    ${alertClass}
-                ">
-                    ${tagDisplay}
-                </div>
-            `;
+let fontClass =
+    "board-large";
+
+if (tagDisplay.length > 9) {
+    fontClass = "board-medium";
+}
+
+if (tagDisplay.length > 14) {
+    fontClass = "board-small";
+}
+
+board.innerHTML += `
+    <div class="
+        board-tile
+        ${alertClass}
+        ${fontClass}
+    ">
+        ${tagDisplay}
+    </div>
+`;
 
         } else {
 
@@ -1639,3 +1644,53 @@ function updateConnectionStatus() {
         );
     }
 }
+
+function toggleFullscreen() {
+
+    let button =
+        document.getElementById(
+            "fullscreenBtn"
+        );
+
+    if (
+        !document.fullscreenElement
+    ) {
+
+        document.documentElement
+            .requestFullscreen();
+
+        button.innerHTML =
+            '<i class="fa-solid fa-xmark"></i>';
+
+    }
+    else {
+
+        document.exitFullscreen();
+
+        button.innerHTML =
+            '<i class="fa-solid fa-expand"></i>';
+
+    }
+
+}
+
+document.addEventListener(
+    "fullscreenchange",
+    () => {
+
+        let button =
+            document.getElementById(
+                "fullscreenBtn"
+            );
+
+        if (!button) {
+            return;
+        }
+
+        button.innerHTML =
+            document.fullscreenElement
+                ? '<i class="fa-solid fa-xmark"></i>'
+                : '<i class="fa-solid fa-expand"></i>';
+
+    }
+);
