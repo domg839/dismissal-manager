@@ -468,8 +468,7 @@ function renderDismissalBoard() {
     board.innerHTML = "";
 
     let activeStudents =
-        dismissalQueue
-            .filter(
+        dismissalQueue.filter(
                 student => !student.released
             );
 
@@ -1419,12 +1418,43 @@ async function releaseStudentFirebase(student) {
                 student.id
             );
 
-        await window.firebaseServices.updateDoc(
-            docRef,
-            {
-                released: !student.released
-            }
+const newReleasedState =
+    !student.released;
+
+await window.firebaseServices.updateDoc(
+    docRef,
+    {
+        released: newReleasedState
+    }
+);
+
+if (
+    student.released &&
+    dismissalStartTime
+) {
+
+    const remainingReleased =
+        dismissalQueue.filter(
+            item =>
+                item.released &&
+                item.id !== student.id
+        ).length;
+
+    if (remainingReleased === 0) {
+
+        await updateDismissalStartTime(
+            null
         );
+
+        dismissalStartTime = null;
+
+        console.log(
+            "Dismissal start time cleared"
+        );
+
+    }
+
+}
 
         console.log(
             "Student released"

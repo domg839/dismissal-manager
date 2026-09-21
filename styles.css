@@ -285,37 +285,6 @@ input {
     padding: 10px;
     white-space: nowrap;}
 
-.home-icon {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    background-color: #4A7DFF;
-    color: white;
-    text-decoration: none;
-    box-shadow: 0 4px 10px rgba(0,0,0,.25);
-    z-index: 999;
-    font-size: 22px;
-    transition:
-        transform .1s ease,
-        box-shadow .15s ease,
-        background-color .15s ease;}
-
-.home-icon:active {
-    transform:
-        translateY(2px)
-        scale(0.95);}
-
-.home-icon:hover {
-    background-color: #2554C7;
-    color: white;
-    box-shadow: 0 6px 14px rgba(0,0,0,.35);}
-
 .needs-student {
     background-color: #FFD700;
     color: black;}
@@ -578,12 +547,20 @@ h3 {
         margin: 0 auto;}}
 
 @media (max-width: 600px) {
-    .home-icon {
+
+    .home-icon,
+    .fullscreen-btn {
         width: 40px;
         height: 40px;
         font-size: 18px;
-        top: 10px;
+        top: 10px;}
+
+    .home-icon {
         left: 10px;}
+
+    .fullscreen-btn {
+        right: 10px;}
+
     h1 {
         font-size: 30px;}}
 
@@ -713,11 +690,16 @@ h3 {
     right: 15px;
     width: 50px;
     height: 50px;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border-radius: 50%;
     border: none;
     background-color: #4A7DFF;
     color: white;
-    font-size: 24px;
+    font-size: 22px;
     cursor: pointer;
     z-index: 999;
     box-shadow: 0 4px 10px rgba(0,0,0,.25);
@@ -736,11 +718,56 @@ h3 {
         translateY(2px)
         scale(0.95);}
 
-.fullscreen-btn i {
+.fullscreen-btn i,
+.home-icon i {
     line-height: 1;
     pointer-events: none;}
 
-.fullscreen-btn {
+.home-icon {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
-    align-items: center;}
+    align-items: center;
+    border-radius: 50%;
+    background-color: #4A7DFF;
+    color: white;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,.25);
+    z-index: 999;
+    font-size: 22px;
+    transition:
+        transform .1s ease,
+        box-shadow .15s ease,
+        background-color .15s ease;}
+
+.home-icon:active {
+    transform:
+        translateY(2px)
+        scale(0.95);}
+
+.home-icon:hover {
+    background-color: #2554C7;
+    color: white;
+    box-shadow: 0 6px 14px rgba(0,0,0,.35);}
+
+@media (max-width: 600px) {
+    .home-icon,
+    .fullscreen-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        top: 10px;}
+
+    .home-icon {
+        left: 10px;}
+
+    .fullscreen-btn {
+        right: 10px;}
+
+    h1 {
+        font-size: 30px;}}     
+            
