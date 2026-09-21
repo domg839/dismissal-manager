@@ -1079,10 +1079,6 @@ async function endDismissal() {
 
     dismissalStartTime = null;
 
-    alert(
-        "Dismissal ended and saved to history."
-    );
-
     location.reload();
 
 }
