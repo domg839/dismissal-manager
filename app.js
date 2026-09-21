@@ -1162,21 +1162,34 @@ function renderHistory() {
                     : ""
             }">
 
-                <div class="history-header">
+<div class="history-header">
 
-                    <h2>
-                        ${history[i].date}
-                    </h2>
+    <h2>
+        ${history[i].date}
+    </h2>
 
-                    <button
-                        class="delete-history"
-                        onclick="deleteHistory('${history[i].id}')">
+    <div class="history-actions">
 
-                        <i class="fa-solid fa-trash"></i>
+        <button
+            class="edit-history"
+            onclick="editHistory('${history[i].id}')">
 
-                    </button>
+            <i class="fa-solid fa-pen"></i>
 
-                </div>
+        </button>
+
+        <button
+            class="delete-history"
+            onclick="deleteHistory('${history[i].id}')">
+
+            <i class="fa-solid fa-trash"></i>
+
+        </button>
+
+    </div>
+
+</div>
+
 
                 <p>
                     Cars Released:
@@ -1720,3 +1733,96 @@ document.addEventListener(
 
     }
 );
+
+async function editHistory(documentId) {
+
+    let record =
+        window.dismissalHistory.find(
+            item => item.id === documentId
+        );
+
+    if (!record) {
+        return;
+    }
+
+    let startTime =
+        prompt(
+            "Start Time",
+            record.startTime
+        );
+
+    if (startTime === null) {
+        return;
+    }
+
+    let endTime =
+        prompt(
+            "End Time",
+            record.endTime
+        );
+
+    if (endTime === null) {
+        return;
+    }
+
+    let carsReleased =
+        prompt(
+            "Cars Released",
+            record.carsReleased
+        );
+
+    if (carsReleased === null) {
+        return;
+    }
+
+    carsReleased =
+        parseInt(carsReleased);
+
+    let start =
+        new Date(
+            `${record.date} ${startTime}`
+        );
+
+    let end =
+        new Date(
+            `${record.date} ${endTime}`
+        );
+
+    let duration =
+        (
+            end - start
+        ) / 60000;
+
+    let carsPerMinute =
+        (
+            carsReleased /
+            Math.max(duration, 1)
+        ).toFixed(1);
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalHistory",
+                documentId
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                startTime,
+                endTime,
+                carsReleased,
+                duration,
+                carsPerMinute
+            }
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}

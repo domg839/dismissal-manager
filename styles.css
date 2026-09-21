@@ -327,6 +327,42 @@ input {
     padding-bottom: 10px;
     border-bottom: 1px solid rgba(0,0,0,.15);}
 
+.history-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;}
+
+.edit-history {
+    transition:
+        transform .1s ease,
+        box-shadow .1s ease,
+        background-color .15s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 8px;
+    background-color: #4A7DFF;
+    color: white;
+    cursor: pointer;
+    box-shadow:
+        0 3px 8px rgba(0,0,0,.25);}
+
+.edit-history:hover {
+    background-color: #2554C7;}
+
+.edit-history:active {
+    transform:
+        translateY(2px)
+        scale(0.95);}
+
+.edit-history i {
+    pointer-events: none;}
+
 .delete-history {
     transition:
         transform .1s ease,
