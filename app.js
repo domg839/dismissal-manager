@@ -1183,10 +1183,8 @@ renderCurrentDismissal();
     const currentQueue =
         await getCurrentQueueFromFirestore();
 
-    let releasedCount =
-        currentQueue.filter(
-            student => student.released
-        ).length;
+let releasedCount =
+    currentQueue.length;
 
     let startTime =
         new Date(

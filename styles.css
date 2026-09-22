@@ -741,7 +741,7 @@ h3 {
     color: #ff7b7b;}
 
 .fullscreen-btn {
-    position: fixed;
+    position: absolute;
     top: 15px;
     right: 15px;
     width: 50px;
@@ -780,7 +780,7 @@ h3 {
     pointer-events: none;}
 
 .home-icon {
-    position: fixed;
+    position: absolute;
     top: 15px;
     left: 15px;
     width: 50px;
@@ -1022,19 +1022,13 @@ h3 {
     display: flex;
     align-items: center;
     justify-content: space-between;
-
-    margin-bottom: 4px;
-}
+    margin-bottom: 4px;}
 
 .settings-toggle-row label:first-child {
     width: auto;
-
     font-size: 18px;
     font-weight: 600;
-
-    padding-left: 15px;
-}
+    padding-left: 15px;}
 
 .settings-helper-tight {
-    margin-top: -10px;
-}
+    margin-top: -10px;}
