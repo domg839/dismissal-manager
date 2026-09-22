@@ -551,9 +551,16 @@ if (showSpotsOnBoard) {
         ${activeStudents[i].needsStudent ? "⚠ " : ""}
         ${activeStudents[i].tag}
 
-        <span class="board-spot">
-            #${activeStudents[i].spot}
-        </span>
+<span class="board-spot">
+    #${
+        START_SPOT +
+        (i % (
+            END_SPOT -
+            START_SPOT +
+            1
+        ))
+    }
+</span>
     `;
 
 }
