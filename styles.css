@@ -921,4 +921,19 @@ h3 {
     flex-wrap: wrap;
     gap: 8px;
     margin-top: 10px;
-    margin-bottom: 10px;}    
+    margin-bottom: 10px;}
+    
+.board-spot {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 14px;
+    font-weight: 700;
+
+    color: #21478F;
+
+    opacity: .7;
+}
+
+.board-tile {
+    position: relative;}

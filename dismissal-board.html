@@ -51,6 +51,22 @@ window.addEventListener("load", async () => {
 
     await loadSettingsFromFirebase();
 
+    window.watchSettings(
+
+        (settings) => {
+
+            showSpotsOnBoard =
+                settings.showSpotsOnBoard || false;
+
+            boardReleaseEnabled =
+                settings.boardReleaseEnabled || false;
+
+            renderDismissalBoard();
+
+        }
+
+    );
+
     window.watchDismissalQueue(
 
         (records) => {

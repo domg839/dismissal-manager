@@ -11,6 +11,8 @@ let CARS_DISPLAYED = 25;
 let dismissalStartTime = null;
 let SCHOOL_NAME = "School";
 let rainyDay = false;
+let showSpotsOnBoard = false;
+let boardReleaseEnabled = false;
 
 async function loadSettingsFromFirebase() {
 
@@ -35,6 +37,12 @@ async function loadSettingsFromFirebase() {
 
     dismissalStartTime =
         settings.dismissalStartTime || null;
+
+    showSpotsOnBoard =
+        settings.showSpotsOnBoard || false;
+
+    boardReleaseEnabled =
+        settings.boardReleaseEnabled || false;    
 
     rainyDay =
         settings.rainyDay || false;    
@@ -537,6 +545,19 @@ let tagDisplay =
         ? `⚠ ${activeStudents[i].tag}`
         : activeStudents[i].tag;
 
+if (showSpotsOnBoard) {
+
+    tagDisplay = `
+        ${activeStudents[i].needsStudent ? "⚠ " : ""}
+        ${activeStudents[i].tag}
+
+        <span class="board-spot">
+            #${activeStudents[i].spot}
+        </span>
+    `;
+
+}
+
 let alertClass =
     activeStudents[i].needsStudent
         ? "board-alert"
@@ -545,11 +566,14 @@ let alertClass =
 let fontClass =
     "board-large";
 
-if (tagDisplay.length > 9) {
+let displayLength =
+    activeStudents[i].tag.length;
+
+if (displayLength > 9) {
     fontClass = "board-medium";
 }
 
-if (tagDisplay.length > 14) {
+if (displayLength > 14) {
     fontClass = "board-small";
 }
 
@@ -558,8 +582,18 @@ board.innerHTML += `
         board-tile
         ${alertClass}
         ${fontClass}
-    ">
+    "
+
+    ${
+        boardReleaseEnabled
+            ? `onclick="releaseStudentFromBoard('${activeStudents[i].id}')"`
+            : ""
+    }
+
+    >
+
         ${tagDisplay}
+
     </div>
 `;
 
@@ -743,11 +777,23 @@ async function loadSettings() {
     let carsBox =
         document.getElementById("carsDisplayed");
 
+    let spotsBoardBox =
+        document.getElementById(
+            "showSpotsOnBoard"
+        );
+
+    let boardReleaseBox =
+        document.getElementById(
+            "boardReleaseEnabled"
+        );
+
     if (
         !schoolBox ||
         !startBox ||
         !endBox ||
-        !carsBox
+        !carsBox ||
+        !spotsBoardBox ||
+        !boardReleaseBox
     ) {
         return;
     }
@@ -770,6 +816,13 @@ async function loadSettings() {
 
     carsBox.value =
         settings.carsDisplayed || 25;
+
+    spotsBoardBox.checked =
+        settings.showSpotsOnBoard || false;
+
+    boardReleaseBox.checked =
+        settings.boardReleaseEnabled || false;
+
 }
 
 async function saveSettings() {
@@ -785,6 +838,16 @@ async function saveSettings() {
 
     let carsBox =
         document.getElementById("carsDisplayed");
+
+    let spotsBoardBox =
+        document.getElementById(
+            "showSpotsOnBoard"
+        );
+
+    let boardReleaseBox =
+        document.getElementById(
+            "boardReleaseEnabled"
+        );
 
     let startValue =
         parseInt(startBox.value);
@@ -806,6 +869,7 @@ async function saveSettings() {
         );
 
         return;
+
     }
 
     await saveSettingsToFirebase({
@@ -820,13 +884,20 @@ async function saveSettings() {
             endValue,
 
         carsDisplayed:
-            carsValue
+            carsValue,
+
+        showSpotsOnBoard:
+            spotsBoardBox.checked,
+
+        boardReleaseEnabled:
+            boardReleaseBox.checked
 
     });
 
     alert(
         "Settings saved."
     );
+
 }
 
 function renderSpotManager() {
@@ -2155,5 +2226,100 @@ function getAlertAge(student) {
     return `${minutes}:${seconds
         .toString()
         .padStart(2, "0")}`;
+
+}
+
+function releaseStudentFromBoard(studentId) {
+
+    if (!boardReleaseEnabled) {
+        return;
+    }
+
+    let student =
+        dismissalQueue.find(
+            item => item.id === studentId
+        );
+
+    if (!student) {
+        return;
+    }
+
+    let confirmed = confirm(
+        "Release tag " +
+        student.tag +
+        "?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    releaseStudentFirebase(
+        student
+    );
+
+}
+
+function releaseStudentFromBoard(studentId) {
+
+    if (!boardReleaseEnabled) {
+        return;
+    }
+
+    let student =
+        dismissalQueue.find(
+            item => item.id === studentId
+        );
+
+    if (!student) {
+        return;
+    }
+
+    let confirmed = confirm(
+        "Release tag " +
+        student.tag +
+        "?"
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    releaseStudentFirebase(
+        student
+    );
+
+}
+
+function releaseStudentFromBoard(studentId) {
+
+    if (!boardReleaseEnabled) {
+        return;
+    }
+
+    let student =
+        dismissalQueue.find(
+            item => item.id === studentId
+        );
+
+    if (!student) {
+        return;
+    }
+
+let confirmed = confirm(
+    "Release tag " +
+    student.tag +
+    "?\n\n" +
+    "Student should report to Spot #" +
+    student.spot
+);
+
+    if (!confirmed) {
+        return;
+    }
+
+    releaseStudentFirebase(
+        student
+    );
 
 }
