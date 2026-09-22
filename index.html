@@ -91,13 +91,42 @@ window.addEventListener("load", async () => {
 
     renderSchoolName();
 
-    window.watchSettings(
+window.watchSettings(
     (settings) => {
 
         dismissalStartTime =
             settings.dismissalStartTime;
 
+        rainyDay =
+            settings.rainyDay || false;
+
+        let weatherButton =
+            document.getElementById(
+                "weatherToggle"
+            );
+
+        if (weatherButton) {
+
+            weatherButton.innerHTML =
+                rainyDay
+                    ? '<i class="fa-solid fa-cloud-rain"></i>'
+                    : '<i class="fa-solid fa-sun"></i>';
+
+            weatherButton.classList.remove(
+                "sun",
+                "rain"
+            );
+
+            weatherButton.classList.add(
+                rainyDay
+                    ? "rain"
+                    : "sun"
+            );
+
+        }
+
         renderCurrentDismissal();
+
     }
 );
 

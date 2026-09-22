@@ -36,6 +36,9 @@ async function loadSettingsFromFirebase() {
     dismissalStartTime =
         settings.dismissalStartTime || null;
 
+    rainyDay =
+        settings.rainyDay || false;    
+
     console.log(
         "Settings Loaded:",
         settings
@@ -1153,11 +1156,13 @@ const settingsRef =
 await window.firebaseServices.updateDoc(
     settingsRef,
     {
+        rainyDay: false,
+
         totalAlerts: 0,
         totalRequestSeconds: 0,
         completedRequests: 0
     }
-);    
+);   
 
     dismissalStartTime = null;
 
@@ -2064,7 +2069,7 @@ await window.firebaseServices.updateDoc(
 
 }
 
-function toggleRainDay() {
+async function toggleRainDay() {
 
     rainyDay = !rainyDay;
 
@@ -2104,6 +2109,20 @@ function toggleRainDay() {
         );
 
     }
+
+    const settingsRef =
+        window.firebaseServices.doc(
+            window.firebaseServices.db,
+            "settings",
+            "config"
+        );
+
+    await window.firebaseServices.updateDoc(
+        settingsRef,
+        {
+            rainyDay
+        }
+    );
 
 }
 
