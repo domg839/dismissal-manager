@@ -1233,37 +1233,45 @@ const busiestCars =
 
 <div class="history-header">
 
-<div class="history-date-group">
+    <div>
 
-    <h2>
-        ${history[i].date}
-    </h2>
+        <div class="history-date-group">
 
-    ${i === 0 ? `
-        <span class="latest-badge">
-            Latest
-        </span>
-    ` : ""}
+            <h2>
+                ${history[i].date}
+            </h2>
 
-    ${parseFloat(history[i].carsPerMinute) === fastestCPM ? `
-        <span class="fastest-badge">
-            Fastest
-        </span>
-    ` : ""}
+        </div>
 
-    ${history[i].carsReleased === busiestCars ? `
-        <span class="busiest-badge">
-            Busiest
-        </span>
-    ` : ""}
+        <div class="history-badges">
 
-${history[i].rainyDay ? `
-    <span class="rain-badge">
-        Rain
-    </span>
-` : ""}    
+            ${i === 0 ? `
+                <span class="latest-badge">
+                    Latest
+                </span>
+            ` : ""}
 
-</div>
+            ${parseFloat(history[i].carsPerMinute) === fastestCPM ? `
+                <span class="fastest-badge">
+                    Fastest
+                </span>
+            ` : ""}
+
+            ${history[i].carsReleased === busiestCars ? `
+                <span class="busiest-badge">
+                    Busiest
+                </span>
+            ` : ""}
+
+            ${history[i].rainyDay ? `
+                <span class="rain-badge">
+                    Rain
+                </span>
+            ` : ""}
+
+        </div>
+
+    </div>
 
     <div class="history-actions">
 
@@ -1286,7 +1294,6 @@ ${history[i].rainyDay ? `
     </div>
 
 </div>
-
 
                 <p>
                     Cars Released:

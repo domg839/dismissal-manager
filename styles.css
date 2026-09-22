@@ -300,6 +300,7 @@ input {
     color: black;
     border-radius: 12px;
     padding: 15px;
+    position: relative;
     margin-bottom: 15px;
     text-align: left;
     box-shadow: 0 4px 10px rgba(0,0,0,.2);}
@@ -330,8 +331,10 @@ input {
     border-bottom: 1px solid rgba(0,0,0,.15);}
 
 .history-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
     display: flex;
-    align-items: center;
     gap: 8px;}
 
 .edit-history {
@@ -838,8 +841,7 @@ h3 {
 
 .history-date-group {
     display: flex;
-    align-items: center;
-    gap: 10px;}    
+    align-items: center;}
 
 .fastest-badge {
     background-color: #28A745;
@@ -948,3 +950,10 @@ h3 {
     font-size: 10px;
     opacity: .85;
     pointer-events: none;}
+
+.history-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    margin-bottom: 10px;}    
