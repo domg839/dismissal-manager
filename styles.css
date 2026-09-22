@@ -606,15 +606,6 @@ h3 {
         font-size: 30px;}}
 
 @media (max-width: 600px) {
-
-    .sound-toggle {
-        top: 10px;
-        left: 60px;
-    }
-
-}        
-
-@media (max-width: 600px) {
     .spot-cell {
         width: 42px;
         min-width: 42px;
@@ -916,32 +907,6 @@ h3 {
     border-radius: 6px;
     font-size: 12px;
     font-weight: 700;}  
-
-.sound-toggle {
-    position: fixed;
-    top: 15px;
-    left: 75px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    border-radius: 50%;
-    font-size: 22px;
-    cursor: pointer;
-    background-color: rgba(255,255,255,.15);
-    color: white;
-    box-shadow: 0 3px 8px rgba(0,0,0,.25);
-    transition:
-        transform .1s ease,
-        background-color .15s ease;
-    z-index: 999;}
-
-.sound-toggle:active {
-    transform:
-        translateY(2px)
-        scale(.95);}    
 
 .spot-alert-age {
     position: absolute;

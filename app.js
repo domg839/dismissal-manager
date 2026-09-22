@@ -11,7 +11,6 @@ let CARS_DISPLAYED = 25;
 let dismissalStartTime = null;
 let SCHOOL_NAME = "School";
 let rainyDay = false;
-let soundEnabled = true;
 
 async function loadSettingsFromFirebase() {
 
@@ -322,8 +321,6 @@ function addVehicle() {
     addVehicleToFirebase(
         studentRecord
     );
-
-    playEntrySound();
 
     renderQueue();
 
@@ -2107,66 +2104,6 @@ function toggleRainDay() {
         );
 
     }
-
-}
-
-function toggleSound() {
-
-    soundEnabled = !soundEnabled;
-
-    let button =
-        document.getElementById(
-            "soundToggle"
-        );
-
-    if (!button) {
-        return;
-    }
-
-    button.innerHTML =
-        soundEnabled
-            ? "🔊"
-            : "🔇";
-
-}
-
-function playEntrySound() {
-
-    if (!soundEnabled) {
-        return;
-    }
-
-    const audioContext =
-        new (
-            window.AudioContext ||
-            window.webkitAudioContext
-        )();
-
-    const oscillator =
-        audioContext.createOscillator();
-
-    const gainNode =
-        audioContext.createGain();
-
-    oscillator.connect(gainNode);
-
-    gainNode.connect(
-        audioContext.destination
-    );
-
-    oscillator.type = "sine";
-
-    oscillator.frequency.value = 800;
-
-    gainNode.gain.value = 0.03;
-
-    oscillator.start();
-
-    setTimeout(() => {
-
-        oscillator.stop();
-
-    }, 75);
 
 }
 
