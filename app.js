@@ -2291,7 +2291,7 @@ function releaseStudentFromBoard(studentId) {
 
 }
 
-function releaseStudentFromBoard(studentId) {
+async function releaseStudentFromBoard(studentId) {
 
     if (!boardReleaseEnabled) {
         return;
@@ -2306,16 +2306,27 @@ function releaseStudentFromBoard(studentId) {
         return;
     }
 
-let confirmed = confirm(
-    "Release tag " +
-    student.tag +
-    "?\n\n" +
-    "Student should report to Spot #" +
-    student.spot
-);
+    let confirmed = confirm(
+        "Release tag " +
+        student.tag +
+        "?\n\n" +
+        "Student should report to Spot #" +
+        student.spot
+    );
 
     if (!confirmed) {
         return;
+    }
+
+    if (!dismissalStartTime) {
+
+        dismissalStartTime =
+            new Date().toISOString();
+
+        await updateDismissalStartTime(
+            dismissalStartTime
+        );
+
     }
 
     releaseStudentFirebase(
