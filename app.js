@@ -2,6 +2,9 @@ let dismissalQueue = [];
 
 let endingDismissal = false;
 
+let totalAlerts = 0;
+let totalRequestSeconds = 0;
+let completedRequests = 0;
 let START_SPOT = 3;
 let END_SPOT = 10;
 let CARS_DISPLAYED = 25;
@@ -952,10 +955,10 @@ ${getAlertAge(
 
 async function requestStudent(studentId) {
 
-let student =
-    dismissalQueue.find(
-        item => item.id === studentId
-    );
+    let student =
+        dismissalQueue.find(
+            item => item.id === studentId
+        );
 
     if (!student) {
         return;
@@ -970,14 +973,14 @@ let student =
         return;
     }
 
-let message =
-    student.needsStudent
-        ? "Remove student needed alert for tag " +
-          student.tag +
-          "?"
-        : "Send student needed alert for tag " +
-          student.tag +
-          "?";
+    let message =
+        student.needsStudent
+            ? "Remove student needed alert for tag " +
+              student.tag +
+              "?"
+            : "Send student needed alert for tag " +
+              student.tag +
+              "?";
 
     let confirmed =
         confirm(message);
@@ -995,18 +998,40 @@ let message =
                 student.id
             );
 
-await window.firebaseServices.updateDoc(
-    docRef,
-    {
-        needsStudent:
-            !student.needsStudent,
+        if (!student.needsStudent) {
 
-        requestedAt:
-            !student.needsStudent
-                ? Date.now()
-                : null
-    }
-);
+            const settingsRef =
+                window.firebaseServices.doc(
+                    window.firebaseServices.db,
+                    "settings",
+                    "config"
+                );
+
+            const settings =
+                await window.loadSettingsFromFirestore();
+
+            await window.firebaseServices.updateDoc(
+                settingsRef,
+                {
+                    totalAlerts:
+                        (settings.totalAlerts || 0) + 1
+                }
+            );
+
+        }
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                needsStudent:
+                    !student.needsStudent,
+
+                requestedAt:
+                    !student.needsStudent
+                        ? Date.now()
+                        : null
+            }
+        );
 
         console.log(
             "Student alert updated"
@@ -1017,6 +1042,7 @@ await window.firebaseServices.updateDoc(
         console.error(error);
 
     }
+
 }
 
 async function endDismissal() {
@@ -1063,6 +1089,9 @@ async function endDismissal() {
             endTime - startTime
         ) / 60000;
 
+const currentSettings =
+    await window.loadSettingsFromFirestore();
+
 const historyRecord = {
 
     date:
@@ -1089,7 +1118,19 @@ const historyRecord = {
             )
         ).toFixed(1),
 
-    rainyDay: rainyDay
+    rainyDay:
+        rainyDay,
+
+totalAlerts:
+    currentSettings.totalAlerts || 0,
+
+averageRequestTime:
+    (currentSettings.completedRequests || 0) > 0
+        ? Math.round(
+            (currentSettings.totalRequestSeconds || 0) /
+            currentSettings.completedRequests
+          )
+        : null
 
 };
 
@@ -1104,6 +1145,22 @@ const historyRecord = {
     await updateDismissalStartTime(
         null
     );
+
+const settingsRef =
+    window.firebaseServices.doc(
+        window.firebaseServices.db,
+        "settings",
+        "config"
+    );
+
+await window.firebaseServices.updateDoc(
+    settingsRef,
+    {
+        totalAlerts: 0,
+        totalRequestSeconds: 0,
+        completedRequests: 0
+    }
+);    
 
     dismissalStartTime = null;
 
@@ -1331,6 +1388,26 @@ const busiestCars =
                         ${history[i].carsPerMinute}
                     </strong>
                 </p>
+<p>
+    Alerts:
+    <strong>
+        ${history[i].totalAlerts ?? 0}
+    </strong>
+</p>
+
+<p>
+    Avg Request Time:
+    <strong>
+        ${
+            history[i].averageRequestTime
+                ? formatDuration(
+                    history[i].averageRequestTime / 60
+                  )
+                : "None"
+        }
+    </strong>
+</p>
+
 ${history[i].lastEdited ? `
     <p class="history-edited">
         Last Edited:
@@ -1545,6 +1622,41 @@ async function releaseStudentFirebase(student) {
         const newReleasedState =
             !student.released;
 
+        if (
+            newReleasedState &&
+            student.requestedAt
+        ) {
+
+            const requestSeconds =
+                Math.floor(
+                    (Date.now() -
+                    student.requestedAt) / 1000
+                );
+
+            const settings =
+                await window.loadSettingsFromFirestore();
+
+            const settingsRef =
+                window.firebaseServices.doc(
+                    window.firebaseServices.db,
+                    "settings",
+                    "config"
+                );
+
+            await window.firebaseServices.updateDoc(
+                settingsRef,
+                {
+                    totalRequestSeconds:
+                        (settings.totalRequestSeconds || 0) +
+                        requestSeconds,
+
+                    completedRequests:
+                        (settings.completedRequests || 0) + 1
+                }
+            );
+
+        }
+
         await window.firebaseServices.updateDoc(
             docRef,
             {
@@ -1596,7 +1708,6 @@ async function releaseStudentFirebase(student) {
     }
 
 }
-
 
 async function requestStudentFirebase(student) {
 
