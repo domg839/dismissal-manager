@@ -124,6 +124,34 @@ window.watchSettings(
             );
 
         }
+        dismissalEnding =
+            settings.dismissalEnding || false;
+
+        let endButton =
+    document.querySelector(
+        ".btn-end"
+    );
+
+if (endButton) {
+
+    if (dismissalEnding) {
+
+        endButton.disabled = true;
+
+        endButton.innerText =
+            "Ending...";
+
+    }
+    else {
+
+        endButton.disabled = false;
+
+        endButton.innerText =
+            "End Dismissal";
+
+    }
+
+}    
 
         renderCurrentDismissal();
 

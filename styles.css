@@ -929,11 +929,20 @@ h3 {
     right: 8px;
     font-size: 14px;
     font-weight: 700;
-
     color: #21478F;
-
-    opacity: .7;
-}
+    opacity: .7;}
 
 .board-tile {
     position: relative;}
+
+.edited-badge {
+    background-color: #6c757d;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;}    
+
+.btn-end:disabled {
+    opacity: .7;
+    cursor: default;}

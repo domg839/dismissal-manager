@@ -1,6 +1,7 @@
 let dismissalQueue = [];
 
 let endingDismissal = false;
+let dismissalEnding = false;
 
 let totalAlerts = 0;
 let totalRequestSeconds = 0;
@@ -37,6 +38,9 @@ async function loadSettingsFromFirebase() {
 
     dismissalStartTime =
         settings.dismissalStartTime || null;
+
+    dismissalEnding =
+        settings.dismissalEnding || false;    
 
     showSpotsOnBoard =
         settings.showSpotsOnBoard || false;
@@ -1142,9 +1146,39 @@ async function endDismissal() {
         return;
     }
 
-    endingDismissal = true;
+endingDismissal = true;
 
-    renderCurrentDismissal();
+dismissalEnding = true;
+
+const settingsRef =
+    window.firebaseServices.doc(
+        window.firebaseServices.db,
+        "settings",
+        "config"
+    );
+
+await window.firebaseServices.updateDoc(
+    settingsRef,
+    {
+        dismissalEnding: true
+    }
+);
+
+let endButton =
+    document.querySelector(
+        ".btn-end"
+    );
+
+if (endButton) {
+
+    endButton.disabled = true;
+
+    endButton.innerText =
+        "Processing...";
+
+}
+
+renderCurrentDismissal();
 
     const currentQueue =
         await getCurrentQueueFromFirestore();
@@ -1224,23 +1258,18 @@ averageRequestTime:
         null
     );
 
-const settingsRef =
-    window.firebaseServices.doc(
-        window.firebaseServices.db,
-        "settings",
-        "config"
-    );
-
 await window.firebaseServices.updateDoc(
     settingsRef,
     {
         rainyDay: false,
 
+        dismissalEnding: false,
+
         totalAlerts: 0,
         totalRequestSeconds: 0,
         completedRequests: 0
     }
-);   
+);
 
     dismissalStartTime = null;
 
@@ -1406,6 +1435,12 @@ const busiestCars =
                 </span>
             ` : ""}
 
+            ${history[i].lastEdited ? `
+                <span class="edited-badge">
+                   Edited
+                </span>
+            ` : ""}
+
         </div>
 
     </div>
@@ -1564,18 +1599,21 @@ function renderCurrentDismissal() {
         return;
     }
 
-    if (endingDismissal) {
+if (
+    endingDismissal ||
+    dismissalEnding
+) {
 
-        stats.innerHTML = `
-            <p>
-                <i class="fa-solid fa-arrows-rotate"></i>
-                Ending dismissal...
-            </p>
-        `;
+    stats.innerHTML = `
+        <p>
+            <i class="fa-solid fa-arrows-rotate"></i>
+            Ending dismissal...
+        </p>
+    `;
 
-        return;
+    return;
 
-    }
+}
 
     if (!dismissalStartTime) {
 
