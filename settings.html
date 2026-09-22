@@ -29,6 +29,11 @@
 
         <div class="settings-card">
 
+<h2>
+    <i class="fa-solid fa-school"></i>
+    School Settings
+</h2>
+
             <div class="settings-row">
 
                 <label>School Name</label>
@@ -59,6 +64,15 @@
 
             </div>
 
+        </div>
+
+        <div class="settings-card">
+
+<h2>
+    <i class="fa-solid fa-tv"></i>
+    Dismissal Board
+</h2>
+
             <div class="settings-row">
 
                 <label>Cars Displayed</label>
@@ -69,35 +83,41 @@
 
             </div>
 
-            <div class="settings-row">
+<div class="settings-toggle-row">
+    <label>Show Spots On Board</label>
+    <label class="switch">
+        <input
+            type="checkbox"
+            id="showSpotsOnBoard">
+        <span class="slider"></span>
+    </label>
+</div>
 
-                <label>Show Spots On Board</label>
 
-                <input
-                    type="checkbox"
-                    id="showSpotsOnBoard">
+<div class="settings-helper">Displays destination spot numbers on the Dismissal Board.</div>
 
-            </div>
 
-            <div class="settings-row">
+<div class="settings-toggle-row">
+    <label>Allow Release From Board</label>
+    <label class="switch">
+        <input
+            type="checkbox"
+            id="boardReleaseEnabled">
+        <span class="slider"></span>
+    </label>
+</div>
 
-                <label>Allow Release From Board</label>
-
-                <input
-                    type="checkbox"
-                    id="boardReleaseEnabled">
-
-            </div>
-
-            <button
-                class="btn-save-settings"
-                onclick="saveSettings()">
-
-                Save Settings
-
-            </button>
+<div class="settings-helper">Allows staff to release students directly from the Dismissal Board.</div>
 
         </div>
+
+        <button
+            class="btn-save-settings"
+            onclick="saveSettings()">
+
+            Save Settings
+
+        </button>
 
     </div>
 
@@ -117,7 +137,4 @@
 
 </body>
 
-</html>   
-
-  
-    
+</html>
