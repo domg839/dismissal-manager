@@ -668,16 +668,25 @@ let spotStudents =
                         "needs-student";
                 }
 
-                board.innerHTML += `
-                    <div
-                        class="release-cell ${statusClass}"
-                        onclick="releaseStudent('${spotStudents[col].id}')">
+board.innerHTML += `
+    <div
+        class="release-cell ${statusClass}"
+        onclick="releaseStudent('${spotStudents[col].id}')">
 
-                        ${spotStudents[col].needsStudent ? "⚠ " : ""}
-                        ${spotStudents[col].tag}
+        ${spotStudents[col].needsStudent ? "⚠ " : ""}
+        ${spotStudents[col].tag}
 
-                    </div>
-                `;
+        ${spotStudents[col].needsStudent &&
+          spotStudents[col].requestedAt
+            ? `<div class="spot-alert-age">
+                ${getAlertAge(
+                    spotStudents[col]
+                )}
+               </div>`
+            : ""}
+
+    </div>
+`;
 
             } else {
 
@@ -921,9 +930,9 @@ board.innerHTML += `
         ${spotStudents[col].needsStudent &&
           spotStudents[col].requestedAt
             ? `<div class="spot-alert-age">
-                ${getAlertAge(
-                    spotStudents[col].requestedAt
-                )}
+${getAlertAge(
+    spotStudents[col]
+)}
                </div>`
             : ""}
 
@@ -1526,43 +1535,48 @@ async function releaseStudentFirebase(student) {
                 student.id
             );
 
-const newReleasedState =
-    !student.released;
+        const newReleasedState =
+            !student.released;
 
-await window.firebaseServices.updateDoc(
-    docRef,
-    {
-        released: newReleasedState
-    }
-);
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                released: newReleasedState,
 
-if (
-    student.released &&
-    dismissalStartTime
-) {
-
-    const remainingReleased =
-        dismissalQueue.filter(
-            item =>
-                item.released &&
-                item.id !== student.id
-        ).length;
-
-    if (remainingReleased === 0) {
-
-        await updateDismissalStartTime(
-            null
+                releasedAt:
+                    newReleasedState
+                        ? Date.now()
+                        : null
+            }
         );
 
-        dismissalStartTime = null;
+        if (
+            student.released &&
+            dismissalStartTime
+        ) {
 
-        console.log(
-            "Dismissal start time cleared"
-        );
+            const remainingReleased =
+                dismissalQueue.filter(
+                    item =>
+                        item.released &&
+                        item.id !== student.id
+                ).length;
 
-    }
+            if (remainingReleased === 0) {
 
-}
+                await updateDismissalStartTime(
+                    null
+                );
+
+                dismissalStartTime = null;
+
+                console.log(
+                    "Dismissal start time cleared"
+                );
+
+            }
+
+        }
 
         console.log(
             "Student released"
@@ -1573,7 +1587,9 @@ if (
         console.error(error);
 
     }
+
 }
+
 
 async function requestStudentFirebase(student) {
 
@@ -2036,15 +2052,22 @@ function playEntrySound() {
 
 }
 
-function getAlertAge(requestedAt) {
+function getAlertAge(student) {
 
-    if (!requestedAt) {
+    if (!student.requestedAt) {
         return "";
     }
 
+    let endTime =
+        student.released &&
+        student.releasedAt
+            ? student.releasedAt
+            : Date.now();
+
     const elapsedSeconds =
         Math.floor(
-            (Date.now() - requestedAt) / 1000
+            (endTime - student.requestedAt) /
+            1000
         );
 
     const minutes =
