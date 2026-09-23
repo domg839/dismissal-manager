@@ -737,6 +737,9 @@ h3 {
 .connection-online {
     color: #7dff7d;}
 
+.connection-syncing {
+    color: #FFD54F;}    
+
 .connection-offline {
     color: #ff7b7b;}
 

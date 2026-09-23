@@ -1995,6 +1995,7 @@ async function editVehicleFirebase(
 }
 
 function updateConnectionStatus() {
+
     let status =
         document.getElementById(
             "connectionStatus"
@@ -2004,29 +2005,59 @@ function updateConnectionStatus() {
         return;
     }
 
-    if (navigator.onLine) {
-        status.innerHTML =
-            "● Connected";
+    if (!navigator.onLine) {
 
-        status.classList.remove(
-            "connection-offline"
-        );
-
-        status.classList.add(
-            "connection-online"
-        );
-    } else {
         status.innerHTML =
             "● Offline";
 
         status.classList.remove(
-            "connection-online"
+            "connection-online",
+            "connection-syncing"
         );
 
         status.classList.add(
             "connection-offline"
         );
+
+        return;
+
     }
+
+    const syncing =
+        dismissalQueue.some(
+            student => student.pending
+        );
+
+    if (syncing) {
+
+        status.innerHTML =
+            "● Syncing";
+
+        status.classList.remove(
+            "connection-online",
+            "connection-offline"
+        );
+
+        status.classList.add(
+            "connection-syncing"
+        );
+
+    } else {
+
+        status.innerHTML =
+            "● Connected";
+
+        status.classList.remove(
+            "connection-syncing",
+            "connection-offline"
+        );
+
+        status.classList.add(
+            "connection-online"
+        );
+
+    }
+
 }
 
 function toggleFullscreen() {

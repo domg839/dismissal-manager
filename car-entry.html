@@ -62,10 +62,12 @@
 
             (records) => {
 
-                dismissalQueue =
-                    records;
+dismissalQueue =
+    records;
 
-                renderQueue();
+renderQueue();
+
+updateConnectionStatus();
 
             }
 
@@ -88,15 +90,23 @@
             }
         );
 
-    window.addEventListener(
-        "online",
-        updateConnectionStatus
-    );
+window.addEventListener(
+    "online",
+    () => {
 
-    window.addEventListener(
-        "offline",
-        updateConnectionStatus
-    );
+        updateConnectionStatus();
+
+    }
+);
+
+window.addEventListener(
+    "offline",
+    () => {
+
+        updateConnectionStatus();
+
+    }
+);
 
     updateConnectionStatus();
 
