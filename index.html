@@ -176,9 +176,9 @@ window.watchSettings(
         dismissalEnding =
             settings.dismissalEnding || false;
 
-        let endButton =
+let endButton =
     document.querySelector(
-        ".btn-end"
+        ".btn-end-admin"
     );
 
 if (endButton) {
@@ -187,16 +187,20 @@ if (endButton) {
 
         endButton.disabled = true;
 
-        endButton.innerText =
-            "Ending...";
+endButton.innerHTML = `
+    <i class="fa-solid fa-arrows-rotate"></i>
+    <div>Ending</div>
+`;
 
     }
     else {
 
         endButton.disabled = false;
 
-        endButton.innerText =
-            "End Dismissal";
+endButton.innerHTML = `
+    <i class="fa-solid fa-flag-checkered"></i>
+    <div>End</div>
+`;
 
     }
 

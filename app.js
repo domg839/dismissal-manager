@@ -1166,15 +1166,17 @@ await window.firebaseServices.updateDoc(
 
 let endButton =
     document.querySelector(
-        ".btn-end"
+        ".btn-end-admin"
     );
 
 if (endButton) {
 
     endButton.disabled = true;
 
-    endButton.innerText =
-        "Processing...";
+endButton.innerHTML = `
+    <i class="fa-solid fa-arrows-rotate"></i>
+    <div>Ending</div>
+`;
 
 }
 
@@ -1269,9 +1271,11 @@ await window.firebaseServices.updateDoc(
     }
 );
 
-    dismissalStartTime = null;
+dismissalStartTime = null;
 
 rainyDay = false;
+
+dismissalEnding = false;
 
 let weatherButton =
     document.getElementById(

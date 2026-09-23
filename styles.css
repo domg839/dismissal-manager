@@ -1151,4 +1151,7 @@ body::after {
         max-width: 280px;
         font-size: 28px;
         font-weight: bold;
-        padding: 14px;}}      
+        padding: 14px;}}   
+        
+.btn-end-admin .fa-arrows-rotate {
+    animation: spin .8s linear infinite;}    
