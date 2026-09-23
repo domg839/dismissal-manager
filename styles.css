@@ -179,9 +179,15 @@ input {
 
 #dismissalBoard {
     display: grid;
-    gap: 15px;
+    gap: 8px;
     width: 95vw;
     margin: 10px auto;}
+
+.page-board h1 {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 24px;
+}    
 
 .board-tile {
     background-color: white;
@@ -1219,24 +1225,4 @@ body::after {
 
 .btn-locate-student i {
     font-size: 18px;
-}
-
-.located-student {
-    animation: locatePulse 3s ease-in-out 3;
-}
-
-@keyframes locatePulse {
-
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.12);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-
 }
