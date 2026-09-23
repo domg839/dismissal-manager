@@ -229,7 +229,7 @@ let editedClass =
                 <span>
 
                     <span class="queue-position">
-                        ${student.queuePosition}
+                        ${student.queuePosition}.
                     </span>
 
                     <span class="queue-status ${

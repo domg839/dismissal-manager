@@ -134,8 +134,14 @@ input {
     margin-bottom: 6px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     min-height: 40px;}
+
+.queue-item > span {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}    
 
 .queue-item span {
     font-size: 18px;
@@ -143,14 +149,14 @@ input {
 
 .queue-actions {
     display: flex;
-    gap: 5px;}
+    gap: 3px;}
 
 .queue-actions button {
     transition: 
       transform .1s ease, 
       box-shadow .1s ease;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     padding: 0;
     margin: 0;}
 
@@ -562,25 +568,34 @@ h3 {
 .entry-card h2,
 .recent-card h2 {
     margin-top: 0;
-    font-size: 18px;
-    margin-bottom: 10px;}
+    margin-bottom: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: .3px;}
 
 .recent-card h2 {
     position: sticky;
     top: 0;
     z-index: 20;
     margin: 0 -20px;
-    margin-bottom: 5px;
-    padding: 12px 0;
-    background-color: rgb(120,165,245);
+    margin-bottom: 8px;
+    padding: 14px 0;
+    background:
+        linear-gradient(
+            180deg,
+            rgb(134,176,250),
+            rgb(108,157,245)
+        );
     border-top-left-radius: 10px;
-    border-top-right-radius: 10px;}
+    border-top-right-radius: 10px;
+    box-shadow:
+        0 2px 8px rgba(0,0,0,.15);}
 
 .queue-position {
     display: inline-block;
-    width: 35px;
+    width: 24px;
     font-weight: bold;
-    opacity: .6;}
+    opacity: .45;}
 
 .duplicate-tag {
     display: inline-block;
@@ -624,7 +639,7 @@ h3 {
     width: 24px;
     justify-content: center;
     align-items: center;
-    margin-right: 8px;
+    margin-right: 4px;
     font-size: 16px;}
 
 .status-saving {
@@ -1103,55 +1118,75 @@ body::after {
 @media (max-width: 600px) {
 
     h1 {
-        font-size: 30px;}
+        font-size: 30px;
+    }
 
     .home-icon,
     .fullscreen-btn {
         width: 40px;
         height: 40px;
         font-size: 18px;
-        top: 10px;}
+        top: 10px;
+    }
 
     .home-icon {
-        left: 10px;}
+        left: 10px;
+    }
 
     .fullscreen-btn {
-        right: 10px;}
+        right: 10px;
+    }
 
     .release-cell {
         font-size: 16px;
         min-height: 28px;
-        padding: 4px;}
+        padding: 4px;
+    }
 
     .spot-cell {
         width: 42px;
         min-width: 42px;
         min-height: 42px;
         padding: 12px;
-        font-size: 20px;}
+        font-size: 20px;
+    }
 
     .settings-row {
         flex-direction: column;
         align-items: stretch;
-        gap: 8px;}
+        gap: 8px;
+    }
 
     .settings-row label {
         width: 100%;
         color: white;
         font-weight: 700;
-        text-align: left;}
+        text-align: left;
+    }
 
     .settings-row input {
         width: 250px;
         max-width: 100%;
-        margin: 0 auto;}
+        margin: 0 auto;
+    }
 
     input {
         width: 100%;
         max-width: 280px;
         font-size: 28px;
         font-weight: bold;
-        padding: 14px;}}   
+        padding: 14px;
+    }
+
+    .queue-tag,
+    .duplicate-tag {
+        padding: 2px 8px;
+        font-size: 16px;
+    }
+
+}
+        
+        
         
 .btn-end-admin .fa-arrows-rotate {
     animation: spin .8s linear infinite;}    
