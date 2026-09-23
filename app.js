@@ -997,9 +997,10 @@ let spotStudents =
                 }
 
 board.innerHTML += `
-    <div
-        class="release-cell ${statusClass}"
-        onclick="requestStudent('${spotStudents[col].id}')">
+<div
+    class="release-cell ${statusClass}"
+    data-student-id="${spotStudents[col].id}"
+    onclick="requestStudent('${spotStudents[col].id}')">
 
         ${spotStudents[col].needsStudent ? "⚠ " : ""}
         ${spotStudents[col].tag}
@@ -2402,5 +2403,154 @@ async function releaseStudentFromBoard(studentId) {
     releaseStudentFirebase(
         student
     );
+
+}
+
+async function locateStudent() {
+
+    let tag =
+        prompt(
+            "Enter Tag Number"
+        );
+
+    if (
+        tag === null ||
+        tag.trim() === ""
+    ) {
+        return;
+    }
+
+    tag =
+        tag.trim();
+
+    let student =
+        dismissalQueue.find(
+            item => item.tag === tag
+        );
+
+if (student) {
+
+    await requestStudent(
+        student.id
+    );
+
+    scrollToStudent(
+        student.id
+    );
+
+    return;
+
+}
+
+    let createAlert = confirm(
+        "Tag " +
+        tag +
+        " was not found.\n\n" +
+        "Create a requested student alert?"
+    );
+
+    if (!createAlert) {
+        return;
+    }
+
+    const nextQueuePosition =
+        Math.max(
+            ...dismissalQueue.map(
+                item =>
+                    item.queuePosition || 0
+            ),
+            0
+        ) + 1;
+
+    const spotCount =
+        END_SPOT -
+        START_SPOT +
+        1;
+
+    const assignedSpot =
+        START_SPOT +
+        (
+            dismissalQueue.length %
+            spotCount
+        );
+
+    const studentRecord = {
+
+        tag: tag,
+
+        queuePosition:
+            nextQueuePosition,
+
+        spot:
+            assignedSpot,
+
+        released: false,
+
+        needsStudent: true,
+
+        requestedAt:
+            Date.now(),
+
+        syncStatus:
+            "saving"
+
+    };
+
+    await addVehicleToFirebase(
+        studentRecord
+    );
+
+setTimeout(() => {
+
+    const createdStudent =
+        dismissalQueue.find(
+            item =>
+                item.tag === tag
+        );
+
+    if (createdStudent) {
+
+        scrollToStudent(
+            createdStudent.id
+        );
+
+    }
+
+}, 1000);    
+
+}
+
+function scrollToStudent(studentId) {
+
+    setTimeout(() => {
+
+        const element =
+            document.querySelector(
+                `[data-student-id="${studentId}"]`
+            );
+
+        if (!element) {
+            return;
+        }
+
+        const wrapper =
+            document.querySelector(
+                ".release-board-wrapper"
+            );
+
+        if (!wrapper) {
+            return;
+        }
+
+        wrapper.scrollTo({
+
+            left:
+                element.offsetLeft - 80,
+
+            behavior: "smooth"
+
+        });
+
+    }, 100);
 
 }

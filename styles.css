@@ -266,7 +266,8 @@ input {
     overflow-y: visible;
     width: 100%;
     margin-top: 20px;
-    padding-bottom: 10px;}
+    padding-bottom: 10px;
+    min-height: calc(100vh - 200px);}
 
 #releaseBoard,
 #spotManagerBoard {
@@ -1192,8 +1193,50 @@ body::after {
     }
 
 }
-        
-        
-        
+               
 .btn-end-admin .fa-arrows-rotate {
-    animation: spin .8s linear infinite;}    
+    animation: spin .8s linear infinite;}   
+    
+.btn-locate-student {
+
+    width: 220px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    margin: 10px auto 20px auto;
+
+    background: linear-gradient(
+        180deg,
+        #FFD54F,
+        #E6B93C
+    );
+
+    color: #333;
+}
+
+.btn-locate-student i {
+    font-size: 18px;
+}
+
+.located-student {
+    animation: locatePulse 3s ease-in-out 3;
+}
+
+@keyframes locatePulse {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.12);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+
+}
