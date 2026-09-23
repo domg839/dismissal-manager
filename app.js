@@ -580,14 +580,6 @@ let fontClass =
 let displayLength =
     activeStudents[i].tag.length;
 
-if (displayLength > 9) {
-    fontClass = "board-medium";
-}
-
-if (displayLength > 14) {
-    fontClass = "board-small";
-}
-
 board.innerHTML += `
     <div class="
         board-tile

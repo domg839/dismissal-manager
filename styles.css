@@ -189,8 +189,12 @@ input {
     border-radius: 12px;
     display: flex;
     position: relative;
+    white-space: normal;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    align-content: center;
+    text-align: center;
     font-weight: bold;
     aspect-ratio: 2 / 1;}
 
@@ -232,13 +236,16 @@ input {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
-    white-space: nowrap;
+    white-space: normal;
     min-width: 120px;
     min-height: 42px;
     display: flex;
     position: relative;
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;}
+    align-items: center;
+    align-content: center;
+    word-break: break-word;}
 
 .release-cell:active {
     transform:
