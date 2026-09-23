@@ -182,14 +182,11 @@ input {
     color: black;
     border-radius: 12px;
     display: flex;
+    position: relative;
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    aspect-ratio: 2 / 1;
-    font-size: clamp(
-        2rem,
-        4vw,
-        4.5rem);}
+    aspect-ratio: 2 / 1;}
 
 .board-large {
     font-size: clamp(
@@ -241,12 +238,6 @@ input {
     transform:
         translateY(2px)
         scale(0.97);}
-
-@media (max-width: 600px) {
-    .release-cell {
-        font-size: 16px;
-        min-height: 28px;
-        padding: 4px;}}
 
 .release-cell.released {
     background-color: #4CAF50;
@@ -564,60 +555,9 @@ h3 {
 .pending-tag {
     opacity: .4;}
 
-@media (max-width: 600px) {
-    .settings-row {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 8px;}
-
-    .settings-row label {
-        width: 100%;
-        color: white;
-        font-weight: 700;
-        text-align: left;}
-
-    .settings-row input {
-        width: 250px;
-        max-width: 100%;
-        margin: 0 auto;}}
-
-@media (max-width: 600px) {
-
-    .home-icon,
-    .fullscreen-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-        top: 10px;}
-
-    .home-icon {
-        left: 10px;}
-
-    .fullscreen-btn {
-        right: 10px;}
-
-    h1 {
-        font-size: 30px;}}
-
-@media (max-width: 600px) {
-    .spot-cell {
-        width: 42px;
-        min-width: 42px;
-        min-height: 42px;
-        padding: 12px;
-        font-size: 20px;}}
-
 @keyframes fadeIn {
     from {opacity: 0;}
     to {opacity: 1;}}
-
-@media (max-width: 600px) {
-    input {
-        width: 100%;
-        max-width: 280px;
-        font-size: 28px;
-        font-weight: bold;
-        padding: 14px;}}
 
 .entry-card h2,
 .recent-card h2 {
@@ -792,23 +732,6 @@ h3 {
     color: white;
     box-shadow: 0 6px 14px rgba(0,0,0,.35);}
 
-@media (max-width: 600px) {
-    .home-icon,
-    .fullscreen-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 18px;
-        top: 10px;}
-
-    .home-icon {
-        left: 10px;}
-
-    .fullscreen-btn {
-        right: 10px;}
-
-    h1 {
-        font-size: 30px;}} 
-
 .latest-history {
     border: 2px solid #FFD700;}   
     
@@ -850,16 +773,7 @@ h3 {
 
     font-size: 12px;
     font-weight: 700;} 
-    
-.btn-rain {
-    background-color: #5DADE2;
-    color: white;}
-    
-.dismissal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;}
-
+      
 .weather-toggle {
     position: absolute;
     top: 0px;
@@ -928,9 +842,6 @@ h3 {
     font-weight: 700;
     color: #21478F;
     opacity: .7;}
-
-.board-tile {
-    position: relative;}
 
 .edited-badge {
     background-color: #6c757d;
@@ -1038,7 +949,7 @@ h3 {
     font-weight: 700;}
 
 .btn-admin i {
-    font-size: 22px;}
+    font-size: 24px;}
 
 .btn-launcher {
     width: 100%;
@@ -1052,9 +963,6 @@ h3 {
     font-size: 14px;
     font-weight: 700;}
 
-.btn-launcher i {
-    font-size: 36px;}
-
 .launcher-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1063,28 +971,184 @@ h3 {
     margin: 0 auto 15px auto;}
 
 .btn-car {
-    background-color: #6CA6FF;}
+    background: linear-gradient(
+        180deg,
+        #7AB0FF,
+        #5A96F2
+    );}
 
 .btn-release {
-    background-color: #66D8C6;}
+    background: linear-gradient(
+        180deg,
+        #7CE6D6,
+        #57C9B7
+    );}
 
 .btn-board {
-    background-color: #4A7DFF;}
+    background: linear-gradient(
+        180deg,
+        #4F7EFF,
+        #3559C7
+    );}
 
 .btn-spot {
-    background-color: #B084FF;}
+    background: linear-gradient(
+        180deg,
+        #C29BFF,
+        #9D6BEB
+    );}
 
 .btn-history-admin {
-    background-color: #FFD54F;
-    color: #333;}    
+    background: linear-gradient(
+        180deg,
+        #FFE07A,
+        #FFD54F
+    );
+    color: #333;}
 
-.btn-settings-admin {
-    background-color: #6C7A89;
-    color: white;}
+.btn-history-admin:hover {
+    background: linear-gradient(
+        180deg,
+        #FFE899,
+        #FFD54F);}
 
-.btn-end-admin {
-    background-color: #FF7B72;
-    color: white;}
+.btn-settings-admin:hover {
+    background: linear-gradient(
+        180deg,
+        #8A97A5,
+        #6C7A89);}
 
 .btn-end-admin:hover {
-    background-color: #E45D55;}    
+    background: linear-gradient(
+        180deg,
+        #FF9A94,
+        #E45D55);}
+
+.btn-settings-admin {
+    background: linear-gradient(
+        180deg,
+        #7D8B99,
+        #5E6B77
+    );
+color: white;}
+
+.btn-end-admin {
+    background: linear-gradient(
+        180deg,
+        #FF8A82,
+        #E45D55
+    );
+    color: white;}
+  
+.btn-launcher,
+.btn-admin {
+    border: 1px solid rgba(
+        255,
+        255,
+        255,
+        .15
+    );
+    box-shadow:
+        0 10px 24px rgba(
+            0,
+            0,
+            0,
+            .35
+        );
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease,
+        filter .15s ease;} 
+
+.btn-launcher:hover,
+.btn-admin:hover {
+    transform:
+        translateY(-3px);
+    box-shadow:
+        0 10px 22px rgba(
+            0,
+            0,
+            0,
+            .35
+        );
+    filter: brightness(1.05);}
+
+.btn-launcher i {
+    font-size: 48px;}
+
+body::before {
+    content: "";
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.03);
+    top: -200px;
+    right: -100px;
+    pointer-events: none;
+    z-index: -1;}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: rgba(255,255,255,.02);
+    transform: rotate(35deg);
+    bottom: -150px;
+    left: -100px;
+    pointer-events: none;
+    z-index: -1;}
+
+@media (max-width: 600px) {
+
+    h1 {
+        font-size: 30px;}
+
+    .home-icon,
+    .fullscreen-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        top: 10px;}
+
+    .home-icon {
+        left: 10px;}
+
+    .fullscreen-btn {
+        right: 10px;}
+
+    .release-cell {
+        font-size: 16px;
+        min-height: 28px;
+        padding: 4px;}
+
+    .spot-cell {
+        width: 42px;
+        min-width: 42px;
+        min-height: 42px;
+        padding: 12px;
+        font-size: 20px;}
+
+    .settings-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;}
+
+    .settings-row label {
+        width: 100%;
+        color: white;
+        font-weight: 700;
+        text-align: left;}
+
+    .settings-row input {
+        width: 250px;
+        max-width: 100%;
+        margin: 0 auto;}
+
+    input {
+        width: 100%;
+        max-width: 280px;
+        font-size: 28px;
+        font-weight: bold;
+        padding: 14px;}}      
