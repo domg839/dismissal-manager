@@ -37,7 +37,7 @@ button {
 .stats {
     max-width: 295px;
     width: 90%;
-    margin: 15px auto;
+    margin: 20px auto;
     background-color: rgba(255,255,255,.15);
     padding: 12px;
     border-radius: 14px;
@@ -273,7 +273,11 @@ input {
     width: 100%;
     margin-top: 20px;
     padding-bottom: 10px;
-    min-height: calc(100vh - 200px);}
+    min-height: calc(100vh - 230px);}
+
+.page-release .release-board-wrapper {
+    min-height: calc(100vh - 160px);
+}    
 
 #releaseBoard,
 #spotManagerBoard {
@@ -1033,7 +1037,7 @@ h3 {
         #FFE07A,
         #FFD54F
     );
-    color: #333;}
+    color: #222;}
 
 .btn-history-admin:hover {
     background: linear-gradient(
@@ -1071,12 +1075,14 @@ color: white;}
   
 .btn-launcher,
 .btn-admin {
+
     border: 1px solid rgba(
         255,
         255,
         255,
         .15
     );
+
     box-shadow:
         0 10px 24px rgba(
             0,
@@ -1084,10 +1090,40 @@ color: white;}
             0,
             .35
         );
+
+    position: relative;
+
+    overflow: hidden;
+
     transition:
         transform .15s ease,
         box-shadow .15s ease,
-        filter .15s ease;} 
+        filter .15s ease;
+
+}
+
+.btn-launcher::before,
+.btn-admin::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 35%;
+
+    background:
+        linear-gradient(
+            rgba(255,255,255,.18),
+            rgba(255,255,255,0)
+        );
+
+    pointer-events: none;
+
+}
 
 .btn-launcher:hover,
 .btn-admin:hover {

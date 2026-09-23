@@ -2423,10 +2423,32 @@ async function locateStudent() {
     tag =
         tag.trim();
 
-    let student =
-        dismissalQueue.find(
-            item => item.tag === tag
-        );
+let searchTags =
+    tag
+        .trim()
+        .toUpperCase()
+        .split(" ")
+        .filter(t => t !== "");
+
+let student =
+    dismissalQueue.find(
+        item => {
+
+            let itemTags =
+                item.tag
+                    .toUpperCase()
+                    .split(" ")
+                    .filter(t => t !== "");
+
+            return searchTags.every(
+                searchTag =>
+                    itemTags.includes(
+                        searchTag
+                    )
+            );
+
+        }
+    );
 
 if (student) {
 
@@ -2542,14 +2564,19 @@ function scrollToStudent(studentId) {
             return;
         }
 
-        wrapper.scrollTo({
+const targetLeft =
+    element.offsetLeft
+    - (wrapper.clientWidth / 2)
+    + (element.clientWidth / 2);
 
-            left:
-                element.offsetLeft - 80,
+wrapper.scrollTo({
 
-            behavior: "smooth"
+    left:
+        Math.max(0, targetLeft),
 
-        });
+    behavior: "smooth"
+
+});
 
     }, 100);
 
