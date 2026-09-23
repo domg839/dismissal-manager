@@ -35,7 +35,7 @@ button {
     padding-top: 20px;}
 
 .stats {
-    max-width: 300px;
+    max-width: 295px;
     width: 90%;
     margin: 15px auto;
     background-color: rgba(255,255,255,.15);
@@ -422,27 +422,6 @@ h3 {
     margin: 3px 0;
     font-weight: 700;
     font-size: 18px;}
-
-.btn-car {
-    background-color: #6CA6FF;}
-
-.btn-release {
-    background-color: #66D8C6;}
-
-.btn-board {
-    background-color: #4A7DFF;}
-
-.btn-spot {
-    background-color: #B084FF;}
-
-.btn-history {
-    background-color: #FFD166;}
-
-.btn-settings {
-    background-color: #BFC7D5;}
-
-.btn-end {
-    background-color: #FF7B72;}
 
 .page-home {
     background:
@@ -1035,3 +1014,77 @@ h3 {
 
 .settings-helper-tight {
     margin-top: -10px;}
+
+.admin-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    width: fit-content;
+    max-width: 320px;
+    margin: 10px auto 20px auto;}
+
+.btn-admin {
+    width: 100px !important;
+    height: 70px;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+    font-weight: 700;}
+
+.btn-admin i {
+    font-size: 22px;}
+
+.btn-launcher {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    font-size: 14px;
+    font-weight: 700;}
+
+.btn-launcher i {
+    font-size: 36px;}
+
+.launcher-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    max-width: 320px;
+    margin: 0 auto 15px auto;}
+
+.btn-car {
+    background-color: #6CA6FF;}
+
+.btn-release {
+    background-color: #66D8C6;}
+
+.btn-board {
+    background-color: #4A7DFF;}
+
+.btn-spot {
+    background-color: #B084FF;}
+
+.btn-history-admin {
+    background-color: #FFD54F;
+    color: #333;}    
+
+.btn-settings-admin {
+    background-color: #6C7A89;
+    color: white;}
+
+.btn-end-admin {
+    background-color: #FF7B72;
+    color: white;}
+
+.btn-end-admin:hover {
+    background-color: #E45D55;}    
