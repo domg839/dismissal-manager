@@ -1359,8 +1359,11 @@ function renderHistory() {
         return;
     }
 
-    let history =
-        window.dismissalHistory || [];
+let history =
+    (window.dismissalHistory || [])
+        .filter(
+            item => !item.deleted
+        );
 
     history.sort((a, b) => {
 
@@ -1583,12 +1586,16 @@ async function deleteHistory(documentId) {
                 documentId
             );
 
-        await window.firebaseServices.deleteDoc(
-            docRef
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                deleted: true,
+                deletedAt: Date.now()
+            }
         );
 
         console.log(
-            "History record deleted"
+            "History record moved to Recently Deleted"
         );
 
     } catch (error) {
@@ -1596,6 +1603,7 @@ async function deleteHistory(documentId) {
         console.error(error);
 
     }
+
 }
 
 function renderSchoolName() {
@@ -2609,5 +2617,181 @@ wrapper.scrollTo({
 });
 
     }, 100);
+
+}
+
+async function restoreHistory(documentId) {
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalHistory",
+                documentId
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                deleted: false,
+                deletedAt: null
+            }
+        );
+
+        console.log(
+            "History record restored"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+async function deleteHistoryForever(documentId) {
+
+    let confirmed = confirm(
+        "Permanently delete this record?\n\nThis action cannot be undone."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalHistory",
+                documentId
+            );
+
+        await window.firebaseServices.deleteDoc(
+            docRef
+        );
+
+        console.log(
+            "History record permanently deleted"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+function renderDeletedHistory() {
+
+    let historyList =
+        document.getElementById(
+            "deletedHistoryList"
+        );
+
+    if (!historyList) {
+        return;
+    }
+
+    let history =
+        (window.dismissalHistory || [])
+            .filter(
+                item => item.deleted
+            );
+
+    history.sort((a, b) => {
+
+        return (
+            (b.deletedAt || 0) -
+            (a.deletedAt || 0)
+        );
+
+    });
+
+    historyList.innerHTML = "";
+
+    if (history.length === 0) {
+
+        historyList.innerHTML = `
+            <div class="history-card">
+                No deleted records.
+            </div>
+        `;
+
+        return;
+
+    }
+
+    history.forEach(record => {
+
+        historyList.innerHTML += `
+
+            <div class="history-card">
+
+                <h2>
+                    ${record.date}
+                </h2>
+
+                <p>
+                    Cars Released:
+                    <strong>
+                        ${record.carsReleased}
+                    </strong>
+                </p>
+
+                <p>
+                    Start Time:
+                    <strong>
+                        ${record.startTime}
+                    </strong>
+                </p>
+
+                <p>
+                    End Time:
+                    <strong>
+                        ${record.endTime}
+                    </strong>
+                </p>
+
+                <div
+                    class="deleted-actions">
+
+                    <button
+                        class="restore-history-btn"
+                        onclick="
+                            restoreHistory(
+                                '${record.id}'
+                            )
+                        ">
+
+                        <i class="fa-solid fa-rotate-left"></i>
+                        Restore
+
+                    </button>
+
+                    <button
+                        class="delete-forever-btn"
+                        onclick="
+                            deleteHistoryForever(
+                                '${record.id}'
+                            )
+                        ">
+
+                        <i class="fa-solid fa-trash"></i>
+                        Delete Forever
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
 
 }

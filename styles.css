@@ -210,18 +210,6 @@ input {
         4vw,
         4.5rem);}
 
-.board-medium {
-    font-size: clamp(
-        1.6rem,
-        3vw,
-        3rem);}
-
-.board-small {
-    font-size: clamp(
-        1.1rem,
-        2.2vw,
-        2rem);}
-
 .spot-header {
     background-color: gold;
     color: black;
@@ -730,21 +718,22 @@ h3 {
         scale(0.95);}
 
 .fullscreen-btn i,
-.home-icon i {
+.home-icon i,
+.trash-page-icon i {
     line-height: 1;
     pointer-events: none;}
 
-.home-icon {
+.home-icon,
+.trash-page-icon {
     position: absolute;
     top: 15px;
-    left: 15px;
     width: 50px;
     height: 50px;
+
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    background-color: #4A7DFF;
     color: white;
     text-decoration: none;
     box-shadow: 0 4px 10px rgba(0,0,0,.25);
@@ -754,16 +743,6 @@ h3 {
         transform .1s ease,
         box-shadow .15s ease,
         background-color .15s ease;}
-
-.home-icon:active {
-    transform:
-        translateY(2px)
-        scale(0.95);}
-
-.home-icon:hover {
-    background-color: #2554C7;
-    color: white;
-    box-shadow: 0 6px 14px rgba(0,0,0,.35);}
 
 .latest-history {
     border: 2px solid #FFD700;}   
@@ -1172,7 +1151,8 @@ body::after {
     }
 
     .home-icon,
-    .fullscreen-btn {
+    .fullscreen-btn,
+    .trash-page-icon {
         width: 40px;
         height: 40px;
         font-size: 18px;
@@ -1183,9 +1163,10 @@ body::after {
         left: 10px;
     }
 
-    .fullscreen-btn {
-        right: 10px;
-    }
+.fullscreen-btn,
+.trash-page-icon {
+    right: 10px;
+}
 
     .release-cell {
         font-size: 16px;
@@ -1261,4 +1242,71 @@ body::after {
 
 .btn-locate-student i {
     font-size: 18px;
+}
+
+.deleted-actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+}
+
+.restore-history-btn {
+
+    background-color: #28A745;
+
+    color: white;
+
+    width: 140px;
+
+}
+
+.delete-forever-btn {
+
+    background-color: #DC3545;
+
+    color: white;
+
+    width: 170px;
+
+}
+
+.home-icon:hover,
+.trash-page-icon:hover {
+
+    color: white;
+
+    box-shadow:
+        0 6px 14px rgba(0,0,0,.35);
+
+}
+
+.home-icon {
+    left: 15px;
+    background-color: #4A7DFF;
+}
+
+.trash-page-icon {
+    right: 15px;
+    background-color: #DC3545;
+}
+
+.home-icon:hover {
+    background-color: #2554C7;
+}
+
+.trash-page-icon:hover {
+    background-color: #C82333;
+}
+
+.home-icon:active,
+.trash-page-icon:active {
+
+    transform:
+        translateY(2px)
+        scale(.95);
+
 }
