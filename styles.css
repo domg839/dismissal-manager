@@ -1291,7 +1291,7 @@ body::after {
 
 .trash-page-icon {
     right: 15px;
-    background-color: #DC3545;
+    background-color: #7952B3;
 }
 
 .home-icon:hover {
@@ -1299,7 +1299,7 @@ body::after {
 }
 
 .trash-page-icon:hover {
-    background-color: #C82333;
+    background-color: #6841A1;
 }
 
 .home-icon:active,
