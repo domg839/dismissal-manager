@@ -1175,6 +1175,10 @@ body::after {
         max-width: 100%;
         margin: 0 auto;}
 
+    .history-time-row {
+        flex-direction: column;
+        gap: 0; }
+
     input {
         width: 100%;
         max-width: 280px;
@@ -1395,3 +1399,146 @@ body::after {
     background-color: #28A745;
 
 }
+
+.history-form {
+
+    display: none;
+
+    text-align: left;
+
+    margin-top: 10px;
+
+}
+
+.history-form label {
+
+    display: block;
+
+    margin-top: 14px;
+    margin-bottom: 6px;
+
+    color: #333;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: .5px;
+
+}
+
+.history-form input[type="text"],
+.history-form input[type="number"] {
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    margin: 0;
+
+    padding: 12px;
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    text-align: left;
+
+    border: 1px solid #D0D5DD;
+
+    border-radius: 10px;
+
+    background-color: white;
+
+    color: black;
+
+}
+
+.history-checkbox {
+
+    display: flex !important;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 24px;
+
+    padding: 12px;
+
+    background-color: #F5F5F5;
+
+    border-radius: 10px;
+
+    color: #333;
+
+    font-size: 16px;
+
+    text-transform: none !important;
+
+    letter-spacing: normal !important;
+
+}
+
+.history-mode {
+
+    max-width: 450px;
+
+}
+
+.history-checkbox input {
+
+    width: auto;
+
+    margin: 0;
+
+}
+
+.history-form-title {
+
+    text-align: center;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: #7952B3;
+
+    margin-bottom: 4px;
+
+}
+
+.history-form-date {
+
+    text-align: center;
+
+    display: block;
+
+    width: fit-content;
+
+    margin: 0 auto 18px auto;
+
+    background: #F5F5F5;
+
+    padding: 4px 10px;
+
+    border-radius: 8px;
+
+}
+
+.history-time-row {
+
+    display: flex;
+
+    gap: 12px;
+
+}
+
+.history-time-group {
+
+    flex: 1;
+
+}
+

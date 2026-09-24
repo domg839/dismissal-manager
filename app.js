@@ -277,10 +277,12 @@ let editedClass =
 
 }
 
-function addVehicle() {
+async function addVehicle() {
 
     let tagInput =
-        document.getElementById("tagInput");
+        document.getElementById(
+            "tagInput"
+        );
 
     let tagNumber =
         tagInput.value.trim();
@@ -295,18 +297,21 @@ function addVehicle() {
         )
     ) {
 
-        let proceed = confirm(
-            tagNumber +
-            " is already in the queue.\n\n" +
-            "Do you want to add it again?"
-        );
+        let proceed =
+            await showConfirmModal(
+                "Duplicate Tag",
+                tagNumber +
+                " is already in the queue.\n\nDo you want to add it again?"
+            );
 
         if (!proceed) {
 
             tagInput.focus();
 
             return;
+
         }
+
     }
 
     const spotCount =
@@ -319,18 +324,28 @@ function addVehicle() {
     const nextQueuePosition =
         Math.max(
             ...dismissalQueue.map(
-                item => item.queuePosition || 0
+                item =>
+                    item.queuePosition || 0
             ),
             0
         ) + 1;
 
     const studentRecord = {
+
         tag: tagNumber,
-        queuePosition: nextQueuePosition,
-        spot: assignedSpot,
+
+        queuePosition:
+            nextQueuePosition,
+
+        spot:
+            assignedSpot,
+
         released: false,
+
         needsStudent: false,
+
         syncStatus: "saving"
+
     };
 
     addVehicleToFirebase(
@@ -346,13 +361,15 @@ function addVehicle() {
 
     if (recentCard) {
 
-        recentCard.scrollTop = 0;
+        recentCard.scrollTop =
+            0;
 
     }
 
     tagInput.value = "";
 
     tagInput.focus();
+
 }
 
 async function deleteVehicleFirebase(student) {
@@ -860,16 +877,24 @@ async function loadSettings() {
 async function saveSettings() {
 
     let schoolBox =
-        document.getElementById("schoolName");
+        document.getElementById(
+            "schoolName"
+        );
 
     let startBox =
-        document.getElementById("startSpot");
+        document.getElementById(
+            "startSpot"
+        );
 
     let endBox =
-        document.getElementById("endSpot");
+        document.getElementById(
+            "endSpot"
+        );
 
     let carsBox =
-        document.getElementById("carsDisplayed");
+        document.getElementById(
+            "carsDisplayed"
+        );
 
     let spotsBoardBox =
         document.getElementById(
@@ -882,13 +907,19 @@ async function saveSettings() {
         );
 
     let startValue =
-        parseInt(startBox.value);
+        parseInt(
+            startBox.value
+        );
 
     let endValue =
-        parseInt(endBox.value);
+        parseInt(
+            endBox.value
+        );
 
     let carsValue =
-        parseInt(carsBox.value);
+        parseInt(
+            carsBox.value
+        );
 
     if (
         isNaN(startValue) ||
@@ -896,7 +927,8 @@ async function saveSettings() {
         isNaN(carsValue)
     ) {
 
-        alert(
+        await showAlertModal(
+            "Invalid Settings",
             "Please enter valid values."
         );
 
@@ -926,8 +958,9 @@ async function saveSettings() {
 
     });
 
-    alert(
-        "Settings saved."
+    await showAlertModal(
+        "Settings Saved",
+        "Your settings have been updated successfully."
     );
 
 }
@@ -2224,44 +2257,40 @@ async function editHistory(documentId) {
         return;
     }
 
-    let startTime =
-        prompt(
-            "Start Time",
-            record.startTime
+    const result =
+        await showEditHistoryModal(
+            record
         );
 
-    if (startTime === null) {
+    if (!result) {
         return;
     }
+
+    let startTime =
+        result.startTime;
 
     let endTime =
-        prompt(
-            "End Time",
-            record.endTime
-        );
-
-    if (endTime === null) {
-        return;
-    }
+        result.endTime;
 
     let carsReleased =
-        prompt(
-            "Cars Released",
-            record.carsReleased
+        result.carsReleased;
+
+    let rainyDay =
+        result.rainyDay;
+
+    if (
+        isNaN(carsReleased) ||
+        carsReleased < 0
+    ) {
+
+        await showAlertModal(
+            "Invalid Value",
+            "Cars Released must be 0 or greater."
         );
 
-let rainyDay = confirm(
-    "Weather Condition\n\n" +
-    "OK = 🌧 Rainy Day\n" +
-    "Cancel = ☀ Normal Day"
-);   
-
-    if (carsReleased === null) {
         return;
-    }
 
-    carsReleased =
-        parseInt(carsReleased);
+    }
 
     let start =
         new Date(
@@ -2293,25 +2322,35 @@ let rainyDay = confirm(
                 documentId
             );
 
-await window.firebaseServices.updateDoc(
-    docRef,
-    {
-        startTime,
-        endTime,
-        carsReleased,
-        duration,
-        carsPerMinute,
-        rainyDay,
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                startTime,
+                endTime,
+                carsReleased,
+                duration,
+                carsPerMinute,
+                rainyDay,
 
-        lastEdited:
-            new Date()
-                .toLocaleString()
-    }
-);
+                lastEdited:
+                    new Date()
+                        .toLocaleString()
+            }
+        );
+
+        await showAlertModal(
+            "History Updated",
+            "The dismissal record was updated successfully."
+        );
 
     } catch (error) {
 
         console.error(error);
+
+        await showAlertModal(
+            "Update Failed",
+            "Unable to update the dismissal record."
+        );
 
     }
 
@@ -2406,74 +2445,13 @@ function getAlertAge(student) {
 
 }
 
-function releaseStudentFromBoard(studentId) {
-
-    if (!boardReleaseEnabled) {
-        return;
-    }
-
-    let student =
-        dismissalQueue.find(
-            item => item.id === studentId
-        );
-
-    if (!student) {
-        return;
-    }
-
-    let confirmed = confirm(
-        "Release tag " +
-        student.tag +
-        "?"
-    );
-
-    if (!confirmed) {
-        return;
-    }
-
-    releaseStudentFirebase(
-        student
-    );
-
-}
-
-function releaseStudentFromBoard(studentId) {
-
-    if (!boardReleaseEnabled) {
-        return;
-    }
-
-    let student =
-        dismissalQueue.find(
-            item => item.id === studentId
-        );
-
-    if (!student) {
-        return;
-    }
-
-    let confirmed = confirm(
-        "Release tag " +
-        student.tag +
-        "?"
-    );
-
-    if (!confirmed) {
-        return;
-    }
-
-    releaseStudentFirebase(
-        student
-    );
-
-}
 
 async function releaseStudentFromBoard(studentId) {
 
-console.log(
-    "releaseStudentFromBoard fired",
-    studentId
-);
+    console.log(
+        "releaseStudentFromBoard fired",
+        studentId
+    );
 
     if (!boardReleaseEnabled) {
         return;
@@ -3322,3 +3300,259 @@ function showAlertModal(
 
 }
 
+function previewHistoryForm() {
+
+    document.getElementById(
+        "appModal"
+    ).classList.remove(
+        "hidden"
+    );
+
+    document.getElementById(
+        "historyForm"
+    ).style.display =
+        "block";
+
+}
+
+function showEditHistoryModal(record) {
+
+    return new Promise((resolve) => {
+
+        const modal =
+            document.getElementById(
+                "appModal"
+            );
+
+        const historyForm =
+            document.getElementById(
+                "historyForm"
+            );
+
+        const title =
+            document.getElementById(
+                "modalTitle"
+            );
+
+        const message =
+            document.getElementById(
+                "modalMessage"
+            );
+
+        const input =
+            document.getElementById(
+                "modalInput"
+            );
+
+        const confirmButton =
+            document.getElementById(
+                "modalConfirm"
+            );
+
+        const cancelButton =
+            document.getElementById(
+                "modalCancel"
+            );
+
+        document.querySelector(
+            ".history-form-date"
+        ).textContent =
+            record.date;
+
+        document.getElementById(
+            "historyStartTime"
+        ).value =
+            record.startTime || "";
+
+        document.getElementById(
+            "historyEndTime"
+        ).value =
+            record.endTime || "";
+
+        document.getElementById(
+            "historyCarsReleased"
+        ).value =
+            record.carsReleased || "";
+
+        document.getElementById(
+            "historyRainyDay"
+        ).checked =
+            record.rainyDay || false;
+
+        title.style.display =
+            "none";
+
+        message.style.display =
+            "none";
+
+        input.style.display =
+            "none";
+
+        historyForm.style.display =
+            "block";
+
+        confirmButton.textContent =
+            "Save Changes";
+
+        confirmButton.className =
+            "modal-confirm modal-success";
+
+        modal.classList.remove(
+            "hidden"
+        );
+
+        modal.onclick =
+            (event) => {
+
+                if (
+                    event.target !== modal
+                ) {
+                    return;
+                }
+
+                modal.classList.add(
+                    "hidden"
+                );
+
+                historyForm.style.display =
+                    "none";
+
+                title.style.display =
+                    "";
+
+                message.style.display =
+                    "";
+
+                input.style.display =
+                    "";
+
+                modal.onclick =
+                    null;
+
+                document.onkeydown =
+                    null;
+
+                resolve(null);
+
+            };
+
+        document.onkeydown =
+            (event) => {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    historyForm.style.display =
+                        "none";
+
+                    title.style.display =
+                        "";
+
+                    message.style.display =
+                        "";
+
+                    input.style.display =
+                        "";
+
+                    modal.onclick =
+                        null;
+
+                    document.onkeydown =
+                        null;
+
+                    resolve(null);
+
+                }
+
+            };
+
+        confirmButton.onclick =
+            () => {
+
+                modal.classList.add(
+                    "hidden"
+                );
+
+                historyForm.style.display =
+                    "none";
+
+                title.style.display =
+                    "";
+
+                message.style.display =
+                    "";
+
+                input.style.display =
+                    "";
+
+                modal.onclick =
+                    null;
+
+                document.onkeydown =
+                    null;
+
+                resolve({
+
+                    startTime:
+                        document.getElementById(
+                            "historyStartTime"
+                        ).value,
+
+                    endTime:
+                        document.getElementById(
+                            "historyEndTime"
+                        ).value,
+
+                    carsReleased:
+                        parseInt(
+                            document.getElementById(
+                                "historyCarsReleased"
+                            ).value
+                        ),
+
+                    rainyDay:
+                        document.getElementById(
+                            "historyRainyDay"
+                        ).checked
+
+                });
+
+            };
+
+        cancelButton.onclick =
+            () => {
+
+                modal.classList.add(
+                    "hidden"
+                );
+
+                historyForm.style.display =
+                    "none";
+
+                title.style.display =
+                    "";
+
+                message.style.display =
+                    "";
+
+                input.style.display =
+                    "";
+
+                modal.onclick =
+                    null;
+
+                document.onkeydown =
+                    null;
+
+                resolve(null);
+
+            };
+
+    });
+
+}
