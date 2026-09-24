@@ -386,27 +386,45 @@ async function deleteVehicle(index) {
     let student =
         dismissalQueue[index];
 
-    let proceed;
+let proceed;
 
-    if (student.released) {
+if (student.released) {
 
-        proceed = confirm(
+    proceed =
+        await showConfirmModal(
+
+            "Delete Released Tag",
+
             "Tag " +
             student.tag +
             " has already been released.\n\n" +
             "Released tags should normally remain in the queue.\n\n" +
-            "Delete anyway?"
+            "Delete anyway?",
+
+            "Delete Tag",
+
+            "modal-danger"
+
         );
 
-    } else {
+} else {
 
-        proceed = confirm(
+    proceed =
+        await showConfirmModal(
+
+            "Delete Tag",
+
             "Remove tag " +
             student.tag +
-            "?"
+            "?",
+
+            "Delete",
+
+            "modal-danger"
+
         );
 
-    }
+}
 
     if (!proceed) {
         return;
@@ -426,9 +444,12 @@ async function editVehicle(index) {
     let oldTag =
         student.tag;
 
-    let newTag = prompt(
-        "Edit Tag Number",
-        oldTag
+    let newTag =
+        await showPromptModal(
+         "Edit Tag Number",
+         "Update the vehicle tag.",
+         oldTag,
+         "Save"
     );
 
     if (
@@ -449,11 +470,19 @@ async function editVehicle(index) {
         )
     ) {
 
-        let proceed = confirm(
-            newTag +
-            " is already in the queue.\n\n" +
-            "Do you want to use it anyway?"
-        );
+        let proceed =
+            await showConfirmModal(
+
+                "Duplicate Tag",
+
+                newTag +
+                " is already in the queue.\n\nDo you want to use it anyway?",
+
+                "Use Tag",
+
+                "modal-warning"
+
+            );
 
         if (!proceed) {
             return;
@@ -1041,12 +1070,14 @@ async function requestStudent(studentId) {
 
     if (student.released) {
 
-        alert(
-            "Student already released."
-        );
+await showAlertModal(
+    "Student Already Released",
+    "Tag " +
+    student.tag +
+    " has already been released."
+);
 
-        return;
-    }
+return;}
 
     let message =
         student.needsStudent
@@ -1057,8 +1088,24 @@ async function requestStudent(studentId) {
               student.tag +
               "?";
 
-    let confirmed =
-        confirm(message);
+let confirmed =
+    await showConfirmModal(
+
+        student.needsStudent
+            ? "Cancel Student Request"
+            : "Request Student",
+
+        message,
+
+        student.needsStudent
+            ? "Remove Alert"
+            : "Request Student",
+
+        student.needsStudent
+            ? "modal-danger"
+            : "modal-success"
+
+    );
 
     if (!confirmed) {
         return;
@@ -1124,62 +1171,73 @@ async function endDismissal() {
 
     if (!dismissalStartTime) {
 
-        alert(
+        await showAlertModal(
+            "Dismissal Not Started",
             "Dismissal has not started yet."
         );
 
         return;
+
     }
 
-    let confirmed = confirm(
-        "End today's dismissal?"
-    );
+    let confirmed =
+        await showConfirmModal(
+
+            "End Dismissal",
+
+            "Are you sure you want to end today's dismissal?\n\nThis will save today's dismissal history and clear the queue.",
+
+            "End Dismissal",
+
+            "modal-danger"
+
+        );
 
     if (!confirmed) {
         return;
     }
 
-endingDismissal = true;
+    endingDismissal = true;
 
-dismissalEnding = true;
+    dismissalEnding = true;
 
-const settingsRef =
-    window.firebaseServices.doc(
-        window.firebaseServices.db,
-        "settings",
-        "config"
+    const settingsRef =
+        window.firebaseServices.doc(
+            window.firebaseServices.db,
+            "settings",
+            "config"
+        );
+
+    await window.firebaseServices.updateDoc(
+        settingsRef,
+        {
+            dismissalEnding: true
+        }
     );
 
-await window.firebaseServices.updateDoc(
-    settingsRef,
-    {
-        dismissalEnding: true
+    let endButton =
+        document.querySelector(
+            ".btn-end-admin"
+        );
+
+    if (endButton) {
+
+        endButton.disabled = true;
+
+        endButton.innerHTML = `
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <div>Ending</div>
+        `;
+
     }
-);
 
-let endButton =
-    document.querySelector(
-        ".btn-end-admin"
-    );
-
-if (endButton) {
-
-    endButton.disabled = true;
-
-endButton.innerHTML = `
-    <i class="fa-solid fa-arrows-rotate"></i>
-    <div>Ending</div>
-`;
-
-}
-
-renderCurrentDismissal();
+    renderCurrentDismissal();
 
     const currentQueue =
         await getCurrentQueueFromFirestore();
 
-let releasedCount =
-    currentQueue.length;
+    let releasedCount =
+        currentQueue.length;
 
     let startTime =
         new Date(
@@ -1194,80 +1252,80 @@ let releasedCount =
             endTime - startTime
         ) / 60000;
 
-const currentSettings =
-    await window.loadSettingsFromFirestore();
+    const currentSettings =
+        await window.loadSettingsFromFirestore();
 
-let totalRequestSeconds =
-    currentSettings.totalRequestSeconds || 0;
+    let totalRequestSeconds =
+        currentSettings.totalRequestSeconds || 0;
 
-let completedRequests =
-    currentSettings.completedRequests || 0;
+    let completedRequests =
+        currentSettings.completedRequests || 0;
 
-for (const student of currentQueue) {
+    for (const student of currentQueue) {
 
-    if (
-        !student.released &&
-        student.requestedAt
-    ) {
+        if (
+            !student.released &&
+            student.requestedAt
+        ) {
 
-        const requestSeconds =
-            Math.floor(
-                (
-                    Date.now() -
-                    student.requestedAt
-                ) / 1000
-            );
+            const requestSeconds =
+                Math.floor(
+                    (
+                        Date.now() -
+                        student.requestedAt
+                    ) / 1000
+                );
 
-        totalRequestSeconds +=
-            requestSeconds;
+            totalRequestSeconds +=
+                requestSeconds;
 
-        completedRequests++;
+            completedRequests++;
+
+        }
 
     }
 
-}
+    const historyRecord = {
 
-const historyRecord = {
+        date:
+            endTime.toLocaleDateString(),
 
-    date:
-        endTime.toLocaleDateString(),
+        startTime:
+            startTime.toLocaleTimeString(),
 
-    startTime:
-        startTime.toLocaleTimeString(),
+        endTime:
+            endTime.toLocaleTimeString(),
 
-    endTime:
-        endTime.toLocaleTimeString(),
+        carsReleased:
+            releasedCount,
 
-    carsReleased:
-        releasedCount,
+        duration:
+            durationMinutes,
 
-    duration:
-        durationMinutes,
+        carsPerMinute:
+            (
+                releasedCount /
+                Math.max(
+                    durationMinutes,
+                    1
+                )
+            ).toFixed(1),
 
-    carsPerMinute:
-        (
-            releasedCount /
-            Math.max(
-                durationMinutes,
-                1
-            )
-        ).toFixed(1),
+        rainyDay:
+            rainyDay,
 
-    rainyDay:
-        rainyDay,
+        totalAlerts:
+            currentSettings.totalAlerts || 0,
 
-totalAlerts:
-    currentSettings.totalAlerts || 0,
+        averageRequestTime:
+            completedRequests > 0
+                ? Math.round(
+                    totalRequestSeconds /
+                    completedRequests
+                  )
+                : null
 
-averageRequestTime:
-    completedRequests > 0
-        ? Math.round(
-            totalRequestSeconds /
-            completedRequests
-          )
-        : null
-
-};
+    };
 
     await saveHistoryToFirebase(
         historyRecord
@@ -1281,44 +1339,45 @@ averageRequestTime:
         null
     );
 
-await window.firebaseServices.updateDoc(
-    settingsRef,
-    {
-        rainyDay: false,
+    await window.firebaseServices.updateDoc(
+        settingsRef,
+        {
+            rainyDay: false,
 
-        dismissalEnding: false,
+            dismissalEnding: false,
 
-        totalAlerts: 0,
-        totalRequestSeconds: 0,
-        completedRequests: 0
-    }
-);
-
-dismissalStartTime = null;
-
-rainyDay = false;
-
-dismissalEnding = false;
-
-let weatherButton =
-    document.getElementById(
-        "weatherToggle"
+            totalAlerts: 0,
+            totalRequestSeconds: 0,
+            completedRequests: 0
+        }
     );
 
-if (weatherButton) {
+    dismissalStartTime = null;
 
-    weatherButton.innerHTML =
-        '<i class="fa-solid fa-sun"></i>';
+    rainyDay = false;
 
-weatherButton.classList.remove(
-    "rain"
-);
+    dismissalEnding = false;
 
-weatherButton.classList.add(
-    "sun"
-);
+    let weatherButton =
+        document.getElementById(
+            "weatherToggle"
+        );
 
-}
+    if (weatherButton) {
+
+        weatherButton.innerHTML =
+            '<i class="fa-solid fa-sun"></i>';
+
+        weatherButton.classList.remove(
+            "rain"
+        );
+
+        weatherButton.classList.add(
+            "sun"
+        );
+
+    }
+
     location.reload();
 
 }
@@ -1569,8 +1628,17 @@ ${history[i].lastEdited ? `
 
 async function deleteHistory(documentId) {
 
-    let confirmDelete = confirm(
-        "Delete this dismissal record?"
+let confirmDelete =
+    await showConfirmModal(
+
+        "Delete History Record",
+
+        "Move this dismissal record to Recently Deleted?",
+
+        "Move To Deleted",
+
+        "modal-danger"
+
     );
 
     if (!confirmDelete) {
@@ -2402,6 +2470,11 @@ function releaseStudentFromBoard(studentId) {
 
 async function releaseStudentFromBoard(studentId) {
 
+console.log(
+    "releaseStudentFromBoard fired",
+    studentId
+);
+
     if (!boardReleaseEnabled) {
         return;
     }
@@ -2415,13 +2488,22 @@ async function releaseStudentFromBoard(studentId) {
         return;
     }
 
-    let confirmed = confirm(
-        "Release tag " +
-        student.tag +
-        "?\n\n" +
-        "Student should report to Spot #" +
-        student.spot
-    );
+    let confirmed =
+        await showConfirmModal(
+
+            "Release Student",
+
+            "Release tag " +
+            student.tag +
+            "?\n\n" +
+            "Student should report to Spot #" +
+            student.spot,
+
+            "Release",
+
+            "modal-success"
+
+        );
 
     if (!confirmed) {
         return;
@@ -2446,10 +2528,13 @@ async function releaseStudentFromBoard(studentId) {
 
 async function locateStudent() {
 
-    let tag =
-        prompt(
-            "Enter Tag Number"
-        );
+let tag =
+    await showPromptModal(
+        "Locate Student",
+        "Enter Tag Number",
+        "",
+        "Search"
+    );
 
     if (
         tag === null ||
@@ -2502,11 +2587,16 @@ if (student) {
 
 }
 
-    let createAlert = confirm(
+let createAlert =
+    await showConfirmModal(
+        "Tag Not Found",
+
         "Tag " +
         tag +
         " was not found.\n\n" +
-        "Create a requested student alert?"
+        "Create a requested student alert?",
+
+        "Create Alert"
     );
 
     if (!createAlert) {
@@ -2653,9 +2743,18 @@ async function restoreHistory(documentId) {
 
 async function deleteHistoryForever(documentId) {
 
-    let confirmed = confirm(
-        "Permanently delete this record?\n\nThis action cannot be undone."
-    );
+    let confirmed =
+        await showConfirmModal(
+
+            "Delete Forever",
+
+            "Permanently delete this history record?\n\nThis action cannot be undone.",
+
+            "Delete Forever",
+
+            "modal-danger"
+
+        );
 
     if (!confirmed) {
         return;
@@ -2795,3 +2894,431 @@ function renderDeletedHistory() {
     });
 
 }
+
+function showPromptModal(
+    titleText,
+    messageText,
+    defaultValue = "",
+    confirmText = "Search"
+) {
+
+    return new Promise(
+        (resolve) => {
+
+            const modal =
+                document.getElementById(
+                    "appModal"
+                );
+
+            const title =
+                document.getElementById(
+                    "modalTitle"
+                );
+
+            const message =
+                document.getElementById(
+                    "modalMessage"
+                );
+
+            const input =
+                document.getElementById(
+                    "modalInput"
+                );
+
+            const confirmButton =
+                document.getElementById(
+                    "modalConfirm"
+                );
+
+            const cancelButton =
+                document.getElementById(
+                    "modalCancel"
+                );
+
+            title.textContent =
+                titleText;
+
+            message.textContent =
+                messageText;
+
+            confirmButton.textContent =
+                confirmText;
+
+            cancelButton.textContent =
+                "Cancel";    
+
+            input.value =
+                defaultValue;
+
+            input.onkeydown =
+    (event) => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            confirmButton.click();
+
+        }
+
+    };
+
+modal.classList.remove(
+    "hidden"
+);
+
+modal.onclick =
+    (event) => {
+
+        if (
+            event.target === modal
+        ) {
+
+            modal.classList.add(
+                "hidden"
+            );
+
+            document.onkeydown =
+                null;
+                
+            resolve(
+                null
+            );
+
+        }
+
+    };
+
+document.onkeydown =
+    (event) => {
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            modal.classList.add(
+                "hidden"
+            );
+
+            document.onkeydown =
+                null;
+
+            resolve(
+                null
+            );
+
+        }
+
+    };
+
+setTimeout(() => {
+
+    input.focus();
+
+}, 50);
+
+            confirmButton.onclick =
+                () => {
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    document.onkeydown =
+                        null;
+
+                    resolve(
+                        input.value
+                    );
+
+                };
+
+            cancelButton.onclick =
+                () => {
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    document.onkeydown =
+                        null;
+
+                    resolve(
+                        null
+                    );
+
+                };
+
+        }
+
+    );
+
+}
+
+function showConfirmModal(
+    titleText,
+    messageText,
+    confirmText = "Confirm",
+    confirmClass = "modal-confirm"
+) {
+
+    return new Promise(
+        (resolve) => {
+
+            const modal =
+                document.getElementById(
+                    "appModal"
+                );
+
+            const title =
+                document.getElementById(
+                    "modalTitle"
+                );
+
+            const message =
+                document.getElementById(
+                    "modalMessage"
+                );
+
+            const input =
+                document.getElementById(
+                    "modalInput"
+                );
+
+            const confirmButton =
+                document.getElementById(
+                    "modalConfirm"
+                );
+
+            const cancelButton =
+                document.getElementById(
+                    "modalCancel"
+                );
+  
+
+            title.textContent =
+                titleText;
+
+            message.textContent =
+                messageText;
+
+            input.style.display =
+                "none";
+
+            confirmButton.textContent =
+                confirmText;
+
+            confirmButton.className =
+                `modal-confirm ${confirmClass}`;
+
+            cancelButton.textContent =
+                "Cancel";
+
+            modal.classList.remove(
+                "hidden"
+            );
+
+            modal.onclick =
+                (event) => {
+
+                    if (
+                        event.target === modal
+                    ) {
+
+                        modal.classList.add(
+                            "hidden"
+                        );
+
+                        document.onkeydown =
+                            null;
+
+                        input.style.display =
+                            "";
+
+                        resolve(false);
+
+                    }
+
+                };
+
+            document.onkeydown =
+                (event) => {
+
+                    if (
+                        event.key === "Escape"
+                    ) {
+
+                        modal.classList.add(
+                            "hidden"
+                        );
+
+                        document.onkeydown =
+                            null;
+
+                        input.style.display =
+                            "";
+
+                        resolve(false);
+
+                    }
+
+                };
+
+            confirmButton.onclick =
+                () => {
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    document.onkeydown =
+                        null;
+
+                    input.style.display =
+                        "";
+
+                    resolve(true);
+
+                };
+
+            cancelButton.onclick =
+                () => {
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    document.onkeydown =
+                        null;
+
+                    input.style.display =
+                        "";
+
+                    resolve(false);
+
+                };
+
+        }
+
+    );
+
+}
+
+function showAlertModal(
+    titleText,
+    messageText
+) {
+
+    return new Promise(
+        (resolve) => {
+
+            const modal =
+                document.getElementById(
+                    "appModal"
+                );
+
+            const title =
+                document.getElementById(
+                    "modalTitle"
+                );
+
+            const message =
+                document.getElementById(
+                    "modalMessage"
+                );
+
+            const input =
+                document.getElementById(
+                    "modalInput"
+                );
+
+            const confirmButton =
+                document.getElementById(
+                    "modalConfirm"
+                );
+
+            const cancelButton =
+                document.getElementById(
+                    "modalCancel"
+                );
+
+            title.textContent =
+                titleText;
+
+            message.textContent =
+                messageText;
+
+            input.style.display =
+                "none";
+
+            cancelButton.style.display =
+                "none";
+
+            confirmButton.textContent =
+                "OK";
+
+            confirmButton.className =
+                "modal-confirm modal-success";
+
+            modal.classList.remove(
+                "hidden"
+            );
+
+            document.onkeydown =
+                (event) => {
+
+                    if (
+                        event.key === "Escape"
+                    ) {
+
+                        modal.classList.add(
+                            "hidden"
+                        );
+
+                        document.onkeydown =
+                            null;
+
+                        input.style.display =
+                            "";
+
+                        cancelButton.style.display =
+                            "";
+
+                        confirmButton.className =
+                            "modal-confirm";
+
+                        resolve();
+
+                    }
+
+                };
+
+            confirmButton.onclick =
+                () => {
+
+                    modal.classList.add(
+                        "hidden"
+                    );
+
+                    document.onkeydown =
+                        null;
+
+                    input.style.display =
+                        "";
+
+                    cancelButton.style.display =
+                        "";
+
+                    confirmButton.className =
+                        "modal-confirm";
+
+                    resolve();
+
+                };
+
+        }
+
+    );
+
+}
+

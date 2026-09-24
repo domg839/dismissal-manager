@@ -234,6 +234,48 @@ endButton.innerHTML = `
 
     </script>
 
+<div id="appModal" class="app-modal hidden">
+
+    <div class="app-modal-content">
+
+        <h2 id="modalTitle"></h2>
+
+        <p
+            id="modalMessage"
+            class="modal-message">
+        </p>
+
+        <input
+            id="modalInput"
+            type="text"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false">
+
+        <div class="modal-buttons">
+
+            <button
+                id="modalCancel"
+                class="modal-cancel">
+
+                Cancel
+
+            </button>
+
+            <button
+                id="modalConfirm"
+                class="modal-confirm">
+
+                Confirm
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>    
+
 </body>
 
 </html>
