@@ -1197,6 +1197,36 @@ let releasedCount =
 const currentSettings =
     await window.loadSettingsFromFirestore();
 
+let totalRequestSeconds =
+    currentSettings.totalRequestSeconds || 0;
+
+let completedRequests =
+    currentSettings.completedRequests || 0;
+
+for (const student of currentQueue) {
+
+    if (
+        !student.released &&
+        student.requestedAt
+    ) {
+
+        const requestSeconds =
+            Math.floor(
+                (
+                    Date.now() -
+                    student.requestedAt
+                ) / 1000
+            );
+
+        totalRequestSeconds +=
+            requestSeconds;
+
+        completedRequests++;
+
+    }
+
+}
+
 const historyRecord = {
 
     date:
@@ -1230,10 +1260,10 @@ totalAlerts:
     currentSettings.totalAlerts || 0,
 
 averageRequestTime:
-    (currentSettings.completedRequests || 0) > 0
+    completedRequests > 0
         ? Math.round(
-            (currentSettings.totalRequestSeconds || 0) /
-            currentSettings.completedRequests
+            totalRequestSeconds /
+            completedRequests
           )
         : null
 
