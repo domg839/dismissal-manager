@@ -1513,7 +1513,9 @@ const busiestCars =
 
         historyList.innerHTML += `
 
-            <div class="history-card ${
+            <div
+    id="history-record-${history[i].id}"
+    class="history-card ${
                 i === 0
                     ? "latest-history"
                     : ""
@@ -3702,7 +3704,9 @@ function renderHistoryDashboard() {
 
         <div class="history-dashboard">
 
-           <div class="history-stat-card history-stat-fastest">
+           <div
+    class="history-stat-card history-stat-fastest"
+    onclick="scrollToHistoryRecord('${fastest.id}')">
 
                <div class="history-stat-label">
     <i class="fa-solid fa-bolt"></i>
@@ -3719,7 +3723,9 @@ function renderHistoryDashboard() {
 
             </div>
 
-<div class="history-stat-card history-stat-busiest">
+<div
+    class="history-stat-card history-stat-busiest"
+    onclick="scrollToHistoryRecord('${busiest.id}')">
 
     <div class="history-stat-label">
         <i class="fa-solid fa-car"></i>
@@ -3771,5 +3777,40 @@ function renderHistoryDashboard() {
 </div>
 
     `;
+
+}
+
+function scrollToHistoryRecord(
+    documentId
+) {
+
+    const card =
+        document.getElementById(
+            `history-record-${documentId}`
+        );
+
+    if (!card) {
+        return;
+    }
+
+    card.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
+    card.classList.add(
+        "history-card-highlight"
+    );
+
+    setTimeout(
+        () => {
+
+            card.classList.remove(
+                "history-card-highlight"
+            );
+
+        },
+        2000
+    );
 
 }
