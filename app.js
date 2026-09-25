@@ -1566,7 +1566,50 @@ if (window.isDemoMode) {
             endTime - startTime
         ) / 60000;
 
-    const historyRecord = {
+const requestedStudents =
+    currentQueue.filter(
+        student =>
+            student.requestedAt
+    );
+
+const averageRequestTime =
+    requestedStudents.length > 0
+
+        ? Math.round(
+
+            requestedStudents.reduce(
+
+                (total, student) => {
+
+                    let endTime =
+
+                        student.releasedAt ||
+
+                        Date.now();
+
+                    return total +
+
+                        (
+
+                            endTime -
+
+                            student.requestedAt
+
+                        ) / 1000;
+
+                },
+
+                0
+
+            ) /
+
+            requestedStudents.length
+
+        )
+
+        : null;    
+    
+        const historyRecord = {
 
         id:
             "demo-history-" +
@@ -1607,7 +1650,8 @@ if (window.isDemoMode) {
             item.needsStudent
     ).length,
 
-        averageRequestTime: null
+        averageRequestTime:
+    averageRequestTime
 
     };
 
