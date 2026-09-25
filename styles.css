@@ -1542,3 +1542,62 @@ body::after {
 
 }
 
+.toast {
+
+    position: fixed;
+
+    bottom: 25px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: linear-gradient(
+    180deg,
+    #343A40,
+    #212529);
+
+    color: white;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    box-shadow:
+        0 8px 20px rgba(
+            0,
+            0,
+            0,
+            .35
+        );
+
+    z-index: 10000;
+
+    opacity: 0;
+
+    transition:
+        opacity .2s ease,
+        transform .2s ease;
+
+}
+
+.toast.show {
+
+    opacity: 1;
+
+    transform:
+        translateX(-50%)
+        translateY(0);
+
+}
+
+.toast i {
+
+    margin-right: 8px;
+
+}
+

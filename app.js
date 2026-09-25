@@ -958,10 +958,9 @@ async function saveSettings() {
 
     });
 
-    await showAlertModal(
-        "Settings Saved",
-        "Your settings have been updated successfully."
-    );
+showToast(
+    '<i class="fa-solid fa-floppy-disk"></i> Settings Saved'
+);
 
 }
 
@@ -1953,6 +1952,7 @@ async function releaseStudentFirebase(student) {
             "Student released"
         );
 
+
     } catch (error) {
 
         console.error(error);
@@ -2338,10 +2338,9 @@ async function editHistory(documentId) {
             }
         );
 
-        await showAlertModal(
-            "History Updated",
-            "The dismissal record was updated successfully."
-        );
+showToast(
+    '<i class="fa-solid fa-circle-check"></i> History Updated'
+);
 
     } catch (error) {
 
@@ -2707,9 +2706,13 @@ async function restoreHistory(documentId) {
             }
         );
 
-        console.log(
-            "History record restored"
-        );
+console.log(
+    "History record restored"
+);
+
+showToast(
+    '<i class="fa-solid fa-clock-rotate-left"></i> Record Restored'
+);
 
     } catch (error) {
 
@@ -2751,9 +2754,13 @@ async function deleteHistoryForever(documentId) {
             docRef
         );
 
-        console.log(
-            "History record permanently deleted"
-        );
+console.log(
+    "History record permanently deleted"
+);
+
+showToast(
+    '<i class="fa-solid fa-trash-can"></i> Permanently Deleted'
+);
 
     } catch (error) {
 
@@ -3554,5 +3561,59 @@ function showEditHistoryModal(record) {
             };
 
     });
+
+}
+
+function showToast(
+    message,
+    duration = 2500
+) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+    if (!toast) {
+        return;
+    }
+
+    toast.innerHTML =
+        message;
+
+    toast.classList.remove(
+        "hidden"
+    );
+
+    toast.classList.add(
+        "show"
+    );
+
+    clearTimeout(
+        toast.timeoutId
+    );
+
+    toast.timeoutId =
+        setTimeout(
+            () => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+                setTimeout(
+                    () => {
+
+                        toast.classList.add(
+                            "hidden"
+                        );
+
+                    },
+                    200
+                );
+
+            },
+            duration
+        );
 
 }
