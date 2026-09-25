@@ -23,9 +23,31 @@
         <i class="fa-solid fa-house"></i>
     </a>
 
+<button
+    class="logout-icon"
+    onclick="logout()">
+
+    <i class="fa-solid fa-right-from-bracket"></i>
+
+</button>    
+
     <div class="container">
 
         <h1>Settings</h1>
+
+        <div
+    id="adminNotice"
+    class="settings-admin-notice hidden">
+
+    <i class="fa-solid fa-lock"></i>
+
+    Administrator Access Required
+
+    <div class="settings-admin-subtitle">
+        Settings can be viewed but only Administrators can make changes.
+    </div>
+
+</div>
 
         <div class="settings-card">
 
@@ -131,15 +153,6 @@
 
 </button>
 
-<button
-    class="btn-logout"
-    onclick="logout()">
-
-    <i class="fa-solid fa-right-from-bracket"></i>
-    Logout
-
-</button>
-
     </div>
 
     <script type="module" src="firebase.js"></script>
@@ -148,11 +161,33 @@
 
     <script>
 
-        window.addEventListener("load", async () => {
+window.addEventListener("load", async () => {
 
-            await loadSettings();
+    await loadSettings();
 
-        });
+    const email =
+        window.firebaseServices
+            .auth
+            .currentUser
+            ?.email;
+
+    const role =
+        await window.getUserRole(
+            email
+        );
+
+    console.log(
+        "Settings Role:",
+        role
+    );
+
+    if (role !== "admin") {
+
+        enableReadOnlySettings();
+
+    }
+
+});
 
     </script>
 

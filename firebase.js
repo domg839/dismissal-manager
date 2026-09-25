@@ -240,3 +240,41 @@ function watchSettings(callback) {
 
 window.watchSettings =
     watchSettings;
+
+async function getUserRole(email) {
+
+    const querySnapshot =
+        await getDocs(
+
+            collection(
+                db,
+                "users"
+            )
+
+        );
+
+    let role =
+        "staff";
+
+    querySnapshot.forEach((doc) => {
+
+        const user =
+            doc.data();
+
+        if (
+            user.email === email
+        ) {
+
+            role =
+                user.role;
+
+        }
+
+    });
+
+    return role;
+
+}
+
+window.getUserRole =
+    getUserRole;

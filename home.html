@@ -138,6 +138,27 @@ window.addEventListener("load", async () => {
 
     await loadSettingsFromFirebase();
 
+const email =
+    window.firebaseServices
+        .auth
+        .currentUser
+        ?.email;
+
+console.log(
+    "Current User:",
+    email
+);
+
+const role =
+    await window.getUserRole(
+        email
+    );
+
+console.log(
+    "Current Role:",
+    role
+);
+
     renderSchoolName();
 
 window.watchSettings(

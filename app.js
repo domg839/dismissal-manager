@@ -1599,25 +1599,31 @@ ${history[i].lastEdited ? `
 
     </div>
 
-    <div class="history-actions">
+${
+    window.currentUserRole === "admin"
+        ? `
+<div class="history-actions">
 
-        <button
-            class="edit-history"
-            onclick="editHistory('${history[i].id}')">
+    <button
+        class="edit-history"
+        onclick="editHistory('${history[i].id}')">
 
-            <i class="fa-solid fa-pen"></i>
+        <i class="fa-solid fa-pen"></i>
 
-        </button>
+    </button>
 
-        <button
-            class="delete-history"
-            onclick="deleteHistory('${history[i].id}')">
+    <button
+        class="delete-history"
+        onclick="deleteHistory('${history[i].id}')">
 
-            <i class="fa-solid fa-trash"></i>
+        <i class="fa-solid fa-trash"></i>
 
-        </button>
+    </button>
 
-    </div>
+</div>
+`
+        : ""
+}
 
 </div>
 
@@ -3860,6 +3866,55 @@ async function logout() {
 
     window.location.href =
         "login.html";
+
+}
+
+function enableReadOnlySettings() {
+
+    document
+        .getElementById(
+            "adminNotice"
+        )
+        ?.classList.remove(
+            "hidden"
+        );
+
+    document
+        .querySelectorAll(
+            "#schoolName, #startSpot, #endSpot, #carsDisplayed"
+        )
+        .forEach(input => {
+
+            input.disabled =
+                true;
+
+        });
+
+    document
+        .querySelectorAll(
+            "#showSpotsOnBoard, #boardReleaseEnabled"
+        )
+        .forEach(input => {
+
+            input.disabled =
+                true;
+
+        });
+
+    const saveButton =
+        document.getElementById(
+            "saveSettingsBtn"
+        );
+
+    if (saveButton) {
+
+        saveButton.disabled =
+            true;
+
+saveButton.innerHTML =
+    '<i class="fa-solid fa-lock"></i> Admin Only';
+
+    }
 
 }
 

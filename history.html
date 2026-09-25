@@ -18,6 +18,7 @@
 </a>
 
 <a
+    id="recentlyDeletedBtn"
     href="recently-deleted.html"
     class="trash-page-icon">
 
@@ -43,18 +44,65 @@
 
     window.addEventListener("load", () => {
 
-        window.watchDismissalHistory(
+        window.firebaseServices
+            .onAuthStateChanged(
 
-            (records) => {
+                window.firebaseServices.auth,
 
-                window.dismissalHistory =
-                    records;
+                async (user) => {
 
-                renderHistory();
+                    if (!user) {
 
-            }
+                        window.location.href =
+                            "login.html";
 
-        );
+                        return;
+
+                    }
+
+                    console.log(
+                        "History Email:",
+                        user.email
+                    );
+
+                    window.currentUserRole =
+                        await window.getUserRole(
+                            user.email
+                        );
+
+console.log(
+    "History Role:",
+    window.currentUserRole
+);
+
+if (
+    window.currentUserRole !==
+    "admin"
+) {
+
+    document.getElementById(
+        "recentlyDeletedBtn"
+    ).style.display =
+        "none";
+
+}
+
+                    window.watchDismissalHistory(
+
+                        (records) => {
+
+                            window.dismissalHistory =
+                                records;
+
+                            renderHistory();
+
+                        }
+
+                    );
+
+                }
+
+            );
 
     });
 

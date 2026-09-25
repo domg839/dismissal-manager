@@ -28,6 +28,32 @@ localStorage.setItem(
     email
 );
 
+const role =
+    await window.getUserRole(
+        email
+    );
+
+console.log(
+    "Role Found:",
+    role
+);
+
+localStorage.setItem(
+    "userRole",
+    role
+);
+
+console.log(
+    "Role Saved:",
+    localStorage.getItem(
+        "userRole"
+    )
+);
+
+localStorage.setItem(
+    "userRole",
+    role
+);
 
         window.location.href =
             "home.html";
