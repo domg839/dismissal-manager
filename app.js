@@ -876,10 +876,12 @@ async function loadSettings() {
 
 async function saveSettings() {
 
-    if (
-        window.currentUserRole !==
-        "admin"
-    ) {
+if (
+    !window.isDemoMode &&
+    window.currentUserRole !==
+    "admin"
+)
+ {
 
         console.warn(
             "Staff user attempted to save settings."
@@ -1618,7 +1620,10 @@ ${history[i].lastEdited ? `
     </div>
 
 ${
-    window.currentUserRole === "admin"
+    (
+    window.currentUserRole === "admin" ||
+    window.isDemoMode
+)
         ? `
 <div class="history-actions">
 
@@ -1774,6 +1779,15 @@ function renderSchoolName() {
 
     if (!title) {
         return;
+    }
+
+    if (window.isDemoMode) {
+
+        title.innerText =
+            "Sample Elementary School";
+
+        return;
+
     }
 
     title.innerText =
@@ -3935,5 +3949,26 @@ saveButton.style.display =
     }
 
 }
+
+window.isDemoMode =
+    sessionStorage.getItem(
+        "demoMode"
+    ) === "true";
+
+const demoBanner =
+    document.getElementById(
+        "demoBanner"
+    );
+
+if (
+    demoBanner &&
+    window.isDemoMode
+) {
+
+    demoBanner.classList.remove(
+        "hidden"
+    );
+
+}    
 
 

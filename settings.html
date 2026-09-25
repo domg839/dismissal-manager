@@ -159,9 +159,45 @@
 
     <script src="app.js"></script>
 
-    <script>
+<script>
 
 window.addEventListener("load", async () => {
+
+    const isDemoMode =
+        sessionStorage.getItem(
+            "demoMode"
+        ) === "true";
+
+    if (isDemoMode) {
+
+        document.getElementById(
+            "schoolName"
+        ).value =
+            "Sample Elementary School";
+
+        document.getElementById(
+            "startSpot"
+        ).value = 1;
+
+        document.getElementById(
+            "endSpot"
+        ).value = 10;
+
+        document.getElementById(
+            "carsDisplayed"
+        ).value = 20;
+
+        document.getElementById(
+            "showSpotsOnBoard"
+        ).checked = true;
+
+        document.getElementById(
+            "boardReleaseEnabled"
+        ).checked = true;
+
+        return;
+
+    }
 
     await loadSettings();
 
@@ -176,11 +212,6 @@ window.addEventListener("load", async () => {
             email
         );
 
-    console.log(
-        "Settings Role:",
-        role
-    );
-
     if (role !== "admin") {
 
         enableReadOnlySettings();
@@ -189,7 +220,7 @@ window.addEventListener("load", async () => {
 
 });
 
-    </script>
+</script>
 
 <div id="appModal" class="app-modal hidden">
 

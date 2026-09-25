@@ -33,6 +33,20 @@ setTimeout(() => {
 
 setTimeout(() => {
 
+    const isDemoMode =
+        sessionStorage.getItem(
+            "demoMode"
+        ) === "true";
+
+    if (isDemoMode) {
+
+        window.location.href =
+            "home.html";
+
+        return;
+
+    }
+
     window.firebaseServices
         .onAuthStateChanged(
 

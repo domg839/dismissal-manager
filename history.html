@@ -42,69 +42,132 @@
 
 <script>
 
-    window.addEventListener("load", () => {
+window.addEventListener("load", () => {
 
-        window.firebaseServices
-            .onAuthStateChanged(
+    const isDemoMode =
+        sessionStorage.getItem(
+            "demoMode"
+        ) === "true";
 
-                window.firebaseServices.auth,
+if (isDemoMode) {
 
-                async (user) => {
-
-                    if (!user) {
-
-                        window.location.href =
-                            "login.html";
-
-                        return;
-
-                    }
-
-                    console.log(
-                        "History Email:",
-                        user.email
-                    );
-
-                    window.currentUserRole =
-                        await window.getUserRole(
-                            user.email
-                        );
-
-console.log(
-    "History Role:",
-    window.currentUserRole
-);
-
-if (
-    window.currentUserRole !==
-    "admin"
-) {
+    window.currentUserRole =
+        "admin";
 
     document.getElementById(
         "recentlyDeletedBtn"
-    ).style.display =
-        "none";
+    ).style.display = "";
+
+window.dismissalHistory = [
+
+    {
+        id: "demo1",
+        deleted: false,
+        date: "9/24/2026",
+        carsReleased: 52,
+        startTime: "2:00 PM",
+        endTime: "2:18 PM",
+        duration: 18,
+        carsPerMinute: "2.89",
+        totalAlerts: 4,
+        rainyDay: false
+    },
+
+    {
+        id: "demo2",
+        deleted: false,
+        date: "9/23/2026",
+        carsReleased: 38,
+        startTime: "2:00 PM",
+        endTime: "2:25 PM",
+        duration: 25,
+        carsPerMinute: "1.52",
+        totalAlerts: 2,
+        rainyDay: true
+    },    
+
+    {
+         id: "demo3",
+         deleted: true,
+         deletedAt: Date.now(),
+         date: "9/22/2026",
+         carsReleased: 44,
+         startTime: "2:00 PM",
+         endTime: "2:22 PM",
+         duration: 22,
+         carsPerMinute: "2.00",
+         totalAlerts: 3,
+         rainyDay: false
+    }
+];
+
+renderHistory();
+
+    return;
 
 }
 
-                    window.watchDismissalHistory(
+    window.firebaseServices
+        .onAuthStateChanged(
 
-                        (records) => {
+            window.firebaseServices.auth,
 
-                            window.dismissalHistory =
-                                records;
+            async (user) => {
 
-                            renderHistory();
+                if (!user) {
 
-                        }
+                    window.location.href =
+                        "login.html";
 
-                    );
+                    return;
 
                 }
 
-            );
+                console.log(
+                    "History Email:",
+                    user.email
+                );
 
-    });
+                window.currentUserRole =
+                    await window.getUserRole(
+                        user.email
+                    );
+
+                console.log(
+                    "History Role:",
+                    window.currentUserRole
+                );
+
+                if (
+                    window.currentUserRole !==
+                    "admin"
+                ) {
+
+                    document.getElementById(
+                        "recentlyDeletedBtn"
+                    ).style.display =
+                        "none";
+
+                }
+
+                window.watchDismissalHistory(
+
+                    (records) => {
+
+                        window.dismissalHistory =
+                            records;
+
+                        renderHistory();
+
+                    }
+
+                );
+
+            }
+
+        );
+
+});
 
 </script>
 

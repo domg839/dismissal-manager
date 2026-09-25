@@ -2371,4 +2371,70 @@ body::after {
 
 }
 
+.btn-demo {
 
+    width: 100%;
+
+    background: linear-gradient(
+        180deg,
+        #FFD54F,
+        #E6B93C
+    );
+
+    color: #333;
+
+}
+
+.demo-banner {
+
+    max-width: 500px;
+
+    margin: 10px auto;
+
+    padding: 12px;
+
+    border-radius: 12px;
+
+    background: #fff3cd;
+
+    color: #856404;
+
+    border: 1px solid #ffe69c;
+
+    text-align: center;
+
+}
+
+.demo-banner i {
+
+    color: #4A7DFF;
+
+    font-size: 24px;
+
+    display: block;
+
+    margin-bottom: 6px;
+
+}
+
+.demo-title {
+
+    font-size: 18px;
+
+    font-weight: 800;
+
+    line-height: 1.1;
+
+    margin-bottom: 4px;
+
+}
+
+.demo-subtitle {
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+}

@@ -165,3 +165,31 @@ window.addEventListener(
 
     }
 );
+
+const demoButton =
+    document.getElementById(
+        "demoModeBtn"
+    );
+
+if (demoButton) {
+
+demoButton.addEventListener(
+    "click",
+    () => {
+
+        sessionStorage.setItem(
+            "demoMode",
+            "true"
+        );
+
+        console.log(
+            "Demo Mode Enabled"
+        );
+
+        window.location.href =
+            "index.html";
+
+    }
+);
+
+}
