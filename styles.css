@@ -81,6 +81,38 @@ button:active {
     border-radius: 5px;
     font-weight: bold;}
 
+.spot-range-row {
+
+    display: flex;
+    margin-left: 0px;
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+}
+
+#schoolName {
+    margin-right: 150px;
+}
+
+
+.spot-setting {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: center;}
+
+.spot-setting label {
+    width: auto;
+    padding: 0;
+    margin-bottom: 2px;
+    text-align: center;}
+
+.spot-setting input {
+    width: 70px;
+    transform: translateX(-80px);
+    max-width: 70px;}    
+
 .tag {
     width: 50px;
     background-color: white;
@@ -500,7 +532,7 @@ h3 {
     text-align: left;
     border-bottom: 1px solid rgba(255,255,255,.15);
     padding-bottom: 10px;
-    margin-bottom: 20px;}
+    margin-bottom: 14px;}
     
 
 .settings-row {
@@ -1163,6 +1195,10 @@ body::after {
         padding: 12px;
         font-size: 20px;}
 
+    .spot-range-row {
+        flex-direction: row;
+        gap: 24px;}
+    
     .settings-row {
         flex-direction: column;
         align-items: stretch;
@@ -1921,4 +1957,26 @@ body::after {
 .modal-warning:hover,
 .modal-success:hover {
     filter: brightness(1.08);
+}
+
+.settings-inline-row {
+
+    justify-content: space-between;
+
+}
+
+.settings-inline-row label {
+
+    width: auto;
+
+}
+
+.settings-inline-row input {
+
+    width: 70px;
+
+    max-width: 70px;
+
+    text-align: center;
+
 }
