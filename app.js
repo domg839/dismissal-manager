@@ -337,10 +337,6 @@ let proceed =
 
 const studentRecord = {
 
-    id:
-        "demo-" +
-        Date.now(),
-
     tag: tagNumber,
 
     queuePosition:
@@ -1115,9 +1111,45 @@ if (
         isNaN(carsValue)
     ) {
 
-await showAlertModal(
-    '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Settings',
+        await showAlertModal(
+            '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Settings',
             "Please enter valid values."
+        );
+
+        return;
+
+    }
+
+    if (
+        startValue < 1 ||
+        endValue < 1
+    ) {
+
+        await showAlertModal(
+            '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Settings',
+            "Start Spot and End Spot must be 1 or greater."
+        );
+
+        return;
+
+    }
+
+    if (endValue < startValue) {
+
+        await showAlertModal(
+            '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Spot Range',
+            "Ending Spot must be greater than or equal to Starting Spot."
+        );
+
+        return;
+
+    }
+
+    if (carsValue < 1) {
+
+        await showAlertModal(
+            '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Settings',
+            "Cars Displayed must be 1 or greater."
         );
 
         return;
@@ -3212,10 +3244,6 @@ await showConfirmModal(
         );
 
 const studentRecord = {
-
-    id:
-        "local-" +
-        Date.now(),
 
     tag: tag,
 

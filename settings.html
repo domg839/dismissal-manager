@@ -72,9 +72,10 @@
 
         <label>Starting Spot</label>
 
-        <input
-            type="number"
-            id="startSpot">
+<input
+    type="number"
+    id="startSpot"
+    min="1">
 
     </div>
 
@@ -82,9 +83,11 @@
 
         <label>Ending Spot</label>
 
-        <input
-            type="number"
-            id="endSpot">
+<input
+    type="number"
+    id="endSpot"
+    min="1">
+
 
     </div>
 
@@ -104,9 +107,10 @@
 
     <label>Cars Displayed</label>
 
-    <input
-        type="number"
-        id="carsDisplayed">
+<input
+    type="number"
+    id="carsDisplayed"
+    min="1">
 
 </div>
 
@@ -186,6 +190,9 @@ window.addEventListener("load", async () => {
         await window.getUserRole(
             email
         );
+
+        window.currentUserRole =
+            role;
 
     if (role !== "admin") {
 
