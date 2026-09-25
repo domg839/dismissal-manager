@@ -297,12 +297,12 @@ async function addVehicle() {
         )
     ) {
 
-        let proceed =
-            await showConfirmModal(
-                "Duplicate Tag",
-                tagNumber +
-                " is already in the queue.\n\nDo you want to add it again?"
-            );
+let proceed =
+    await showConfirmModal(
+        '<i class="fa-solid fa-copy"></i> Duplicate Tag',
+        tagNumber +
+        " is already in the queue.\n\nDo you want to add it again?"
+    );
 
         if (!proceed) {
 
@@ -408,38 +408,38 @@ let proceed;
 if (student.released) {
 
     proceed =
-        await showConfirmModal(
+await showConfirmModal(
 
-            "Delete Released Tag",
+    '<i class="fa-solid fa-trash"></i> Delete Released Tag',
 
-            "Tag " +
-            student.tag +
-            " has already been released.\n\n" +
-            "Released tags should normally remain in the queue.\n\n" +
-            "Delete anyway?",
+    "Tag " +
+    student.tag +
+    " has already been released.\n\n" +
+    "Released tags should normally remain in the queue.\n\n" +
+    "Delete anyway?",
 
-            "Delete Tag",
+    "Delete Tag",
 
-            "modal-danger"
+    "modal-danger"
 
-        );
+);
 
 } else {
 
     proceed =
-        await showConfirmModal(
+await showConfirmModal(
 
-            "Delete Tag",
+    '<i class="fa-solid fa-trash"></i> Delete Tag',
 
-            "Remove tag " +
-            student.tag +
-            "?",
+    "Remove tag " +
+    student.tag +
+    "?",
 
-            "Delete",
+    "Delete",
 
-            "modal-danger"
+    "modal-danger"
 
-        );
+);
 
 }
 
@@ -462,12 +462,12 @@ async function editVehicle(index) {
         student.tag;
 
     let newTag =
-        await showPromptModal(
-         "Edit Tag Number",
-         "Update the vehicle tag.",
-         oldTag,
-         "Save"
-    );
+await showPromptModal(
+    '<i class="fa-solid fa-pen"></i> Edit Tag Number',
+    "Update the vehicle tag.",
+    oldTag,
+    "Save"
+);
 
     if (
         newTag === null ||
@@ -487,19 +487,19 @@ async function editVehicle(index) {
         )
     ) {
 
-        let proceed =
-            await showConfirmModal(
+let proceed =
+    await showConfirmModal(
 
-                "Duplicate Tag",
+        '<i class="fa-solid fa-triangle-exclamation"></i> Duplicate Tag',
 
-                newTag +
-                " is already in the queue.\n\nDo you want to use it anyway?",
+        newTag +
+        " is already in the queue.\n\nDo you want to use it anyway?",
 
-                "Use Tag",
+        "Use Tag",
 
-                "modal-warning"
+        "modal-warning"
 
-            );
+    );
 
         if (!proceed) {
             return;
@@ -927,8 +927,8 @@ async function saveSettings() {
         isNaN(carsValue)
     ) {
 
-        await showAlertModal(
-            "Invalid Settings",
+await showAlertModal(
+    '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Settings',
             "Please enter valid values."
         );
 
@@ -1129,7 +1129,7 @@ async function requestStudent(studentId) {
     if (student.released) {
 
 await showAlertModal(
-    "Student Already Released",
+    '<i class="fa-solid fa-triangle-exclamation"></i> Student Already Released',
     "Tag " +
     student.tag +
     " has already been released."
@@ -1149,9 +1149,9 @@ return;}
 let confirmed =
     await showConfirmModal(
 
-        student.needsStudent
-            ? "Cancel Student Request"
-            : "Request Student",
+student.needsStudent
+    ? '<i class="fa-solid fa-user-minus"></i> Cancel Student Request'
+    : '<i class="fa-solid fa-user-plus"></i> Request Student',
 
         message,
 
@@ -1229,10 +1229,10 @@ async function endDismissal() {
 
     if (!dismissalStartTime) {
 
-        await showAlertModal(
-            "Dismissal Not Started",
-            "Dismissal has not started yet."
-        );
+await showAlertModal(
+    '<i class="fa-solid fa-clock"></i> Dismissal Not Started',
+    "Dismissal has not started yet."
+);
 
         return;
 
@@ -1241,7 +1241,7 @@ async function endDismissal() {
     let confirmed =
         await showConfirmModal(
 
-            "End Dismissal",
+            '<i class="fa-solid fa-flag-checkered"></i> End Dismissal',
 
             "Are you sure you want to end today's dismissal?\n\nThis will save today's dismissal history and clear the queue.",
 
@@ -1696,17 +1696,12 @@ ${history[i].lastEdited ? `
 async function deleteHistory(documentId) {
 
 let confirmDelete =
-    await showConfirmModal(
-
-        "Delete History Record",
-
-        "Move this dismissal record to Recently Deleted?",
-
-        "Move To Deleted",
-
-        "modal-danger"
-
-    );
+await showConfirmModal(
+    '<i class="fa-solid fa-trash"></i> Delete History Record',
+    "Move this dismissal record to Recently Deleted?",
+    "Move To Deleted",
+    "modal-danger"
+);
 
     if (!confirmDelete) {
         return;
@@ -2323,10 +2318,10 @@ async function editHistory(documentId) {
         carsReleased < 0
     ) {
 
-        await showAlertModal(
-            "Invalid Value",
-            "Cars Released must be 0 or greater."
-        );
+await showAlertModal(
+    '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Value',
+    "Cars Released must be 0 or greater."
+);
 
         return;
 
@@ -2387,10 +2382,10 @@ showToast(
 
         console.error(error);
 
-        await showAlertModal(
-            "Update Failed",
-            "Unable to update the dismissal record."
-        );
+await showAlertModal(
+    '<i class="fa-solid fa-circle-xmark"></i> Update Failed',
+    "Unable to update the dismissal record."
+);
 
     }
 
@@ -2506,22 +2501,16 @@ async function releaseStudentFromBoard(studentId) {
         return;
     }
 
-    let confirmed =
-        await showConfirmModal(
+let confirmed =
+await showConfirmModal(
+    '<i class="fa-solid fa-person-walking-arrow-right"></i> Release Student',
 
-            "Release Student",
+    student.tag + " → Spot " + student.spot,
 
-            "Release tag " +
-            student.tag +
-            "?\n\n" +
-            "Student should report to Spot #" +
-            student.spot,
+    "Release",
 
-            "Release",
-
-            "modal-success"
-
-        );
+    "modal-success"
+);
 
     if (!confirmed) {
         return;
@@ -2547,12 +2536,12 @@ async function releaseStudentFromBoard(studentId) {
 async function locateStudent() {
 
 let tag =
-    await showPromptModal(
-        "Locate Student",
-        "Enter Tag Number",
-        "",
-        "Search"
-    );
+await showPromptModal(
+    '<i class="fa-solid fa-magnifying-glass"></i> Locate Student',
+    "Enter a tag number.",
+    "",
+    "Search"
+);
 
     if (
         tag === null ||
@@ -2606,8 +2595,8 @@ if (student) {
 }
 
 let createAlert =
-    await showConfirmModal(
-        "Tag Not Found",
+await showConfirmModal(
+    '<i class="fa-solid fa-magnifying-glass"></i> Tag Not Found',
 
         "Tag " +
         tag +
@@ -2769,7 +2758,7 @@ async function deleteHistoryForever(documentId) {
     let confirmed =
         await showConfirmModal(
 
-            "Delete Forever",
+            '<i class="fa-solid fa-trash-can"></i> Delete Forever',
 
             "Permanently delete this history record?\n\nThis action cannot be undone.",
 
@@ -2964,8 +2953,8 @@ function showPromptModal(
                     "modalCancel"
                 );
 
-            title.textContent =
-                titleText;
+            title.innerHTML =
+                 titleText;
 
             message.textContent =
                 messageText;
@@ -2973,6 +2962,9 @@ function showPromptModal(
             confirmButton.textContent =
                 confirmText;
 
+            confirmButton.className =
+                 "modal-confirm";
+  
             cancelButton.textContent =
                 "Cancel";    
 
@@ -3125,7 +3117,7 @@ function showConfirmModal(
                 );
   
 
-            title.textContent =
+            title.innerHTML =
                 titleText;
 
             message.textContent =
@@ -3271,7 +3263,7 @@ function showAlertModal(
                     "modalCancel"
                 );
 
-            title.textContent =
+            title.innerHTML = 
                 titleText;
 
             message.textContent =
