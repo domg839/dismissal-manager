@@ -1311,11 +1311,16 @@ body::after {
 
     justify-content: center;
 
-    align-items: center;
+    align-items: flex-start;
+
+    padding-top: 18vh;
+
+    overflow-y: auto;
 
     z-index: 5000;
 
 }
+
 
 .hidden {
     display: none;
@@ -1434,16 +1439,6 @@ body::after {
 .modal-success {
 
     background-color: #28A745;
-
-}
-
-.app-modal {
-
-    justify-content: center;
-
-    align-items: flex-start;
-
-    padding-top: 30vh;
 
 }
 
