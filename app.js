@@ -959,7 +959,8 @@ async function saveSettings() {
     });
 
 showToast(
-    '<i class="fa-solid fa-floppy-disk"></i> Settings Saved'
+    '<i class="fa-solid fa-floppy-disk"></i> Settings Saved',
+    "success"
 );
 
 }
@@ -1441,6 +1442,8 @@ function formatDuration(minutes) {
 
 function renderHistory() {
 
+renderHistoryDashboard();    
+
     let historyList =
         document.getElementById(
             "historyList"
@@ -1697,6 +1700,11 @@ let confirmDelete =
         console.log(
             "History record moved to Recently Deleted"
         );
+
+showToast(
+    '<i class="fa-solid fa-trash"></i> Moved To Recently Deleted',
+    "warning"
+);  
 
     } catch (error) {
 
@@ -2339,7 +2347,8 @@ async function editHistory(documentId) {
         );
 
 showToast(
-    '<i class="fa-solid fa-circle-check"></i> History Updated'
+    '<i class="fa-solid fa-circle-check"></i> History Updated',
+    "success"
 );
 
     } catch (error) {
@@ -2711,7 +2720,8 @@ console.log(
 );
 
 showToast(
-    '<i class="fa-solid fa-clock-rotate-left"></i> Record Restored'
+    '<i class="fa-solid fa-clock-rotate-left"></i> Restored From Recently Deleted',
+    "success"
 );
 
     } catch (error) {
@@ -2759,7 +2769,8 @@ console.log(
 );
 
 showToast(
-    '<i class="fa-solid fa-trash-can"></i> Permanently Deleted'
+    '<i class="fa-solid fa-trash-can"></i> Permanently Deleted',
+    "danger"
 );
 
     } catch (error) {
@@ -3566,6 +3577,7 @@ function showEditHistoryModal(record) {
 
 function showToast(
     message,
+    type = "info",
     duration = 2500
 ) {
 
@@ -3577,6 +3589,9 @@ function showToast(
     if (!toast) {
         return;
     }
+
+    toast.className =
+        `toast ${type}`;
 
     toast.innerHTML =
         message;
@@ -3615,5 +3630,141 @@ function showToast(
             },
             duration
         );
+
+}
+
+function renderHistoryDashboard() {
+
+    let dashboard =
+        document.getElementById(
+            "historyDashboard"
+        );
+
+    if (!dashboard) {
+        return;
+    }
+
+    let history =
+        (window.dismissalHistory || [])
+            .filter(
+                item => !item.deleted
+            );
+
+    if (history.length === 0) {
+
+        dashboard.innerHTML = "";
+
+        return;
+
+    }
+
+    const fastest =
+        history.reduce(
+            (best, current) =>
+                parseFloat(
+                    current.carsPerMinute
+                ) >
+                parseFloat(
+                    best.carsPerMinute
+                )
+                    ? current
+                    : best
+        );
+
+    const busiest =
+        history.reduce(
+            (best, current) =>
+                (current.carsReleased || 0) >
+                (best.carsReleased || 0)
+                    ? current
+                    : best
+        );
+
+    const rainyDays =
+        history.filter(
+            item => item.rainyDay
+        ).length;
+
+    const totalAlerts =
+        history.reduce(
+            (total, item) =>
+                total +
+                (item.totalAlerts || 0),
+            0
+        );
+
+    dashboard.innerHTML = `
+
+        <div class="history-dashboard">
+
+           <div class="history-stat-card history-stat-fastest">
+
+               <div class="history-stat-label">
+    <i class="fa-solid fa-bolt"></i>
+    Fastest Day
+</div>
+
+<div class="history-stat-value">
+    ${fastest.carsPerMinute}
+</div>
+
+<div class="history-stat-date">
+    ${fastest.date}
+</div>
+
+            </div>
+
+<div class="history-stat-card history-stat-busiest">
+
+    <div class="history-stat-label">
+        <i class="fa-solid fa-car"></i>
+        Busiest Day
+    </div>
+
+    <div class="history-stat-value">
+        ${busiest.carsReleased}
+    </div>
+
+    <div class="history-stat-date">
+        ${busiest.date}
+    </div>
+
+</div>
+
+<div class="history-stat-card history-stat-rain">
+
+    <div class="history-stat-label">
+        <i class="fa-solid fa-cloud-rain"></i>
+        Rain Days
+    </div>
+
+    <div class="history-stat-value">
+        ${rainyDays}
+    </div>
+
+    <div class="history-stat-date">
+        Across History
+    </div>
+
+</div>
+
+<div class="history-stat-card history-stat-alerts">
+
+    <div class="history-stat-label">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        Total Alerts
+    </div>
+
+    <div class="history-stat-value">
+        ${totalAlerts}
+    </div>
+
+    <div class="history-stat-date">
+        Across History
+    </div>
+
+</div>
+
+    `;
 
 }

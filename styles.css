@@ -1601,3 +1601,175 @@ body::after {
 
 }
 
+.toast.success {
+
+    background: linear-gradient(
+        180deg,
+        #198754,
+        #146c43
+    );
+
+}
+
+.toast.warning {
+
+    background: linear-gradient(
+        180deg,
+        #fd7e14,
+        #e8590c
+    );
+
+}
+
+.toast.danger {
+
+    background: linear-gradient(
+        180deg,
+        #dc3545,
+        #b02a37
+    );
+
+}
+
+.toast.info {
+
+    background: linear-gradient(
+        180deg,
+        #343a40,
+        #212529
+    );
+
+}
+
+.history-dashboard {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(160px, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+
+}
+
+.history-stat-card {
+
+    background: white;
+
+    border-radius: 12px;
+
+    padding: 14px;
+
+    text-align: center;
+
+    box-shadow:
+        0 2px 8px rgba(
+            0,
+            0,
+            0,
+            .08
+        );
+
+    min-height: 110px;
+
+}
+
+.history-stat-card i {
+
+    font-size: 24px;
+
+    margin-bottom: 10px;
+
+}
+
+.history-stat-value {
+
+    font-size: 40px;
+
+    font-weight: 700;
+
+    color: #222;
+
+}
+
+.history-stat-label {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+    font-weight: 600;
+    margin-bottom: 10px;
+
+    color: #666;
+
+    font-size: 14px;
+
+}
+
+.history-stat-date {
+
+    margin-top: 8px;
+
+    font-size: 13px;
+
+    color: #777;
+
+}
+
+.history-stat-fastest i {
+    color: #f0b429;
+}
+
+.history-stat-busiest i {
+    color: #4c6ef5;
+}
+
+.history-stat-rain i {
+    color: #0ea5e9;
+}
+
+.history-stat-alerts i {
+    color: #f59f00;
+}
+
+.history-stat-fastest .history-stat-value {
+    color: #f0b429;
+}
+
+.history-stat-busiest .history-stat-value {
+    color: #4c6ef5;
+}
+
+.history-stat-rain .history-stat-value {
+    color: #0ea5e9;
+}
+
+.history-stat-alerts .history-stat-value {
+    color: #f59f00;
+}
+
+.history-stat-card {
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+
+}
+
+.history-stat-card:hover {
+
+    transform:
+        translateY(-2px);
+
+}
+
+
