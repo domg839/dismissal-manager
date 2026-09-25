@@ -7,7 +7,7 @@ if (
 ) {
 
     window.location.href =
-        "index.html";
+        "home.html";
 
 }
 
@@ -39,7 +39,7 @@ async function login() {
         );
 
         window.location.href =
-            "index.html";
+            "home.html";
 
         return;
 

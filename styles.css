@@ -1442,12 +1442,6 @@ body::after {
 
 }
 
-.modal-success {
-
-    background-color: #28A745;
-
-}
-
 .history-form {
 
     display: none;
@@ -2009,6 +2003,10 @@ body::after {
 
     max-width: 400px;
 
+    width: 100%;
+
+    box-sizing: border-box;
+
     margin: 0 auto;
 
     background: white;
@@ -2072,14 +2070,6 @@ body::after {
     font-weight: 600;
 
     color: #244B74;
-
-}
-
-.login-field input {
-
-    width: 100%;
-
-    box-sizing: border-box;
 
 }
 
@@ -2152,13 +2142,14 @@ body::after {
 .password-container {
 
     position: relative;
+    width: 100%;
 
 }
 
 .password-container input {
 
     width: 100%;
-
+    box-sizing: border-box;
     padding-right: 45px;
 
 }
@@ -2173,7 +2164,11 @@ body::after {
 
     transform: translateY(-50%);
 
+    z-index: 1;
+
     width: auto;
+
+    min-width: 0;
 
     height: auto;
 
@@ -2243,6 +2238,8 @@ body::after {
     text-align: center;
 
     color: white;
+
+    transform: translateY(-30px);
 
 }
 
