@@ -921,14 +921,6 @@ function releaseStudent(studentId) {
 
 }    
 
-        if (window.isDemoMode) {
-
-    saveDemoDismissalStartTime(
-        dismissalStartTime
-    );
-
-}    
-
         if (!window.isDemoMode) {
 
             updateDismissalStartTime(
@@ -1509,14 +1501,14 @@ await showAlertModal(
 
     dismissalEnding = true;
 
-if (!window.isDemoMode) {
+const settingsRef =
+    window.firebaseServices.doc(
+        window.firebaseServices.db,
+        "settings",
+        "config"
+    );
 
-    const settingsRef =
-        window.firebaseServices.doc(
-            window.firebaseServices.db,
-            "settings",
-            "config"
-        );
+if (!window.isDemoMode) {
 
     await window.firebaseServices.updateDoc(
         settingsRef,
@@ -3056,14 +3048,6 @@ async function releaseStudentFromBoard(studentId) {
 
         dismissalStartTime =
             new Date().toISOString();
-
-        if (window.isDemoMode) {
-
-    saveDemoDismissalStartTime(
-        dismissalStartTime
-    );
-
-}    
 
         if (window.isDemoMode) {
 
@@ -4632,16 +4616,23 @@ const demoBanner =
         "demoBanner"
     );
 
-if (
-    demoBanner &&
-    window.isDemoMode
-) {
+if (demoBanner) {
 
-    demoBanner.classList.remove(
-        "hidden"
-    );
+    if (window.isDemoMode) {
 
-}  
+        demoBanner.classList.remove(
+            "hidden"
+        );
+
+    } else {
+
+        demoBanner.classList.add(
+            "hidden"
+        );
+
+    }
+
+}
 
 function getDemoHistory() {
 
