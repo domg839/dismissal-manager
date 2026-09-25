@@ -533,7 +533,11 @@ h3 {
     margin-top: 30px;
     background-color: #4A7DFF;
     color: white;
-    width: 220px;}
+    width: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;}
 
 .stats h2 {
     margin: 0 0 10px 0;
@@ -1827,4 +1831,27 @@ body::after {
     }
 
 }
+
+.empty-history-card {
+
+    text-align: center;
+
+}
+
+.empty-history-card i {
+
+    margin-right: 8px;
+
+    color: #888;
+
+}
+
+.settings-saved {
+
+    background: #198754 !important;
+
+    color: white !important;
+
+}
+
 

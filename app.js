@@ -958,10 +958,35 @@ async function saveSettings() {
 
     });
 
-showToast(
-    '<i class="fa-solid fa-floppy-disk"></i> Settings Saved',
-    "success"
+    const saveButton =
+        document.getElementById(
+            "saveSettingsBtn"
+        );
+
+    if (saveButton) {
+
+saveButton.innerHTML =
+    '<i class="fa-solid fa-check"></i> Saved';
+
+saveButton.classList.add(
+    "settings-saved"
 );
+
+setTimeout(
+    () => {
+
+        saveButton.innerHTML =
+            '<i class="fa-solid fa-floppy-disk"></i> Save Settings';
+
+        saveButton.classList.remove(
+            "settings-saved"
+        );
+
+    },
+    2000
+);
+
+    }
 
 }
 
@@ -2819,9 +2844,10 @@ function renderDeletedHistory() {
     if (history.length === 0) {
 
         historyList.innerHTML = `
-            <div class="history-card">
-                No deleted records.
-            </div>
+<div class="history-card empty-history-card">
+    <i class="fa-solid fa-trash"></i>
+    No deleted records.
+</div>
         `;
 
         return;
