@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>School Dismissal Manager</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="styles.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+
+<body class="page-home fade-in">
+
+    <div class="container">
+
+        <h1>Dismissal Manager</h1>
+
+        <h3 id="schoolTitle"></h3>
+
+<div class="launcher-grid">
+
+    <a href="car-entry.html">
+
+        <button class="btn-launcher btn-car">
+
+            <i class="fa-solid fa-car"></i>
+
+            <span>Car Entry</span>
+
+        </button>
+
+    </a>
+
+    <a href="release-student.html">
+
+        <button class="btn-launcher btn-release">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <span>Release Student</span>
+
+        </button>
+
+    </a>
+
+    <a href="dismissal-board.html">
+
+        <button class="btn-launcher btn-board">
+
+            <i class="fa-solid fa-tv"></i>
+
+            <span>Dismissal Board</span>
+
+        </button>
+
+    </a>
+
+    <a href="spot-manager.html">
+
+        <button class="btn-launcher btn-spot">
+
+            <i class="fa-solid fa-location-dot"></i>
+
+            <span>Spot Manager</span>
+
+        </button>
+
+    </a>
+
+</div>
+
+<div class="admin-buttons">
+
+
+    <a href="history.html">
+        <button class="btn-admin btn-history-admin">
+            <i class="fa-solid fa-scroll"></i>
+            <div>History</div>
+        </button>
+
+    </a>
+
+    <a href="settings.html">
+        <button class="btn-admin btn-settings-admin">
+            <i class="fa-solid fa-gear"></i>
+            <div>Settings</div>
+        </button>
+
+    </a>
+
+    <button
+        class="btn-admin btn-end-admin"
+        onclick="endDismissal()">
+        <i class="fa-solid fa-flag-checkered"></i>
+        <div>End</div>
+    </button>
+</div>
+
+
+
+<div class="stats">
+
+<button
+    id="weatherToggle"
+    class="weather-toggle sun"
+    onclick="toggleRainDay()">
+
+    <i class="fa-solid fa-sun"></i>
+
+</button>
+
+    <h2>Current Dismissal</h2>
+
+    <div id="currentDismissalStats">
+
+        <p>No active dismissal.</p>
+
+    </div>
+
+</div>
+
+</div>
+
+<script type="module" src="firebase.js"></script>
+<script src="app.js"></script>
+
+    <script>
+
+window.addEventListener("load", async () => {
+
+    await loadSettingsFromFirebase();
+
+    renderSchoolName();
+
+window.watchSettings(
+    (settings) => {
+
+        dismissalStartTime =
+            settings.dismissalStartTime;
+
+        rainyDay =
+            settings.rainyDay || false;
+
+        let weatherButton =
+            document.getElementById(
+                "weatherToggle"
+            );
+
+        if (weatherButton) {
+
+            weatherButton.innerHTML =
+                rainyDay
+                    ? '<i class="fa-solid fa-cloud-rain"></i>'
+                    : '<i class="fa-solid fa-sun"></i>';
+
+            weatherButton.classList.remove(
+                "sun",
+                "rain"
+            );
+
+            weatherButton.classList.add(
+                rainyDay
+                    ? "rain"
+                    : "sun"
+            );
+
+        }
+        dismissalEnding =
+            settings.dismissalEnding || false;
+
+let endButton =
+    document.querySelector(
+        ".btn-end-admin"
+    );
+
+if (endButton) {
+
+    if (dismissalEnding) {
+
+        endButton.disabled = true;
+
+endButton.innerHTML = `
+    <i class="fa-solid fa-arrows-rotate"></i>
+    <div>Ending</div>
+`;
+
+    }
+    else {
+
+        endButton.disabled = false;
+
+endButton.innerHTML = `
+    <i class="fa-solid fa-flag-checkered"></i>
+    <div>End</div>
+`;
+
+    }
+
+}    
+
+        renderCurrentDismissal();
+
+    }
+);
+
+    window.watchDismissalQueue(
+
+        (records) => {
+
+            dismissalQueue =
+                records;
+
+            renderCurrentDismissal();
+
+        }
+
+    );
+
+    setInterval(() => {
+
+        renderCurrentDismissal();
+
+    }, 1000);
+
+});
+
+    </script>
+
+<div id="appModal" class="app-modal hidden">
+
+    <div class="app-modal-content">
+
+        <h2 id="modalTitle"></h2>
+
+        <p
+            id="modalMessage"
+            class="modal-message">
+        </p>
+
+        <input
+            id="modalInput"
+            type="text"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false">
+
+        <div class="modal-buttons">
+
+            <button
+                id="modalCancel"
+                class="modal-cancel">
+
+                Cancel
+
+            </button>
+
+            <button
+                id="modalConfirm"
+                class="modal-confirm">
+
+                Confirm
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>    
+
+<div id="toast" class="toast hidden"></div>
+
+</body>
+
+</html>

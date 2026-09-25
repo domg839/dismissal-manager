@@ -3832,3 +3832,37 @@ function scrollToHistoryRecord(
     );
 
 }
+
+async function logout() {
+
+    let confirmed =
+        await showConfirmModal(
+
+            '<i class="fa-solid fa-right-from-bracket"></i> Logout',
+
+            'Are you sure you want to sign out?',
+
+            'Logout',
+
+            'modal-warning'
+
+        );
+
+    if (
+        !confirmed
+    ) {
+
+        return;
+
+    }
+
+    localStorage.removeItem(
+        "loggedIn"
+    );
+
+    window.location.href =
+        "login.html";
+
+}
+
+
