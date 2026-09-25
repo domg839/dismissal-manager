@@ -58,20 +58,33 @@
 
         await loadSettingsFromFirebase();
 
-        window.watchDismissalQueue(
+if (window.isDemoMode) {
 
-            (records) => {
+    dismissalQueue =
+        getDemoQueue();
 
-dismissalQueue =
-    records;
+    renderQueue();
 
-renderQueue();
+    updateConnectionStatus();
 
-updateConnectionStatus();
+} else {
 
-            }
+    window.watchDismissalQueue(
 
-        );
+        (records) => {
+
+            dismissalQueue =
+                records;
+
+            renderQueue();
+
+            updateConnectionStatus();
+
+        }
+
+    );
+
+}
 
     });
 

@@ -154,99 +154,146 @@ window.addEventListener("load", async () => {
 
     await loadSettingsFromFirebase();
 
-const email =
-    window.firebaseServices
-        .auth
-        .currentUser
-        ?.email;
+if (window.isDemoMode) {
 
-console.log(
-    "Current User:",
-    email
-);
+    console.log(
+        "Demo Mode Active"
+    );
 
-const role =
-    await window.getUserRole(
+    window.currentUserRole =
+        "admin";
+
+} else {
+
+    const email =
+        window.firebaseServices
+            .auth
+            .currentUser
+            ?.email;
+
+    console.log(
+        "Current User:",
         email
     );
 
-console.log(
-    "Current Role:",
-    role
-);
+    const role =
+        await window.getUserRole(
+            email
+        );
+
+    console.log(
+        "Current Role:",
+        role
+    );
+
+    window.currentUserRole =
+        role;
+
+}
 
     renderSchoolName();
 
-window.watchSettings(
-    (settings) => {
-
-        dismissalStartTime =
-            settings.dismissalStartTime;
-
-        rainyDay =
-            settings.rainyDay || false;
-
-        let weatherButton =
-            document.getElementById(
-                "weatherToggle"
-            );
-
-        if (weatherButton) {
-
-            weatherButton.innerHTML =
-                rainyDay
-                    ? '<i class="fa-solid fa-cloud-rain"></i>'
-                    : '<i class="fa-solid fa-sun"></i>';
-
-            weatherButton.classList.remove(
-                "sun",
-                "rain"
-            );
-
-            weatherButton.classList.add(
-                rainyDay
-                    ? "rain"
-                    : "sun"
-            );
-
-        }
-        dismissalEnding =
-            settings.dismissalEnding || false;
-
-let endButton =
-    document.querySelector(
-        ".btn-end-admin"
+let weatherButton =
+    document.getElementById(
+        "weatherToggle"
     );
 
-if (endButton) {
+if (weatherButton) {
 
-    if (dismissalEnding) {
+    weatherButton.innerHTML =
+        rainyDay
+            ? '<i class="fa-solid fa-cloud-rain"></i>'
+            : '<i class="fa-solid fa-sun"></i>';
 
-        endButton.disabled = true;
+    weatherButton.classList.remove(
+        "sun",
+        "rain"
+    );
 
-endButton.innerHTML = `
-    <i class="fa-solid fa-arrows-rotate"></i>
-    <div>Ending</div>
-`;
-
-    }
-    else {
-
-        endButton.disabled = false;
-
-endButton.innerHTML = `
-    <i class="fa-solid fa-flag-checkered"></i>
-    <div>End</div>
-`;
-
-    }
+    weatherButton.classList.add(
+        rainyDay
+            ? "rain"
+            : "sun"
+    );
 
 }    
 
-        renderCurrentDismissal();
+if (!window.isDemoMode) {
 
-    }
-);
+    window.watchSettings(
+
+        (settings) => {
+
+            dismissalStartTime =
+                settings.dismissalStartTime;
+
+            rainyDay =
+                settings.rainyDay || false;
+
+            let weatherButton =
+                document.getElementById(
+                    "weatherToggle"
+                );
+
+            if (weatherButton) {
+
+                weatherButton.innerHTML =
+                    rainyDay
+                        ? '<i class="fa-solid fa-cloud-rain"></i>'
+                        : '<i class="fa-solid fa-sun"></i>';
+
+                weatherButton.classList.remove(
+                    "sun",
+                    "rain"
+                );
+
+                weatherButton.classList.add(
+                    rainyDay
+                        ? "rain"
+                        : "sun"
+                );
+
+            }
+
+            dismissalEnding =
+                settings.dismissalEnding || false;
+
+            let endButton =
+                document.querySelector(
+                    ".btn-end-admin"
+                );
+
+            if (endButton) {
+
+                if (dismissalEnding) {
+
+                    endButton.disabled = true;
+
+                    endButton.innerHTML = `
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        <div>Ending</div>
+                    `;
+
+                } else {
+
+                    endButton.disabled = false;
+
+                    endButton.innerHTML = `
+                        <i class="fa-solid fa-flag-checkered"></i>
+                        <div>End</div>
+                    `;
+
+                }
+
+            }
+
+            renderCurrentDismissal();
+
+        }
+
+    );
+
+}
 
     window.watchDismissalQueue(
 

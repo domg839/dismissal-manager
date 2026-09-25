@@ -18,7 +18,9 @@ let boardReleaseEnabled = false;
 async function loadSettingsFromFirebase() {
 
     const settings =
-        await window.loadSettingsFromFirestore();
+        window.isDemoMode
+            ? getDemoSettings()
+            : await window.loadSettingsFromFirestore();
 
     if (!settings) {
         return;
@@ -37,19 +39,21 @@ async function loadSettingsFromFirebase() {
         settings.carsDisplayed || 25;
 
     dismissalStartTime =
-        settings.dismissalStartTime || null;
+    window.isDemoMode
+        ? getDemoDismissalStartTime()
+        : settings.dismissalStartTime || null;
 
     dismissalEnding =
-        settings.dismissalEnding || false;    
+        settings.dismissalEnding || false;
 
     showSpotsOnBoard =
         settings.showSpotsOnBoard || false;
 
     boardReleaseEnabled =
-        settings.boardReleaseEnabled || false;    
+        settings.boardReleaseEnabled || false;
 
     rainyDay =
-        settings.rainyDay || false;    
+        settings.rainyDay || false;
 
     console.log(
         "Settings Loaded:",
@@ -57,6 +61,7 @@ async function loadSettingsFromFirebase() {
     );
 
     return settings;
+
 }
 
 renderQueue();
@@ -330,27 +335,57 @@ let proceed =
             0
         ) + 1;
 
-    const studentRecord = {
+const studentRecord = {
 
-        tag: tagNumber,
+    id:
+        "demo-" +
+        Date.now(),
 
-        queuePosition:
-            nextQueuePosition,
+    tag: tagNumber,
 
-        spot:
-            assignedSpot,
+    queuePosition:
+        nextQueuePosition,
 
-        released: false,
+    spot:
+        assignedSpot,
 
-        needsStudent: false,
+    released: false,
 
-        syncStatus: "saving"
+    needsStudent: false,
 
-    };
+    syncStatus: "saved"
+
+};
+
+if (window.isDemoMode) {
+
+    let queue =
+        getDemoQueue();
+
+    queue.push(
+        studentRecord
+    );
+
+    saveDemoQueue(
+        queue
+    );
+
+    dismissalQueue =
+        queue;
+
+    renderQueue();
+
+    renderDismissalBoard();
+
+    renderReleaseBoard();
+
+} else {
 
     addVehicleToFirebase(
         studentRecord
     );
+
+}
 
     renderQueue();
 
@@ -403,48 +438,82 @@ async function deleteVehicle(index) {
     let student =
         dismissalQueue[index];
 
-let proceed;
+    let proceed;
 
-if (student.released) {
+    if (student.released) {
 
-    proceed =
-await showConfirmModal(
+        proceed =
+            await showConfirmModal(
 
-    '<i class="fa-solid fa-trash"></i> Delete Released Tag',
+                '<i class="fa-solid fa-trash"></i> Delete Released Tag',
 
-    "Tag " +
-    student.tag +
-    " has already been released.\n\n" +
-    "Released tags should normally remain in the queue.\n\n" +
-    "Delete anyway?",
+                "Tag " +
+                student.tag +
+                " has already been released.\n\n" +
+                "Released tags should normally remain in the queue.\n\n" +
+                "Delete anyway?",
 
-    "Delete Tag",
+                "Delete Tag",
 
-    "modal-danger"
+                "modal-danger"
 
-);
+            );
 
-} else {
+    } else {
 
-    proceed =
-await showConfirmModal(
+        proceed =
+            await showConfirmModal(
 
-    '<i class="fa-solid fa-trash"></i> Delete Tag',
+                '<i class="fa-solid fa-trash"></i> Delete Tag',
 
-    "Remove tag " +
-    student.tag +
-    "?",
+                "Remove tag " +
+                student.tag +
+                "?",
 
-    "Delete",
+                "Delete",
 
-    "modal-danger"
+                "modal-danger"
 
-);
+            );
 
-}
+    }
 
     if (!proceed) {
         return;
+    }
+
+    if (window.isDemoMode) {
+
+        let queue =
+            getDemoQueue();
+
+        queue =
+            queue.filter(
+                item =>
+                    item.id !==
+                    student.id
+            );
+
+        saveDemoQueue(
+            queue
+        );
+
+        dismissalQueue =
+            queue;
+
+        renderQueue();
+
+        renderDismissalBoard();
+
+        renderReleaseBoard();
+
+        showToast(
+            '<i class="fa-solid fa-trash"></i> Tag Deleted',
+            "warning"
+        );
+
+        return;
+
     }
 
     await deleteVehicleFirebase(
@@ -462,12 +531,12 @@ async function editVehicle(index) {
         student.tag;
 
     let newTag =
-await showPromptModal(
-    '<i class="fa-solid fa-pen"></i> Edit Tag Number',
-    "Update the vehicle tag.",
-    oldTag,
-    "Save"
-);
+        await showPromptModal(
+            '<i class="fa-solid fa-pen"></i> Edit Tag Number',
+            "Update the vehicle tag.",
+            oldTag,
+            "Save"
+        );
 
     if (
         newTag === null ||
@@ -487,23 +556,67 @@ await showPromptModal(
         )
     ) {
 
-let proceed =
-    await showConfirmModal(
+        let proceed =
+            await showConfirmModal(
 
-        '<i class="fa-solid fa-triangle-exclamation"></i> Duplicate Tag',
+                '<i class="fa-solid fa-triangle-exclamation"></i> Duplicate Tag',
 
-        newTag +
-        " is already in the queue.\n\nDo you want to use it anyway?",
+                newTag +
+                " is already in the queue.\n\nDo you want to use it anyway?",
 
-        "Use Tag",
+                "Use Tag",
 
-        "modal-warning"
+                "modal-warning"
 
-    );
+            );
 
         if (!proceed) {
             return;
         }
+
+    }
+
+    if (window.isDemoMode) {
+
+        let queue =
+            getDemoQueue();
+
+        let record =
+            queue.find(
+                item =>
+                    item.id ===
+                    student.id
+            );
+
+        if (record) {
+
+            record.tag =
+                newTag;
+
+            record.editedFrom =
+                oldTag;
+
+            saveDemoQueue(
+                queue
+            );
+
+            dismissalQueue =
+                queue;
+
+            renderQueue();
+
+            renderDismissalBoard();
+
+            renderReleaseBoard();
+
+        }
+
+        showToast(
+            '<i class="fa-solid fa-check"></i> Tag Updated',
+            "success"
+        );
+
+        return;
 
     }
 
@@ -786,25 +899,86 @@ board.innerHTML += `
 
 function releaseStudent(studentId) {
 
-let student =
-    dismissalQueue.find(
-        item => item.id === studentId
-    );
+    let student =
+        dismissalQueue.find(
+            item => item.id === studentId
+        );
 
     if (!student) {
         return;
     }
 
-if (!dismissalStartTime) {
+    if (!dismissalStartTime) {
 
-    dismissalStartTime =
-        new Date().toISOString();
+        dismissalStartTime =
+            new Date().toISOString();
 
-    updateDismissalStartTime(
+        if (window.isDemoMode) {
+
+    saveDemoDismissalStartTime(
         dismissalStartTime
     );
 
-}
+}    
+
+        if (window.isDemoMode) {
+
+    saveDemoDismissalStartTime(
+        dismissalStartTime
+    );
+
+}    
+
+        if (!window.isDemoMode) {
+
+            updateDismissalStartTime(
+                dismissalStartTime
+            );
+
+        }
+
+    }
+
+    if (window.isDemoMode) {
+
+        let queue =
+            getDemoQueue();
+
+        let record =
+            queue.find(
+                item =>
+                    item.id ===
+                    studentId
+            );
+
+        if (record) {
+
+            record.released =
+                !record.released;
+
+            record.releasedAt =
+                record.released
+                    ? Date.now()
+                    : null;
+
+            saveDemoQueue(
+                queue
+            );
+
+            dismissalQueue =
+                queue;
+
+            renderQueue();
+
+            renderDismissalBoard();
+
+            renderReleaseBoard();
+
+        }
+
+        return;
+
+    }
 
     releaseStudentFirebase(
         student
@@ -847,8 +1021,10 @@ async function loadSettings() {
         return;
     }
 
-    const settings =
-        await window.loadSettingsFromFirestore();
+const settings =
+    window.isDemoMode
+        ? getDemoSettings()
+        : await window.loadSettingsFromFirestore();
 
     if (!settings) {
         return;
@@ -956,27 +1132,41 @@ await showAlertModal(
 
     }
 
-    await saveSettingsToFirebase({
+const settings = {
 
-        schoolName:
-            schoolBox.value,
+    schoolName:
+        schoolBox.value,
 
-        startSpot:
-            startValue,
+    startSpot:
+        startValue,
 
-        endSpot:
-            endValue,
+    endSpot:
+        endValue,
 
-        carsDisplayed:
-            carsValue,
+    carsDisplayed:
+        carsValue,
 
-        showSpotsOnBoard:
-            spotsBoardBox.checked,
+    showSpotsOnBoard:
+        spotsBoardBox.checked,
 
-        boardReleaseEnabled:
-            boardReleaseBox.checked
+    boardReleaseEnabled:
+        boardReleaseBox.checked
 
-    });
+};
+
+if (window.isDemoMode) {
+
+    saveDemoSettings(
+        settings
+    );
+
+} else {
+
+    await saveSettingsToFirebase(
+        settings
+    );
+
+}
 
     const saveButton =
         document.getElementById(
@@ -1189,14 +1379,54 @@ student.needsStudent
         return;
     }
 
-    try {
+try {
 
-        const docRef =
-            window.firebaseServices.doc(
-                window.firebaseServices.db,
-                "dismissalQueue",
-                student.id
+    if (window.isDemoMode) {
+
+        let queue =
+            getDemoQueue();
+
+        let record =
+            queue.find(
+                item =>
+                    item.id === student.id
             );
+
+        if (record) {
+
+            record.needsStudent =
+                !record.needsStudent;
+
+            record.requestedAt =
+                record.needsStudent
+                    ? Date.now()
+                    : null;
+
+            saveDemoQueue(
+                queue
+            );
+
+            dismissalQueue =
+                queue;
+
+            renderQueue();
+
+            renderDismissalBoard();
+
+            renderReleaseBoard();
+
+        }
+
+        return;
+
+    }
+
+    const docRef =
+        window.firebaseServices.doc(
+            window.firebaseServices.db,
+            "dismissalQueue",
+            student.id
+        );
 
         if (!student.needsStudent) {
 
@@ -1279,6 +1509,8 @@ await showAlertModal(
 
     dismissalEnding = true;
 
+if (!window.isDemoMode) {
+
     const settingsRef =
         window.firebaseServices.doc(
             window.firebaseServices.db,
@@ -1292,6 +1524,8 @@ await showAlertModal(
             dismissalEnding: true
         }
     );
+
+}
 
     let endButton =
         document.querySelector(
@@ -1310,6 +1544,116 @@ await showAlertModal(
     }
 
     renderCurrentDismissal();
+
+if (window.isDemoMode) {
+
+    const currentQueue =
+        getDemoQueue();
+
+    let releasedCount =
+        currentQueue.length;
+
+    let startTime =
+        new Date(
+            dismissalStartTime
+        );
+
+    let endTime =
+        new Date();
+
+    let durationMinutes =
+        (
+            endTime - startTime
+        ) / 60000;
+
+    const historyRecord = {
+
+        id:
+            "demo-history-" +
+            Date.now(),
+
+        deleted: false,
+
+        date:
+            endTime.toLocaleDateString(),
+
+        startTime:
+            startTime.toLocaleTimeString(),
+
+        endTime:
+            endTime.toLocaleTimeString(),
+
+        carsReleased:
+            releasedCount,
+
+        duration:
+            durationMinutes,
+
+        carsPerMinute:
+            (
+                releasedCount /
+                Math.max(
+                    durationMinutes,
+                    1
+                )
+            ).toFixed(1),
+
+        rainyDay:
+            rainyDay,
+
+        totalAlerts:
+    currentQueue.filter(
+        item =>
+            item.needsStudent
+    ).length,
+
+        averageRequestTime: null
+
+    };
+
+    let history =
+        getDemoHistory();
+
+    history.unshift(
+        historyRecord
+    );
+
+    saveDemoHistory(
+        history
+    );
+
+    saveDemoQueue([]);
+
+    dismissalQueue = [];
+
+    saveDemoDismissalStartTime(
+        null
+    );
+
+    dismissalStartTime =
+        null;
+
+    rainyDay = false;
+
+    dismissalEnding = false;
+
+    let settings =
+    getDemoSettings();
+
+    settings.rainyDay =
+        false;
+
+    saveDemoSettings(
+        settings
+);
+
+    location.reload();
+
+    return;
+
+}
+
+
 
     const currentQueue =
         await getCurrentQueueFromFirestore();
@@ -1724,19 +2068,59 @@ ${history[i].lastEdited ? `
 
 async function deleteHistory(documentId) {
 
-let confirmDelete =
-await showConfirmModal(
-    '<i class="fa-solid fa-trash"></i> Delete History Record',
-    "Move this dismissal record to Recently Deleted?",
-    "Move To Deleted",
-    "modal-danger"
-);
+    let confirmDelete =
+        await showConfirmModal(
+            '<i class="fa-solid fa-trash"></i> Delete History Record',
+            "Move this dismissal record to Recently Deleted?",
+            "Move To Deleted",
+            "modal-danger"
+        );
 
     if (!confirmDelete) {
         return;
     }
 
     try {
+
+        if (window.isDemoMode) {
+
+            let history =
+                getDemoHistory();
+
+            let record =
+                history.find(
+                    item =>
+                        item.id ===
+                        documentId
+                );
+
+            if (record) {
+
+                record.deleted =
+                    true;
+
+                record.deletedAt =
+                    Date.now();
+
+                saveDemoHistory(
+                    history
+                );
+
+                window.dismissalHistory =
+                    history;
+
+                renderHistory();
+
+            }
+
+            showToast(
+                '<i class="fa-solid fa-trash"></i> Moved To Recently Deleted',
+                "warning"
+            );
+
+            return;
+
+        }
 
         const docRef =
             window.firebaseServices.doc(
@@ -1757,10 +2141,128 @@ await showConfirmModal(
             "History record moved to Recently Deleted"
         );
 
-showToast(
-    '<i class="fa-solid fa-trash"></i> Moved To Recently Deleted',
-    "warning"
-);  
+        showToast(
+            '<i class="fa-solid fa-trash"></i> Moved To Recently Deleted',
+            "warning"
+        );
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+    }
+
+}
+
+async function editHistory(documentId) {
+
+    let history =
+        window.dismissalHistory || [];
+
+    let record =
+        history.find(
+            item =>
+                item.id === documentId
+        );
+
+    if (!record) {
+        return;
+    }
+
+    let updatedRecord =
+        await showEditHistoryModal(
+            record
+        );
+
+    if (!updatedRecord) {
+        return;
+    }
+
+    if (window.isDemoMode) {
+
+        let demoHistory =
+            getDemoHistory();
+
+        let demoRecord =
+            demoHistory.find(
+                item =>
+                    item.id === documentId
+            );
+
+        if (demoRecord) {
+
+            demoRecord.startTime =
+                updatedRecord.startTime;
+
+            demoRecord.endTime =
+                updatedRecord.endTime;
+
+            demoRecord.carsReleased =
+                updatedRecord.carsReleased;
+
+            demoRecord.rainyDay =
+                updatedRecord.rainyDay;
+
+            demoRecord.lastEdited =
+                new Date()
+                    .toLocaleString();
+
+            saveDemoHistory(
+                demoHistory
+            );
+
+            window.dismissalHistory =
+                demoHistory;
+
+            renderHistory();
+
+        }
+
+        showToast(
+            '<i class="fa-solid fa-check"></i> History Updated',
+            "success"
+        );
+
+        return;
+
+    }
+
+    try {
+
+        const docRef =
+            window.firebaseServices.doc(
+                window.firebaseServices.db,
+                "dismissalHistory",
+                documentId
+            );
+
+        await window.firebaseServices.updateDoc(
+            docRef,
+            {
+                startTime:
+                    updatedRecord.startTime,
+
+                endTime:
+                    updatedRecord.endTime,
+
+                carsReleased:
+                    updatedRecord.carsReleased,
+
+                rainyDay:
+                    updatedRecord.rainyDay,
+
+                lastEdited:
+                    new Date()
+                        .toLocaleString()
+            }
+        );
+
+        showToast(
+            '<i class="fa-solid fa-check"></i> History Updated',
+            "success"
+        );
 
     } catch (error) {
 
@@ -1781,17 +2283,9 @@ function renderSchoolName() {
         return;
     }
 
-    if (window.isDemoMode) {
-
-        title.innerText =
-            "Sample Elementary School";
-
-        return;
-
-    }
-
     title.innerText =
         SCHOOL_NAME;
+
 }
 
 function renderCurrentDismissal() {
@@ -2319,115 +2813,6 @@ document.addEventListener(
     }
 );
 
-async function editHistory(documentId) {
-
-    let record =
-        window.dismissalHistory.find(
-            item => item.id === documentId
-        );
-
-    if (!record) {
-        return;
-    }
-
-    const result =
-        await showEditHistoryModal(
-            record
-        );
-
-    if (!result) {
-        return;
-    }
-
-    let startTime =
-        result.startTime;
-
-    let endTime =
-        result.endTime;
-
-    let carsReleased =
-        result.carsReleased;
-
-    let rainyDay =
-        result.rainyDay;
-
-    if (
-        isNaN(carsReleased) ||
-        carsReleased < 0
-    ) {
-
-await showAlertModal(
-    '<i class="fa-solid fa-triangle-exclamation"></i> Invalid Value',
-    "Cars Released must be 0 or greater."
-);
-
-        return;
-
-    }
-
-    let start =
-        new Date(
-            `${record.date} ${startTime}`
-        );
-
-    let end =
-        new Date(
-            `${record.date} ${endTime}`
-        );
-
-    let duration =
-        (
-            end - start
-        ) / 60000;
-
-    let carsPerMinute =
-        (
-            carsReleased /
-            Math.max(duration, 1)
-        ).toFixed(1);
-
-    try {
-
-        const docRef =
-            window.firebaseServices.doc(
-                window.firebaseServices.db,
-                "dismissalHistory",
-                documentId
-            );
-
-        await window.firebaseServices.updateDoc(
-            docRef,
-            {
-                startTime,
-                endTime,
-                carsReleased,
-                duration,
-                carsPerMinute,
-                rainyDay,
-
-                lastEdited:
-                    new Date()
-                        .toLocaleString()
-            }
-        );
-
-showToast(
-    '<i class="fa-solid fa-circle-check"></i> History Updated',
-    "success"
-);
-
-    } catch (error) {
-
-        console.error(error);
-
-await showAlertModal(
-    '<i class="fa-solid fa-circle-xmark"></i> Update Failed',
-    "Unable to update the dismissal record."
-);
-
-    }
-
-}
 
 async function toggleRainDay() {
 
@@ -2470,6 +2855,20 @@ async function toggleRainDay() {
 
     }
 
+if (window.isDemoMode) {
+
+    let settings =
+        getDemoSettings();
+
+    settings.rainyDay =
+        rainyDay;
+
+    saveDemoSettings(
+        settings
+    );
+
+} else {
+
     const settingsRef =
         window.firebaseServices.doc(
             window.firebaseServices.db,
@@ -2483,6 +2882,8 @@ async function toggleRainDay() {
             rainyDay
         }
     );
+
+}
 
 }
 
@@ -2539,16 +2940,16 @@ async function releaseStudentFromBoard(studentId) {
         return;
     }
 
-let confirmed =
-await showConfirmModal(
-    '<i class="fa-solid fa-person-walking-arrow-right"></i> Release Student',
+    let confirmed =
+        await showConfirmModal(
+            '<i class="fa-solid fa-person-walking-arrow-right"></i> Release Student',
 
-    student.tag + " → Spot " + student.spot,
+            student.tag + " → Spot " + student.spot,
 
-    "Release",
+            "Release",
 
-    "modal-success"
-);
+            "modal-success"
+        );
 
     if (!confirmed) {
         return;
@@ -2559,9 +2960,69 @@ await showConfirmModal(
         dismissalStartTime =
             new Date().toISOString();
 
-        await updateDismissalStartTime(
-            dismissalStartTime
-        );
+        if (window.isDemoMode) {
+
+    saveDemoDismissalStartTime(
+        dismissalStartTime
+    );
+
+}    
+
+        if (window.isDemoMode) {
+
+    saveDemoDismissalStartTime(
+        dismissalStartTime
+    );
+
+}    
+
+        if (!window.isDemoMode) {
+
+            await updateDismissalStartTime(
+                dismissalStartTime
+            );
+
+        }
+
+    }
+
+    if (window.isDemoMode) {
+
+        let queue =
+            getDemoQueue();
+
+        let record =
+            queue.find(
+                item =>
+                    item.id === studentId
+            );
+
+        if (record) {
+
+            record.released =
+                !record.released;
+
+            record.releasedAt =
+                record.released
+                    ? Date.now()
+                    : null;
+
+            saveDemoQueue(
+                queue
+            );
+
+            dismissalQueue =
+                queue;
+
+            renderQueue();
+
+            renderDismissalBoard();
+
+            renderReleaseBoard();
+
+        }
+
+        return;
 
     }
 
@@ -2669,31 +3130,59 @@ await showConfirmModal(
             spotCount
         );
 
-    const studentRecord = {
+const studentRecord = {
 
-        tag: tag,
+    id:
+        "local-" +
+        Date.now(),
 
-        queuePosition:
-            nextQueuePosition,
+    tag: tag,
 
-        spot:
-            assignedSpot,
+    queuePosition:
+        nextQueuePosition,
 
-        released: false,
+    spot:
+        assignedSpot,
 
-        needsStudent: true,
+    released: false,
 
-        requestedAt:
-            Date.now(),
+    needsStudent: true,
 
-        syncStatus:
-            "saving"
+    requestedAt:
+        Date.now(),
 
-    };
+    syncStatus:
+        "saving"
+
+};
+
+if (window.isDemoMode) {
+
+    let queue =
+        getDemoQueue();
+
+    queue.push(
+        studentRecord
+    );
+
+    saveDemoQueue(
+        queue
+    );
+
+    dismissalQueue =
+        queue;
+
+    renderQueue();
+    renderDismissalBoard();
+    renderReleaseBoard();
+
+} else {
 
     await addVehicleToFirebase(
         studentRecord
     );
+
+}
 
 setTimeout(() => {
 
@@ -2759,6 +3248,46 @@ async function restoreHistory(documentId) {
 
     try {
 
+        if (window.isDemoMode) {
+
+            let history =
+                getDemoHistory();
+
+            let record =
+                history.find(
+                    item =>
+                        item.id ===
+                        documentId
+                );
+
+            if (record) {
+
+                record.deleted =
+                    false;
+
+                record.deletedAt =
+                    null;
+
+                saveDemoHistory(
+                    history
+                );
+
+                window.dismissalHistory =
+                    history;
+
+                renderDeletedHistory();
+
+            }
+
+            showToast(
+                '<i class="fa-solid fa-clock-rotate-left"></i> Restored From Recently Deleted',
+                "success"
+            );
+
+            return;
+
+        }
+
         const docRef =
             window.firebaseServices.doc(
                 window.firebaseServices.db,
@@ -2774,18 +3303,20 @@ async function restoreHistory(documentId) {
             }
         );
 
-console.log(
-    "History record restored"
-);
+        console.log(
+            "History record restored"
+        );
 
-showToast(
-    '<i class="fa-solid fa-clock-rotate-left"></i> Restored From Recently Deleted',
-    "success"
-);
+        showToast(
+            '<i class="fa-solid fa-clock-rotate-left"></i> Restored From Recently Deleted',
+            "success"
+        );
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
 
     }
 
@@ -2812,6 +3343,36 @@ async function deleteHistoryForever(documentId) {
 
     try {
 
+        if (window.isDemoMode) {
+
+            let history =
+                getDemoHistory();
+
+            history =
+                history.filter(
+                    item =>
+                        item.id !==
+                        documentId
+                );
+
+            saveDemoHistory(
+                history
+            );
+
+            window.dismissalHistory =
+                history;
+
+            renderDeletedHistory();
+
+            showToast(
+                '<i class="fa-solid fa-trash-can"></i> Permanently Deleted',
+                "danger"
+            );
+
+            return;
+
+        }
+
         const docRef =
             window.firebaseServices.doc(
                 window.firebaseServices.db,
@@ -2823,18 +3384,20 @@ async function deleteHistoryForever(documentId) {
             docRef
         );
 
-console.log(
-    "History record permanently deleted"
-);
+        console.log(
+            "History record permanently deleted"
+        );
 
-showToast(
-    '<i class="fa-solid fa-trash-can"></i> Permanently Deleted',
-    "danger"
-);
+        showToast(
+            '<i class="fa-solid fa-trash-can"></i> Permanently Deleted',
+            "danger"
+        );
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
 
     }
 
@@ -3892,6 +4455,18 @@ async function logout() {
 
     }
 
+if (window.isDemoMode) {
+
+    sessionStorage.clear();
+
+    window.location.href =
+        "login.html";
+
+    return;
+
+}
+
+
     await window.firebaseServices.signOut(
         window.firebaseServices.auth
     );
@@ -3969,6 +4544,279 @@ if (
         "hidden"
     );
 
-}    
+}  
 
+function getDemoHistory() {
 
+    let history =
+        sessionStorage.getItem(
+            "demoHistory"
+        );
+
+    if (history) {
+
+        return JSON.parse(
+            history
+        );
+
+    }
+
+    const demoHistory = [
+
+        {
+            id: "demo1",
+            deleted: false,
+            date: "9/24/2026",
+            carsReleased: 52,
+            startTime: "2:00 PM",
+            endTime: "2:18 PM",
+            duration: 18,
+            carsPerMinute: "2.89",
+            totalAlerts: 4,
+            rainyDay: false
+        },
+
+        {
+            id: "demo2",
+            deleted: false,
+            date: "9/23/2026",
+            carsReleased: 38,
+            startTime: "2:00 PM",
+            endTime: "2:25 PM",
+            duration: 25,
+            carsPerMinute: "1.52",
+            totalAlerts: 2,
+            rainyDay: true
+        },
+
+        {
+            id: "demo3",
+            deleted: true,
+            deletedAt: Date.now(),
+
+            date: "9/22/2026",
+            carsReleased: 44,
+            startTime: "2:00 PM",
+            endTime: "2:22 PM",
+            duration: 22,
+            carsPerMinute: "2.00",
+            totalAlerts: 3,
+            rainyDay: false
+        }
+
+    ];
+
+    sessionStorage.setItem(
+        "demoHistory",
+        JSON.stringify(
+            demoHistory
+        )
+    );
+
+    return demoHistory;
+
+}
+
+function saveDemoHistory(
+    history
+) {
+
+    sessionStorage.setItem(
+        "demoHistory",
+        JSON.stringify(
+            history
+        )
+    );
+
+}
+
+function getDemoQueue() {
+
+    let queue =
+        sessionStorage.getItem(
+            "demoQueue"
+        );
+
+    if (queue) {
+
+        return JSON.parse(
+            queue
+        );
+
+    }
+
+    const demoQueue = [
+
+        {
+            id: "demo-1",
+            tag: "101",
+            queuePosition: 1,
+            spot: 1,
+            released: false,
+            needsStudent: false,
+            timestamp:
+                Date.now() - 60000
+        },
+
+        {
+            id: "demo-2",
+            tag: "205",
+            queuePosition: 2,
+            spot: 2,
+            released: false,
+            needsStudent: true,
+            requestedAt:
+                Date.now() - 120000,
+            timestamp:
+                Date.now() - 120000
+        },
+
+        {
+            id: "demo-3",
+            tag: "318",
+            queuePosition: 3,
+            spot: 3,
+            released: true,
+            releasedAt:
+                Date.now() - 300000,
+            timestamp:
+                Date.now() - 300000
+        },
+
+        {
+            id: "demo-4",
+            tag: "422",
+            queuePosition: 4,
+            spot: 4,
+            released: false,
+            needsStudent: false,
+            timestamp:
+                Date.now() - 180000
+        },
+
+        {
+            id: "demo-5",
+            tag: "507",
+            queuePosition: 5,
+            spot: 5,
+            released: false,
+            needsStudent: false,
+            timestamp:
+                Date.now() - 240000
+        }
+
+    ];
+
+    sessionStorage.setItem(
+        "demoQueue",
+        JSON.stringify(
+            demoQueue
+        )
+    );
+
+    return demoQueue;
+
+}
+
+function saveDemoQueue(
+    queue
+) {
+
+    sessionStorage.setItem(
+        "demoQueue",
+        JSON.stringify(
+            queue
+        )
+    );
+
+}
+
+function getDemoSettings() {
+
+    let settings =
+        sessionStorage.getItem(
+            "demoSettings"
+        );
+
+    if (settings) {
+
+        return JSON.parse(
+            settings
+        );
+
+    }
+
+const demoSettings = {
+
+    schoolName:
+        "Sample Elementary School",
+
+    startSpot: 1,
+
+    endSpot: 10,
+
+    carsDisplayed: 20,
+
+    showSpotsOnBoard: true,
+
+    boardReleaseEnabled: true,
+
+    rainyDay: false
+
+};
+
+    sessionStorage.setItem(
+        "demoSettings",
+        JSON.stringify(
+            demoSettings
+        )
+    );
+
+    return demoSettings;
+
+}
+
+function saveDemoSettings(
+    settings
+) {
+
+    sessionStorage.setItem(
+        "demoSettings",
+        JSON.stringify(
+            settings
+        )
+    );
+
+}
+
+function getDemoDismissalStartTime() {
+
+    return sessionStorage.getItem(
+        "demoDismissalStartTime"
+    );
+
+}
+
+function saveDemoDismissalStartTime(
+    startTime
+) {
+
+    if (startTime) {
+
+        sessionStorage.setItem(
+            "demoDismissalStartTime",
+            startTime
+        );
+
+    } else {
+
+        sessionStorage.removeItem(
+            "demoDismissalStartTime"
+        );
+
+    }
+
+}
+
+window.editHistory =
+    editHistory;

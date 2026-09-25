@@ -51,34 +51,54 @@ window.addEventListener("load", async () => {
 
     await loadSettingsFromFirebase();
 
-    window.watchSettings(
+    if (window.isDemoMode) {
 
-        (settings) => {
+        dismissalQueue =
+            getDemoQueue();
 
-            showSpotsOnBoard =
-                settings.showSpotsOnBoard || false;
+        const settings =
+            getDemoSettings();
 
-            boardReleaseEnabled =
-                settings.boardReleaseEnabled || false;
+        showSpotsOnBoard =
+            settings.showSpotsOnBoard;
 
-            renderDismissalBoard();
+        boardReleaseEnabled =
+            settings.boardReleaseEnabled;
 
-        }
+        renderDismissalBoard();
 
-    );
+    } else {
 
-    window.watchDismissalQueue(
+        window.watchSettings(
 
-        (records) => {
+            (settings) => {
 
-            dismissalQueue =
-                records;
+                showSpotsOnBoard =
+                    settings.showSpotsOnBoard || false;
 
-            renderDismissalBoard();
+                boardReleaseEnabled =
+                    settings.boardReleaseEnabled || false;
 
-        }
+                renderDismissalBoard();
 
-    );
+            }
+
+        );
+
+        window.watchDismissalQueue(
+
+            (records) => {
+
+                dismissalQueue =
+                    records;
+
+                renderDismissalBoard();
+
+            }
+
+        );
+
+    }
 
 });
 

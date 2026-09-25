@@ -58,50 +58,10 @@ if (isDemoMode) {
         "recentlyDeletedBtn"
     ).style.display = "";
 
-window.dismissalHistory = [
+    window.dismissalHistory =
+        getDemoHistory();
 
-    {
-        id: "demo1",
-        deleted: false,
-        date: "9/24/2026",
-        carsReleased: 52,
-        startTime: "2:00 PM",
-        endTime: "2:18 PM",
-        duration: 18,
-        carsPerMinute: "2.89",
-        totalAlerts: 4,
-        rainyDay: false
-    },
-
-    {
-        id: "demo2",
-        deleted: false,
-        date: "9/23/2026",
-        carsReleased: 38,
-        startTime: "2:00 PM",
-        endTime: "2:25 PM",
-        duration: 25,
-        carsPerMinute: "1.52",
-        totalAlerts: 2,
-        rainyDay: true
-    },    
-
-    {
-         id: "demo3",
-         deleted: true,
-         deletedAt: Date.now(),
-         date: "9/22/2026",
-         carsReleased: 44,
-         startTime: "2:00 PM",
-         endTime: "2:22 PM",
-         duration: 22,
-         carsPerMinute: "2.00",
-         totalAlerts: 3,
-         rainyDay: false
-    }
-];
-
-renderHistory();
+    renderHistory();
 
     return;
 

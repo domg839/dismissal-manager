@@ -168,38 +168,13 @@ window.addEventListener("load", async () => {
             "demoMode"
         ) === "true";
 
+    await loadSettings();
+
     if (isDemoMode) {
-
-        document.getElementById(
-            "schoolName"
-        ).value =
-            "Sample Elementary School";
-
-        document.getElementById(
-            "startSpot"
-        ).value = 1;
-
-        document.getElementById(
-            "endSpot"
-        ).value = 10;
-
-        document.getElementById(
-            "carsDisplayed"
-        ).value = 20;
-
-        document.getElementById(
-            "showSpotsOnBoard"
-        ).checked = true;
-
-        document.getElementById(
-            "boardReleaseEnabled"
-        ).checked = true;
 
         return;
 
     }
-
-    await loadSettings();
 
     const email =
         window.firebaseServices

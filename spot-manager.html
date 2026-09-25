@@ -62,18 +62,29 @@
 
         await loadSettingsFromFirebase();
 
-        window.watchDismissalQueue(
+ if (window.isDemoMode) {
 
-            (records) => {
+    dismissalQueue =
+        getDemoQueue();
 
-                dismissalQueue =
-                    records;
+    renderSpotManager();
 
-                renderSpotManager();
+} else {
 
-            }
+    window.watchDismissalQueue(
 
-        );
+        (records) => {
+
+            dismissalQueue =
+                records;
+
+            renderSpotManager();
+
+        }
+
+    );
+
+}
 
         setInterval(() => {
 
