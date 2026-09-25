@@ -3929,8 +3929,8 @@ function enableReadOnlySettings() {
         saveButton.disabled =
             true;
 
-saveButton.innerHTML =
-    '<i class="fa-solid fa-lock"></i> Admin Only';
+saveButton.style.display =
+    "none";
 
     }
 
