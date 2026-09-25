@@ -1,19 +1,6 @@
-if (
-
-    localStorage.getItem(
-        "loggedIn"
-    ) === "true"
-
-) {
-
-    window.location.href =
-        "home.html";
-
-}
-
 async function login() {
 
-    let username =
+    let email =
         document.getElementById(
             "username"
         ).value.trim();
@@ -23,32 +10,41 @@ async function login() {
             "password"
         ).value;
 
-    if (
-        username === "demo" &&
-        password === "demo"
-    ) {
+    try {
 
-        localStorage.setItem(
-            "loggedIn",
-            "true"
-        );
+        await window.firebaseServices
+            .signInWithEmailAndPassword(
 
-        localStorage.setItem(
-            "lastUsername",
-            username
-        );
+                window.firebaseServices.auth,
+
+                email,
+
+                password
+
+            );
+
+localStorage.setItem(
+    "lastUsername",
+    email
+);
+
 
         window.location.href =
             "home.html";
 
-        return;
-
     }
 
-    await showAlertModal(
-        '<i class="fa-solid fa-lock"></i> Login Failed',
-        'Invalid username or password.'
-    );
+    catch {
+
+        await showAlertModal(
+
+            '<i class="fa-solid fa-lock"></i> Login Failed',
+
+            'Invalid email or password.'
+
+        );
+
+    }
 
 }
 
@@ -122,6 +118,24 @@ window.addEventListener(
             ).focus();
 
         }
+
+        window.firebaseServices
+            .onAuthStateChanged(
+
+                window.firebaseServices.auth,
+
+                (user) => {
+
+                    if (user) {
+
+                        window.location.href =
+                            "home.html";
+
+                    }
+
+                }
+
+            );
 
     }
 );

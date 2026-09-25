@@ -1,3 +1,11 @@
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
 
 import {
@@ -25,14 +33,21 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+const auth = getAuth(app);
+
 const db = getFirestore(app);
 
 window.firebaseServices = {
     db,
     collection,
+    getDocs,
     addDoc,
     query,
     orderBy,
+    auth,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
     doc,
     updateDoc,
     deleteDoc

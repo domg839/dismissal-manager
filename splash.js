@@ -33,23 +33,28 @@ setTimeout(() => {
 
 setTimeout(() => {
 
-    if (
+    window.firebaseServices
+        .onAuthStateChanged(
 
-        localStorage.getItem(
-            "loggedIn"
-        ) === "true"
+            window.firebaseServices.auth,
 
-    ) {
+            (user) => {
 
-        window.location.href =
-            "home.html";
+                if (user) {
 
-    }
-    else {
+                    window.location.href =
+                        "home.html";
 
-        window.location.href =
-            "login.html";
+                }
+                else {
 
-    }
+                    window.location.href =
+                        "login.html";
+
+                }
+
+            }
+
+        );
 
 }, 2200);

@@ -3848,16 +3848,14 @@ async function logout() {
 
         );
 
-    if (
-        !confirmed
-    ) {
+    if (!confirmed) {
 
         return;
 
     }
 
-    localStorage.removeItem(
-        "loggedIn"
+    await window.firebaseServices.signOut(
+        window.firebaseServices.auth
     );
 
     window.location.href =
