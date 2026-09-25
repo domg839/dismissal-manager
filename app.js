@@ -2235,23 +2235,52 @@ async function editHistory(documentId) {
                     item.id === documentId
             );
 
-        if (demoRecord) {
+if (demoRecord) {
 
-            demoRecord.startTime =
-                updatedRecord.startTime;
+    demoRecord.startTime =
+        updatedRecord.startTime;
 
-            demoRecord.endTime =
-                updatedRecord.endTime;
+    demoRecord.endTime =
+        updatedRecord.endTime;
 
-            demoRecord.carsReleased =
-                updatedRecord.carsReleased;
+    demoRecord.carsReleased =
+        updatedRecord.carsReleased;
 
-            demoRecord.rainyDay =
-                updatedRecord.rainyDay;
+    demoRecord.rainyDay =
+        updatedRecord.rainyDay;
 
-            demoRecord.lastEdited =
-                new Date()
-                    .toLocaleString();
+    let start =
+        new Date(
+            `${demoRecord.date} ${updatedRecord.startTime}`
+        );
+
+    let end =
+        new Date(
+            `${demoRecord.date} ${updatedRecord.endTime}`
+        );
+
+    let durationMinutes =
+        (end - start) / 60000;
+
+    if (
+        !isNaN(durationMinutes) &&
+        durationMinutes > 0
+    ) {
+
+        demoRecord.duration =
+            durationMinutes;
+
+        demoRecord.carsPerMinute =
+            (
+                updatedRecord.carsReleased /
+                durationMinutes
+            ).toFixed(1);
+
+    }
+
+    demoRecord.lastEdited =
+        new Date()
+            .toLocaleString();
 
             saveDemoHistory(
                 demoHistory
@@ -2282,26 +2311,50 @@ async function editHistory(documentId) {
                 documentId
             );
 
-        await window.firebaseServices.updateDoc(
-            docRef,
-            {
-                startTime:
-                    updatedRecord.startTime,
+let start =
+    new Date(
+        `${record.date} ${updatedRecord.startTime}`
+    );
 
-                endTime:
-                    updatedRecord.endTime,
+let end =
+    new Date(
+        `${record.date} ${updatedRecord.endTime}`
+    );
 
-                carsReleased:
-                    updatedRecord.carsReleased,
+let durationMinutes =
+    (end - start) / 60000;
 
-                rainyDay:
-                    updatedRecord.rainyDay,
+await window.firebaseServices.updateDoc(
+    docRef,
+    {
+        startTime:
+            updatedRecord.startTime,
 
-                lastEdited:
-                    new Date()
-                        .toLocaleString()
-            }
-        );
+        endTime:
+            updatedRecord.endTime,
+
+        carsReleased:
+            updatedRecord.carsReleased,
+
+        rainyDay:
+            updatedRecord.rainyDay,
+
+        duration:
+            durationMinutes,
+
+        carsPerMinute:
+            durationMinutes > 0
+                ? (
+                    updatedRecord.carsReleased /
+                    durationMinutes
+                  ).toFixed(1)
+                : 0,
+
+        lastEdited:
+            new Date()
+                .toLocaleString()
+    }
+);
 
         showToast(
             '<i class="fa-solid fa-check"></i> History Updated',
