@@ -1533,35 +1533,40 @@ const busiestCars =
 
         <div class="history-badges">
 
-            ${i === 0 ? `
-                <span class="latest-badge">
-                    Latest
-                </span>
-            ` : ""}
+${i === 0 ? `
+    <span class="latest-badge">
+        <i class="fa-solid fa-star"></i>
+        Latest
+    </span>
+` : ""}
 
-            ${parseFloat(history[i].carsPerMinute) === fastestCPM ? `
-                <span class="fastest-badge">
-                    Fastest
-                </span>
-            ` : ""}
+${parseFloat(history[i].carsPerMinute) === fastestCPM ? `
+    <span class="fastest-badge">
+        <i class="fa-solid fa-bolt"></i>
+        Fastest
+    </span>
+` : ""}
 
-            ${history[i].carsReleased === busiestCars ? `
-                <span class="busiest-badge">
-                    Busiest
-                </span>
-            ` : ""}
+${history[i].carsReleased === busiestCars ? `
+    <span class="busiest-badge">
+        <i class="fa-solid fa-car"></i>
+        Busiest
+    </span>
+` : ""}
 
-            ${history[i].rainyDay ? `
-                <span class="rain-badge">
-                    Rain
-                </span>
-            ` : ""}
+${history[i].rainyDay ? `
+    <span class="rain-badge">
+        <i class="fa-solid fa-cloud-rain"></i>
+        Rain
+    </span>
+` : ""}
 
-            ${history[i].lastEdited ? `
-                <span class="edited-badge">
-                   Edited
-                </span>
-            ` : ""}
+${history[i].lastEdited ? `
+    <span class="edited-badge">
+       <i class="fa-solid fa-pen"></i>
+       Edited
+    </span>
+` : ""}
 
         </div>
 

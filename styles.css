@@ -1772,4 +1772,15 @@ body::after {
 
 }
 
+.latest-badge i,
+.fastest-badge i,
+.busiest-badge i,
+.edited-badge i,
+.rain-badge i {
+
+    margin-right: 4px;
+
+    font-size: 10px;
+
+}
 
