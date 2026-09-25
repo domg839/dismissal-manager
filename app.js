@@ -876,6 +876,24 @@ async function loadSettings() {
 
 async function saveSettings() {
 
+    if (
+        window.currentUserRole !==
+        "admin"
+    ) {
+
+        console.warn(
+            "Staff user attempted to save settings."
+        );
+
+        showToast(
+            "Administrator access required",
+            "warning"
+        );
+
+        return;
+
+    }
+
     let schoolBox =
         document.getElementById(
             "schoolName"

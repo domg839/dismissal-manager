@@ -39,18 +39,57 @@
 
 window.addEventListener("load", () => {
 
-    window.watchDismissalHistory(
+    window.firebaseServices
+        .onAuthStateChanged(
 
-        (records) => {
+            window.firebaseServices.auth,
 
-            window.dismissalHistory =
-                records;
+            async (user) => {
 
-            renderDeletedHistory();
+                if (!user) {
 
-        }
+                    window.location.href =
+                        "login.html";
 
-    );
+                    return;
+
+                }
+
+                const role =
+                    await window.getUserRole(
+                        user.email
+                    );
+
+                console.log(
+                    "Recently Deleted Role:",
+                    role
+                );
+
+                if (role !== "admin") {
+
+                    window.location.href =
+                        "history.html";
+
+                    return;
+
+                }
+
+                window.watchDismissalHistory(
+
+                    (records) => {
+
+                        window.dismissalHistory =
+                            records;
+
+                        renderDeletedHistory();
+
+                    }
+
+                );
+
+            }
+
+        );
 
 });
 
