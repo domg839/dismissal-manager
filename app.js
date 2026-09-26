@@ -349,7 +349,7 @@ const studentRecord = {
 
     needsStudent: false,
 
-    syncStatus: "saved"
+    pending: true
 
 };
 
@@ -369,10 +369,6 @@ if (window.isDemoMode) {
         studentRecord
     );
 
-    saveDemoQueue(
-        queue
-    );
-
     dismissalQueue =
         queue;
 
@@ -381,6 +377,24 @@ if (window.isDemoMode) {
     renderDismissalBoard();
 
     renderReleaseBoard();
+
+    setTimeout(() => {
+
+        studentRecord.pending =
+            false;
+
+        saveDemoQueue(
+            queue
+        );
+
+        dismissalQueue =
+            queue;
+
+        renderQueue();
+
+        updateConnectionStatus();
+
+    }, 750);
 
 } else {
 

@@ -1314,7 +1314,7 @@ body::after {
     background: white;
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 8px 25px rgba(0,0,0,.15);}
+    box-shadow: 0 12px 30px rgba(0,0,0,.15);}
 
 .login-logo {
     text-align: center;

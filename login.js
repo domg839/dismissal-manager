@@ -1,5 +1,20 @@
 async function login() {
 
+    const loginButton =
+        document.getElementById(
+            "loginBtn"
+        );
+
+    if (loginButton) {
+
+        loginButton.disabled =
+            true;
+
+        loginButton.innerHTML =
+            '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Signing In...';
+
+    }
+
     let email =
         document.getElementById(
             "username"
@@ -23,37 +38,32 @@ async function login() {
 
             );
 
-localStorage.setItem(
-    "lastUsername",
-    email
-);
+        localStorage.setItem(
+            "lastUsername",
+            email
+        );
 
-const role =
-    await window.getUserRole(
-        email
-    );
+        const role =
+            await window.getUserRole(
+                email
+            );
 
-console.log(
-    "Role Found:",
-    role
-);
+        console.log(
+            "Role Found:",
+            role
+        );
 
-localStorage.setItem(
-    "userRole",
-    role
-);
+        localStorage.setItem(
+            "userRole",
+            role
+        );
 
-console.log(
-    "Role Saved:",
-    localStorage.getItem(
-        "userRole"
-    )
-);
-
-localStorage.setItem(
-    "userRole",
-    role
-);
+        console.log(
+            "Role Saved:",
+            localStorage.getItem(
+                "userRole"
+            )
+        );
 
         window.location.href =
             "home.html";
@@ -61,6 +71,16 @@ localStorage.setItem(
     }
 
     catch {
+
+        if (loginButton) {
+
+            loginButton.disabled =
+                false;
+
+            loginButton.innerHTML =
+                '<i class="fa-solid fa-right-to-bracket"></i> Login';
+
+        }
 
         await showAlertModal(
 
