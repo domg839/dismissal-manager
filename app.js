@@ -355,6 +355,13 @@ const studentRecord = {
 
 if (window.isDemoMode) {
 
+    studentRecord.id =
+        "demo-" + Date.now();
+
+}
+
+if (window.isDemoMode) {
+
     let queue =
         getDemoQueue();
 
@@ -3264,6 +3271,13 @@ const studentRecord = {
         "saving"
 
 };
+
+if (window.isDemoMode) {
+
+    studentRecord.id =
+        "demo-" + Date.now();
+
+}
 
 if (window.isDemoMode) {
 
