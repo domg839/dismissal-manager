@@ -4646,7 +4646,15 @@ const demoBanner =
 
 if (demoBanner) {
 
-    if (window.isDemoMode) {
+    const hideBanner =
+        sessionStorage.getItem(
+            "hideDemoBanner"
+        ) === "true";
+
+    if (
+        window.isDemoMode &&
+        !hideBanner
+    ) {
 
         demoBanner.classList.remove(
             "hidden"
@@ -4934,5 +4942,23 @@ function saveDemoDismissalStartTime(
 
 }
 
+function dismissDemoBanner() {
+
+    sessionStorage.setItem(
+        "hideDemoBanner",
+        "true"
+    );
+
+    document
+        .getElementById(
+            "demoBanner"
+        )
+        ?.classList.add(
+            "hidden"
+        );
+
+}
+
 window.editHistory =
     editHistory;
+
