@@ -387,6 +387,10 @@ if (window.isDemoMode) {
         studentRecord
     );
 
+    saveDemoQueue(
+        queue
+    );
+
     dismissalQueue =
         queue;
 
@@ -396,25 +400,11 @@ if (window.isDemoMode) {
 
     renderReleaseBoard();
 
-    setTimeout(() => {
+    updateConnectionStatus();
 
-        studentRecord.pending =
-            false;
+}
 
-        saveDemoQueue(
-            queue
-        );
-
-        dismissalQueue =
-            queue;
-
-        renderQueue();
-
-        updateConnectionStatus();
-
-    }, 750);
-
-} else {
+else {
 
     addVehicleToFirebase(
         studentRecord
@@ -749,19 +739,12 @@ let tileColorClass =
 if (showSpotsOnBoard) {
 
     const boardSpot =
-        START_SPOT +
-        (
-            i % (
-                END_SPOT -
-                START_SPOT +
-                1
-            )
-        );
+        activeStudents[i].spot;
 
     tileColorClass =
-    getBoardTileColorClass(
-        boardSpot
-    );    
+        getBoardTileColorClass(
+            boardSpot
+        );
 
     tagDisplay = `
         ${activeStudents[i].needsStudent ? "⚠ " : ""}
@@ -769,20 +752,14 @@ if (showSpotsOnBoard) {
 
 ${
     SPOT_TYPE === "numbers"
-
         ? `
-
 <span class="board-spot">
     #${boardSpot}
 </span>
-
 `
-
         : ""
-
 }
     `;
-
 }
 
 let alertClass =
@@ -3222,16 +3199,19 @@ async function releaseStudentFromBoard(studentId) {
         return;
     }
 
-    let confirmed =
-        await showConfirmModal(
-            '<i class="fa-solid fa-person-walking-arrow-right"></i> Release Student',
+let confirmed =
+    await showConfirmModal(
 
-            student.tag + " → Spot " + student.spot,
+        '<i class="fa-solid fa-person-walking-arrow-right"></i> Release Student',
 
-            "Release",
+        student.tag +
+        " → " +
+        getSpotLabel(student.spot),
 
-            "modal-success"
-        );
+        "Release",
+
+        "modal-success"
+    );
 
     if (!confirmed) {
         return;
@@ -4964,16 +4944,14 @@ function getDemoQueue() {
         },
 
         {
-            id: "demo-3",
-            tag: "318",
-            queuePosition: 3,
-            spot: 3,
-            released: true,
-            releasedAt:
-                Date.now() - 300000,
-            timestamp:
-                Date.now() - 300000
-        },
+    id: "demo-3",
+    tag: "318",
+    queuePosition: 3,
+    spot: 3,
+    released: false,
+    needsStudent: false,
+    timestamp: Date.now() - 300000
+},
 
         {
             id: "demo-4",
