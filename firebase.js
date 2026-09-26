@@ -135,16 +135,16 @@ function watchDismissalQueue(callback) {
 
             snapshot.forEach((doc) => {
 
-                records.push({
+records.push({
 
-                    id: doc.id,
+    id: doc.id,
 
-                    pending:
-                        doc.metadata.hasPendingWrites,
+    ...doc.data(),
 
-                    ...doc.data()
+    pending:
+        doc.metadata.hasPendingWrites
 
-                });
+});
 
             });
 

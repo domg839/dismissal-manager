@@ -9,6 +9,22 @@ let completedRequests = 0;
 let START_SPOT = 3;
 let END_SPOT = 10;
 let CARS_DISPLAYED = 25;
+let SPOT_TYPE = "numbers";
+let COLOR_SPOT_TAGS = false;
+const COLOR_SPOTS = [
+
+    "Red",
+    "Orange",
+    "Yellow",
+    "Green",
+    "Blue",
+    "Purple",
+    "Pink",
+    "Teal",
+    "Brown",
+    "Gray"
+
+];
 let dismissalStartTime = null;
 let SCHOOL_NAME = "School";
 let rainyDay = false;
@@ -48,6 +64,12 @@ async function loadSettingsFromFirebase() {
 
     showSpotsOnBoard =
         settings.showSpotsOnBoard || false;
+
+    SPOT_TYPE =
+        settings.spotType || "numbers";
+
+    COLOR_SPOT_TAGS =
+        settings.colorSpotTags || false;    
 
     boardReleaseEnabled =
         settings.boardReleaseEnabled || false;
@@ -339,17 +361,13 @@ const studentRecord = {
 
     tag: tagNumber,
 
-    queuePosition:
-        nextQueuePosition,
+    queuePosition: nextQueuePosition,
 
-    spot:
-        assignedSpot,
+    spot: assignedSpot,
 
     released: false,
 
-    needsStudent: false,
-
-    pending: true
+    needsStudent: false
 
 };
 
@@ -725,22 +743,44 @@ let tagDisplay =
         ? `⚠ ${activeStudents[i].tag}`
         : activeStudents[i].tag;
 
+let tileColorClass =
+    "";        
+
 if (showSpotsOnBoard) {
+
+    const boardSpot =
+        START_SPOT +
+        (
+            i % (
+                END_SPOT -
+                START_SPOT +
+                1
+            )
+        );
+
+    tileColorClass =
+    getBoardTileColorClass(
+        boardSpot
+    );    
 
     tagDisplay = `
         ${activeStudents[i].needsStudent ? "⚠ " : ""}
         ${activeStudents[i].tag}
 
+${
+    SPOT_TYPE === "numbers"
+
+        ? `
+
 <span class="board-spot">
-    #${
-        START_SPOT +
-        (i % (
-            END_SPOT -
-            START_SPOT +
-            1
-        ))
-    }
+    #${boardSpot}
 </span>
+
+`
+
+        : ""
+
+}
     `;
 
 }
@@ -757,11 +797,12 @@ let displayLength =
     activeStudents[i].tag.length;
 
 board.innerHTML += `
-    <div class="
-        board-tile
-        ${alertClass}
-        ${fontClass}
-    "
+<div class="
+    board-tile
+    ${alertClass}
+    ${fontClass}
+    ${tileColorClass}
+"
 
     ${
         boardReleaseEnabled
@@ -836,11 +877,11 @@ function renderReleaseBoard() {
         spot++
     ) {
 
-        board.innerHTML += `
-            <div class="spot-cell">
-                ${spot}
-            </div>
-        `;
+board.innerHTML += `
+    <div class="spot-cell">
+        ${getSpotLabel(spot)}
+    </div>
+`;
 
 let activeStudents =
     [...dismissalQueue]
@@ -1047,6 +1088,20 @@ const settings =
 
     endBox.value =
         settings.endSpot || 10;
+     
+const selectedSpotType =
+    document.querySelector(
+        `input[name="spotType"][value="${
+            settings.spotType || "numbers"
+        }"]`
+    );
+
+if (selectedSpotType) {
+
+    selectedSpotType.checked =
+        true;
+
+}  
 
     carsBox.value =
         settings.carsDisplayed || 25;
@@ -1121,10 +1176,15 @@ if (
             endBox.value
         );
 
-    let carsValue =
-        parseInt(
-            carsBox.value
-        );
+let carsValue =
+    parseInt(
+        carsBox.value
+    );
+
+const spotTypeValue =
+    document.querySelector(
+        'input[name="spotType"]:checked'
+    )?.value || "numbers";
 
     if (
         isNaN(startValue) ||
@@ -1177,7 +1237,21 @@ if (
 
     }
 
-const settings = {
+    if (
+    spotTypeValue === "colors" &&
+    (endValue - startValue + 1) > 10
+) {
+
+    await showAlertModal(
+        '<i class="fa-solid fa-palette"></i> Too Many Color Spots',
+        'Color mode supports a maximum of 10 spots.'
+    );
+
+    return;
+
+}
+
+    const settings = {
 
     schoolName:
         schoolBox.value,
@@ -1187,6 +1261,9 @@ const settings = {
 
     endSpot:
         endValue,
+
+    spotType:
+        spotTypeValue,
 
     carsDisplayed:
         carsValue,
@@ -1292,11 +1369,11 @@ board.style.gridTemplateColumns =
         spot++
     ) {
 
-        board.innerHTML += `
-            <div class="spot-cell">
-                ${spot}
-            </div>
-        `;
+board.innerHTML += `
+    <div class="spot-cell">
+        ${getSpotLabel(spot)}
+    </div>
+`;
 
 let activeStudents =
     [...dismissalQueue]
@@ -1916,6 +1993,69 @@ function formatDuration(minutes) {
     }
 
     return `${mins}m ${seconds}s`;
+}
+
+function getSpotLabel(spot) {
+
+    if (SPOT_TYPE !== "colors") {
+
+        return spot;
+
+    }
+
+    const colorIndex =
+        spot - START_SPOT;
+
+return (
+    COLOR_SPOTS[colorIndex] ||
+    `Spot ${spot}`
+);
+
+}
+
+function getSpotColorClass(spot) {
+
+    if (SPOT_TYPE !== "colors") {
+
+        return "";
+
+    }
+
+    const colorClasses = [
+
+        "spot-red",
+        "spot-orange",
+        "spot-yellow",
+        "spot-green",
+        "spot-blue",
+        "spot-purple",
+        "spot-pink",
+        "spot-teal",
+        "spot-brown",
+        "spot-gray"
+
+    ];
+
+    return (
+        colorClasses[
+            spot - START_SPOT
+        ] || ""
+    );
+
+}
+
+function getBoardTileColorClass(spot) {
+
+    if (SPOT_TYPE !== "colors") {
+
+        return "";
+
+    }
+
+    return getSpotColorClass(
+        spot
+    );
+
 }
 
 function renderHistory() {
@@ -4907,9 +5047,13 @@ const demoSettings = {
 
     endSpot: 10,
 
+    spotType: "numbers",
+
     carsDisplayed: 20,
 
     showSpotsOnBoard: true,
+
+    colorSpotTags: false,
 
     boardReleaseEnabled: true,
 

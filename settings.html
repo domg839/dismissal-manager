@@ -56,7 +56,7 @@
     School Settings
 </h2>
 
-            <div class="settings-row">
+         <div class="settings-row">   
 
                 <label>School Name</label>
 
@@ -66,31 +66,79 @@
 
             </div>
 
-<div class="settings-row spot-range-row">
+<div class="settings-row settings-inline-row">
 
-    <div class="spot-setting">
+    <label>Spot Type</label>
 
-        <label>Starting Spot</label>
+    <div class="spot-type-options">
 
-<input
-    type="number"
-    id="startSpot"
-    min="1">
+        <input
+            type="radio"
+            id="spotNumbers"
+            name="spotType"
+            value="numbers"
+            checked
+            hidden>
+
+        <label
+            for="spotNumbers"
+            class="spot-type-btn">
+
+            Numbers
+
+        </label>
+
+        <input
+            type="radio"
+            id="spotColors"
+            name="spotType"
+            value="colors"
+            hidden>
+
+        <label
+            for="spotColors"
+            class="spot-type-btn">
+
+            Colors
+
+        </label>
 
     </div>
 
-    <div class="spot-setting">
+</div>
 
-        <label>Ending Spot</label>
+<div class="settings-helper settings-helper-tight">
+    Color mode supports a maximum of 10 pickup locations.
+</div>
 
-<input
-    type="number"
-    id="endSpot"
-    min="1">
+<div class="settings-row settings-inline-row">
 
+    <label>Starting Spot</label>
 
-    </div>
+    <input
+        type="number"
+        id="startSpot"
+        min="1">
 
+</div>
+
+<div class="settings-helper settings-helper-tight">
+    First pickup location.
+</div>
+
+<div class="settings-row settings-inline-row">
+
+    <label>Ending Spot</label>
+
+    <input
+        type="number"
+        id="endSpot"
+        min="1">
+
+</div>
+
+<div class="settings-helper settings-helper-tight">
+    Last pickup location.
 </div>
 
         </div>
@@ -120,7 +168,7 @@
 </div>
 
 <div class="settings-toggle-row">
-    <label>Show Spots On Board</label>
+    <label>Show Spot Location On Board</label>
     <label class="switch">
         <input
             type="checkbox"
@@ -129,7 +177,9 @@
     </label>
 </div>
 
-<div class="settings-helper">Displays destination spot numbers on the Dismissal Board.</div>
+<div class="settings-helper">
+    Displays pickup locations on the Dismissal Board.
+</div>
 
 
 <div class="settings-toggle-row">

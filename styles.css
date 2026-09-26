@@ -71,30 +71,10 @@ button:active {transform:translateY(2px) scale(0.97);}
     border-radius: 5px;
     font-weight: bold;}
 
-.spot-range-row {
-    display: flex;
-    margin-left: 0px;
-    justify-content: space-between;
-    align-items: flex-start;}
+
 
 #schoolName {margin-right: 150px;}
 
-.spot-setting {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: center;}
-
-.spot-setting label {
-    width: auto;
-    padding: 0;
-    margin-bottom: 2px;
-    text-align: center;}
-
-.spot-setting input {
-    width: 70px;
-    transform: translateX(-80px);
-    max-width: 70px;}    
 
 .tag {
     width: 50px;
@@ -203,7 +183,12 @@ input {
     font-weight: bold;
     aspect-ratio: 2 / 1;}
 
-.board-large {font-size: clamp(2rem, 4vw, 4.5rem);}
+.board-large {
+    font-size: clamp(2rem, 4vw, 4.5rem); color: black;}
+
+.board-tile.board-large {
+    color: black !important;
+}    
 
 .spot-header {
     background-color: gold;
@@ -266,14 +251,15 @@ input {
     background-color: #21478F;
     color: white;
     font-weight: 700;
-    font-size: 28px;
+    font-size: 20px;
     border-radius: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 42px;
     padding: 10px;
-    white-space: nowrap;}
+    white-space: nowrap;
+}
 
 .needs-student {background-color: #FFD700; color: black;}
 
@@ -721,9 +707,20 @@ h3 {
     top: 6px;
     right: 8px;
     font-size: 14px;
-    font-weight: 700;
-    color: #21478F;
-    opacity: .7;}
+    font-weight: 800;
+    opacity: 1;
+}
+
+.board-tile.spot-red {background: #f04040;}
+.board-tile.spot-orange {background: #eea861;}
+.board-tile.spot-yellow {background: #ffeb85;}
+.board-tile.spot-green {background: #339142;}
+.board-tile.spot-blue {background: #5a8fdf;}
+.board-tile.spot-purple {background: #b291f0;}
+.board-tile.spot-pink {background: #f0a8ce;}
+.board-tile.spot-teal {background: #70f7e2;}
+.board-tile.spot-brown {background: #b4723c;}
+.board-tile.spot-gray {background: #d5dae0;}
 
 .edited-badge {
     background-color: #6c757d;
@@ -796,7 +793,7 @@ h3 {
     font-weight: 600;
     padding-left: 15px;}
 
-.settings-helper-tight {margin-top: -10px;}
+.settings-helper-tight {margin-top: -20px;}
 
 .admin-buttons {
     display: flex;
@@ -1512,3 +1509,69 @@ body::after {
     top: 3px;}
 
 .demo-banner-close:hover {opacity: 1; transform: scale(1.1);}
+
+.spot-type-options {
+
+    display: flex;
+
+    width: 210px;
+
+    margin-top: 4px;
+
+}
+
+.spot-type-options input {
+    display: none;
+}
+
+.spot-type-btn {
+
+    flex: 1;
+
+    text-align: center;
+
+    padding: 10px 0;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    background: rgba(255,255,255,.08);
+
+    border: 1px solid rgba(255,255,255,.15);
+
+    color: white;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    transition:
+        background .15s ease,
+        color .15s ease;
+
+}
+
+.spot-type-btn:first-of-type {
+
+    border-radius: 12px 0 0 12px;
+
+}
+
+.spot-type-btn:last-of-type {
+
+    border-radius: 0 12px 12px 0;
+
+}
+
+#spotNumbers:checked + .spot-type-btn,
+#spotColors:checked + .spot-type-btn {
+
+    background: #4A7DFF;
+
+    color: white;
+
+    box-shadow:
+        inset 0 2px 4px rgba(0,0,0,.15);
+
+}
